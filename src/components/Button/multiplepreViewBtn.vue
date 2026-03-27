@@ -1,98 +1,202 @@
 <template>
   <div style="display: inline-block">
-    <el-button type="primary" plain size="mini" @click="openMultiplepreView">打开</el-button>
-    <div style="
+    <el-button
+      type="primary"
+      plain
+      size="mini"
+      @click="openMultiplepreView"
+    >
+      打开
+    </el-button>
+    <div
+      v-if="preViewVisible"
+      style="
         position: fixed;
         height: 100%;
         width: 100%;
         left: 0;
         top: 0;
         z-index: 1000;
-      " v-if="preViewVisible">
+      "
+    >
       <template v-for="(item, index) in dialogDataList">
-        <div :key="index" class="mutiplepreViewDialog" @click="preposeClickSign && preposeDialog(item, index)" :style="{
+        <div
+          v-if="item.dialogVisible"
+          :key="index"
+          class="mutiplepreViewDialog"
+          :style="{
             left:item.left,
             top: item.top,
             width: item.width,
             height: item.height,
             'z-index': item.zIndex 
-          }" v-if="item.dialogVisible">
-          <div class="mutiplepreViewDialogTitle" v-drag>
+          }"
+          @click="preposeClickSign && preposeDialog(item, index)"
+        >
+          <div
+            v-drag
+            class="mutiplepreViewDialogTitle"
+          >
             <span>{{ item.fileName }}</span>
             <div class="mutiplepreViewDialogBtn">
-              <el-button v-if="renderStatus == 'stack'" size="mini" @click.stop.native="changeRenderStatus('tile')">平铺</el-button>
-              <el-button v-else size="mini" @click.stop.native="changeRenderStatus('stack')">层叠</el-button>
-              <el-link icon="iconfont icon-suoxiao" v-if="item.isFullScreen" @click="resetMutiplepreViewDialog(item, index, $event)">
-              </el-link>
-              <el-link icon="el-icon-full-screen" v-if="!item.isFullScreen" @click="maximizeMutiplepreViewDialog(item, index, $event)">
-              </el-link>
-              <el-link icon="el-icon-close" @click="closeMutiplepreViewDialogVisible(item, index, $event)">
-              </el-link>
+              <el-button
+                v-if="renderStatus == 'stack'"
+                size="mini"
+                @click.stop.native="changeRenderStatus('tile')"
+              >
+                平铺
+              </el-button>
+              <el-button
+                v-else
+                size="mini"
+                @click.stop.native="changeRenderStatus('stack')"
+              >
+                层叠
+              </el-button>
+              <el-link
+                v-if="item.isFullScreen"
+                icon="iconfont icon-suoxiao"
+                @click="resetMutiplepreViewDialog(item, index, $event)"
+              />
+              <el-link
+                v-if="!item.isFullScreen"
+                icon="el-icon-full-screen"
+                @click="maximizeMutiplepreViewDialog(item, index, $event)"
+              />
+              <el-link
+                icon="el-icon-close"
+                @click="closeMutiplepreViewDialogVisible(item, index, $event)"
+              />
             </div>
           </div>
           <div class="mutiplepreViewDialogBody">
-            <div @click="preposeClickSign &&  preposeDialog(item, index)" style="position: absolute; width: 100%; height: calc(100% - 41px)" v-if="renderStatus == 'stack' && item.hasMask" :style="{ 'z-index': item.zIndex + 100 }"></div>
-            <div class="iframe" v-if="
+            <div
+              v-if="renderStatus == 'stack' && item.hasMask"
+              style="position: absolute; width: 100%; height: calc(100% - 41px)"
+              :style="{ 'z-index': item.zIndex + 100 }"
+              @click="preposeClickSign && preposeDialog(item, index)"
+            />
+            <div
+              v-if="
                 $modelFileSuffix
                   .concat($ibimFileSuffix)
                   .indexOf(item.fileSuffix.toLowerCase()) > -1
-              " style="
+              "
+              class="iframe"
+              style="
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 background-color: #f7f7f7;
-              ">
-              <iframe v-if="$supportWebGL()" v-show="item.iframeLoaded" :src="modelPreViewInitUrl(item)" class="iframe" ref="imodelIframe" @load="sendFileData(item, index, $event)" style="background-color: white"></iframe>
-              <div style="width: inherit; height: inherit" v-else>
-                <img style="width: inherit; height: inherit" :src="notSupportWebGLImg" />
+              "
+            >
+              <iframe
+                v-if="$supportWebGL()"
+                v-show="item.iframeLoaded"
+                ref="imodelIframe"
+                :src="modelPreViewInitUrl(item)"
+                class="iframe"
+                style="background-color: white"
+                @load="sendFileData(item, index, $event)"
+              />
+              <div
+                v-else
+                style="width: inherit; height: inherit"
+              >
+                <img
+                  style="width: inherit; height: inherit"
+                  :src="notSupportWebGLImg"
+                >
               </div>
-              <div style="color: #409eff; font-size: 20px" v-show="!item.iframeLoaded && $supportWebGL()">
-                <i class="el-icon-loading" style="font-size: 22px"></i> Imodel加载中，请稍后...
+              <div
+                v-show="!item.iframeLoaded && $supportWebGL()"
+                style="color: #409eff; font-size: 20px"
+              >
+                <i
+                  class="el-icon-loading"
+                  style="font-size: 22px"
+                /> Imodel加载中，请稍后...
               </div>
             </div>
-            <div class="iframe" v-if="
+            <div
+              v-if="
                 $videoFileSuffix
                   .concat($otherVideoFileSuffix)
                   .indexOf(item.fileSuffix.toLowerCase()) > -1
-              ">
-              <video :src="
+              "
+              class="iframe"
+            >
+              <video
+                :src="
                   $videoFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1
                     ? videoPath(item)
                     : videoReturnPath(item)
-                " controls autoplay style="width: 100%; height: 100%; background-color: black"></video>
+                "
+                controls
+                autoplay
+                style="width: 100%; height: 100%; background-color: black"
+              />
             </div>
-            <template v-if="
+            <template
+              v-if="
                 $officeFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 &&
-                ($pptFileSuffix.indexOf(item.fileSuffix.toLowerCase()) === -1 ||
-                  ($pptFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 &&
-                    !item.pptFileSizeTooLarge))
-              ">
-              <div class="iframe" @click="preposeClickSign && preposeDialog(item, index)">
-                <iframe ref="microsoftOfficeWindow" :src="
+                  ($pptFileSuffix.indexOf(item.fileSuffix.toLowerCase()) === -1 ||
+                    ($pptFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 &&
+                      !item.pptFileSizeTooLarge))
+              "
+            >
+              <div
+                class="iframe"
+                @click="preposeClickSign && preposeDialog(item, index)"
+              >
+                <iframe
+                  ref="microsoftOfficeWindow"
+                  :src="
                     'https://view.officeapps.live.com/op/view.aspx?src=' +
-                    encodeURIComponent(filePath(item))
-                  " class="iframe"></iframe>
+                      encodeURIComponent(filePath(item))
+                  "
+                  class="iframe"
+                />
               </div>
             </template>
-            <div class="iframe" v-if="
+            <div
+              v-if="
                 item.fileSuffix.toLowerCase() === '.pdf' ||
-                ($pptFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 &&
-                  item.pptFileSizeTooLarge)
-              ">
-              <iframe :src="
+                  ($pptFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 &&
+                    item.pptFileSizeTooLarge)
+              "
+              class="iframe"
+            >
+              <iframe
+                :src="
                   assetsPath + '/static/web/viewer.html?file=' +
-                  encodeURIComponent(
-                    item.fileSuffix.toLowerCase() === '.pdf'
-                      ? filePath(item)
-                      : pptTooLargeFilePath(item)
-                  )
-                " class="iframe"></iframe>
+                    encodeURIComponent(
+                      item.fileSuffix.toLowerCase() === '.pdf'
+                        ? filePath(item)
+                        : pptTooLargeFilePath(item)
+                    )
+                "
+                class="iframe"
+              />
             </div>
-            <div class="iframe" v-if="item.fileSuffix.toLowerCase() === '.txt'" style="background-color: white; padding-top: 50px; overflow: auto">
-              <div id="txtContainer">{{ getTxtText(item) }}</div>
+            <div
+              v-if="item.fileSuffix.toLowerCase() === '.txt'"
+              class="iframe"
+              style="background-color: white; padding-top: 50px; overflow: auto"
+            >
+              <div id="txtContainer">
+                {{ getTxtText(item) }}
+              </div>
             </div>
-            <div class="iframe" v-if="$imageFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1" style="background-color: white;display: flex;justify-content: center;align-items: center;">
-              <img :src="filePath(item)" style="max-width: 50%; max-height: 50%" />
+            <div
+              v-if="$imageFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1"
+              class="iframe"
+              style="background-color: white;display: flex;justify-content: center;align-items: center;"
+            >
+              <img
+                :src="filePath(item)"
+                style="max-width: 50%; max-height: 50%"
+              >
             </div>
           </div>
         </div>
@@ -107,10 +211,50 @@
     encrypt
   } from '@/utils'
   export default {
+    directives: {
+      drag: {
+        inserted: function (el) {
+          el.onmousedown = (e) => {
+            let disX = e.clientX - el.parentNode.offsetLeft;
+            let disY = e.clientY - el.parentNode.offsetTop;
+            let left = "";
+            let top = "";
+            document.onmousemove = (e) => {
+              left = e.clientX - disX;
+              top = e.clientY - disY;
+              el.parentNode.style.left = left + "px";
+              el.parentNode.style.top = top + "px";
+            };
+            document.onmouseup = (e) => {
+              document.onmousemove = null;
+              document.onmouseup = null;
+            };
+          };
+        },
+      },
+    },
     props: {
       rows: {
         type: Array,
       },
+    },
+    data() {
+      return {
+        preViewVisible: false,
+        dialogDataList: [],
+        notSupportWebGLImg: notSupportWebGLImg,
+        initZIndex: 1001,
+        dialogPosition: {
+          top: null,
+          left: null,
+          width: null,
+          height: null,
+          zIndex: null
+        },
+        renderStatus: "stack", //  ['stack','tile'] 层叠、平铺
+        preposeClickSign: true,
+        assetsPath: process.env.VUE_APP_ASSET_PATH
+      };
     },
     watch: {
       preViewVisible() {
@@ -153,46 +297,6 @@
         },
         immediate: true,
       },
-    },
-    directives: {
-      drag: {
-        inserted: function (el) {
-          el.onmousedown = (e) => {
-            let disX = e.clientX - el.parentNode.offsetLeft;
-            let disY = e.clientY - el.parentNode.offsetTop;
-            let left = "";
-            let top = "";
-            document.onmousemove = (e) => {
-              left = e.clientX - disX;
-              top = e.clientY - disY;
-              el.parentNode.style.left = left + "px";
-              el.parentNode.style.top = top + "px";
-            };
-            document.onmouseup = (e) => {
-              document.onmousemove = null;
-              document.onmouseup = null;
-            };
-          };
-        },
-      },
-    },
-    data() {
-      return {
-        preViewVisible: false,
-        dialogDataList: [],
-        notSupportWebGLImg: notSupportWebGLImg,
-        initZIndex: 1001,
-        dialogPosition: {
-          top: null,
-          left: null,
-          width: null,
-          height: null,
-          zIndex: null
-        },
-        renderStatus: "stack", //  ['stack','tile'] 层叠、平铺
-        preposeClickSign: true,
-        assetsPath: process.env.ASSET_PATH
-      };
     },
     mounted() {
       this.$iframeListener(this.messageReceived);
@@ -339,7 +443,7 @@
         });
       },
       filePath(row) {
-        return row ? process.env.BASE_API + "/api/home/GetUploadPictureFileZip?IUID=" + row.iuid + '&fileType=' + row.fileType + '&getFileFolderName=' + row.getFileFolderName : null;
+        return row ? process.env.VUE_APP_BASE_API + "/api/home/GetUploadPictureFileZip?IUID=" + row.iuid + '&fileType=' + row.fileType + '&getFileFolderName=' + row.getFileFolderName : null;
       },
       openMultiplepreView() {
         this.preViewVisible = true;
@@ -370,16 +474,16 @@
       },
       modelPreViewInitUrl(row) {
         let file = this.$ibimFileSuffix.indexOf(row.fileSuffix.toLowerCase()) > -1 ? row.filePath : row.turnPath
-        return (process.env.GisIframeOrigin + "/?" + this.$turnEncryptParams(file));
+        return (process.env.VUE_APP_GisIframeOrigin + "/?" + this.$turnEncryptParams(file));
       },
       videoReturnPath(row) {
-        return row ? process.env.BASE_API + "/api/home/GetVideoFile?fileUrl=" + encodeURIComponent(encrypt(row.turnPath)) : null;
+        return row ? process.env.VUE_APP_BASE_API + "/api/home/GetVideoFile?fileUrl=" + encodeURIComponent(encrypt(row.turnPath)) : null;
       },
       videoPath(row) {
-        return row ? process.env.BASE_API + "/api/home/GetVideoFile?fileUrl=" + encodeURIComponent(encrypt(row.filePath)) : null;
+        return row ? process.env.VUE_APP_BASE_API + "/api/home/GetVideoFile?fileUrl=" + encodeURIComponent(encrypt(row.filePath)) : null;
       },
       pptTooLargeFilePath(row) {
-        return row ? process.env.BASE_API + "/api/home/GetUploadPictureFileZip?IUID=" + row.iuid + '&fileType=' + row.fileType + '&getFileFolderName=' + row.getFileFolderName : null;
+        return row ? process.env.VUE_APP_BASE_API + "/api/home/GetUploadPictureFileZip?IUID=" + row.iuid + '&fileType=' + row.fileType + '&getFileFolderName=' + row.getFileFolderName : null;
       },
       getTxtText(row) {
         var xmlhttp;

@@ -1,84 +1,244 @@
 <!-- // 顶部：“跨~界”，高度:39px -->
 <template>
   <div class="navbar background">
-    <el-menu class="el-menu-demo" mode="horizontal" :background-color="$store.getters.darkMode ? '#1e1e20' : 'white'" text-color="#409EFF" active-text-color="#409EFF" @select="menuSelect" :default-active="menuActive">
-      <div style="display: flex; float: left;" class="ksjLogo">
-        <img :src="$headerLogo" style="height: 40px; margin: 5px 0 5px 10px;" />
+    <el-menu
+      class="el-menu-demo"
+      mode="horizontal"
+      :background-color="$store.getters.darkMode ? '#1e1e20' : 'white'"
+      text-color="#409EFF"
+      active-text-color="#409EFF"
+      :default-active="menuActive"
+      @select="menuSelect"
+    >
+      <div
+        style="display: flex; float: left;"
+        class="ksjLogo"
+      >
+        <img
+          :src="$headerLogo"
+          style="height: 40px; margin: 5px 0 5px 10px;"
+        >
       </div>
       <template v-if="homeNavbarVisible && hasCorp">
-        <el-button type="text" size="default" class="back-btn" icon="el-icon-s-home" @click="goBack">{{ $t('base.button.back') }}</el-button>
+        <el-button
+          type="text"
+          size="default"
+          class="back-btn"
+          icon="el-icon-s-home"
+          @click="goBack"
+        >
+          {{ $t('base.button.back') }}
+        </el-button>
       </template>
       <div class="avatar-container">
-        <div class="options" style="margin-right: 10px; margin-top: 3px">
-          <el-dropdown trigger="click" style="margin-right: 20px;" @command="changeLanguage">
-            <el-button style="color: #888;" type="text" size="default">
+        <div
+          class="options"
+          style="margin-right: 10px; margin-top: 3px"
+        >
+          <el-dropdown
+            trigger="click"
+            style="margin-right: 20px;"
+            @command="changeLanguage"
+          >
+            <el-button
+              style="color: #888;"
+              type="text"
+              size="default"
+            >
               <span>{{ languageName }}</span>
-              <i class="el-icon-arrow-down"></i>
+              <i class="el-icon-arrow-down" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="zhCn">中文</el-dropdown-item>
-              <el-dropdown-item command="en">English</el-dropdown-item>
+              <el-dropdown-item command="zhCn">
+                中文
+              </el-dropdown-item>
+              <el-dropdown-item command="en">
+                English
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-tooltip v-if="!$isSpace" style="margin-right: 20px;" effect="dark" content="学习园地" placement="bottom">
-            <img src="../../assets/newNavBtn/read.svg" style="cursor: pointer;width: 18px;height: 18px;" @click="navToStudy">
+          <el-tooltip
+            v-if="!$isSpace"
+            style="margin-right: 20px;"
+            effect="dark"
+            content="学习园地"
+            placement="bottom"
+          >
+            <img
+              src="../../assets/newNavBtn/read.svg"
+              style="cursor: pointer;width: 18px;height: 18px;"
+              @click="navToStudy"
+            >
           </el-tooltip>
-          <el-tooltip v-if="$deployName=='wp'" style="margin-right: 20px;" effect="dark" content="意见反馈" placement="bottom">
-            <img src="../../assets/iconImg/customerService.svg" style="cursor: pointer;width: 20px;height: 20px;" @click="showCustomerService">
+          <el-tooltip
+            v-if="$deployName=='wp'"
+            style="margin-right: 20px;"
+            effect="dark"
+            content="意见反馈"
+            placement="bottom"
+          >
+            <img
+              src="../../assets/iconImg/customerService.svg"
+              style="cursor: pointer;width: 20px;height: 20px;"
+              @click="showCustomerService"
+            >
           </el-tooltip>
-          <el-tooltip style="margin-right: 20px;" effect="dark" v-if="user.isadministrator && $deployName == 'ksj'" content="系统管理" placement="bottom">
-            <img src="../../assets/newNavBtn/setting.svg" style="cursor: pointer;width: 20px;height: 20px;" @click="navToSetting">
+          <el-tooltip
+            v-if="user.isadministrator && $deployName == 'ksj'"
+            style="margin-right: 20px;"
+            effect="dark"
+            content="系统管理"
+            placement="bottom"
+          >
+            <img
+              src="../../assets/newNavBtn/setting.svg"
+              style="cursor: pointer;width: 20px;height: 20px;"
+              @click="navToSetting"
+            >
           </el-tooltip>
-          <el-tooltip v-if="!$isSpace" style="margin-right: 20px;" effect="dark" content="开发者中心" placement="bottom">
-            <img src="../../assets/newNavBtn/code.svg" style="cursor: pointer;width: 20px;height: 20px;" @click="openApiDoc">
+          <el-tooltip
+            v-if="!$isSpace"
+            style="margin-right: 20px;"
+            effect="dark"
+            content="开发者中心"
+            placement="bottom"
+          >
+            <img
+              src="../../assets/newNavBtn/code.svg"
+              style="cursor: pointer;width: 20px;height: 20px;"
+              @click="openApiDoc"
+            >
           </el-tooltip>
-          <el-tooltip v-if="hasCorp" style="margin-right: 20px;" effect="dark" :content="$t('base.button.fileTransfer')" placement="bottom">
-            <img src="../../assets/newNavBtn/inbox.svg" style="cursor: pointer;width: 20px;height: 20px;" @click="showFileTransferDialog">
+          <el-tooltip
+            v-if="hasCorp"
+            style="margin-right: 20px;"
+            effect="dark"
+            :content="$t('base.button.fileTransfer')"
+            placement="bottom"
+          >
+            <img
+              src="../../assets/newNavBtn/inbox.svg"
+              style="cursor: pointer;width: 20px;height: 20px;"
+              @click="showFileTransferDialog"
+            >
           </el-tooltip>
           <!-- <el-tooltip v-if="hasCorp && $sideBarModules.indexOf('团队协作') > -1" style="margin-right: 20px;" effect="dark" content="我的消息" placement="bottom">
             <img src="../../assets/newNavBtn/message.svg" style="cursor: pointer;width: 20px;height: 20px;" @click="showMessageDialog">
           </el-tooltip> -->
-          <el-popover v-if="hasCorp" v-model="showNoticeList" placement="bottom" :disabled="messageListCount == 0" width="300" trigger="hover">
-            <div class="msgList flex ai-center jc-between" v-for="item in messageList.usermes.data" :key="item.iuid">
+          <el-popover
+            v-if="hasCorp"
+            v-model="showNoticeList"
+            placement="bottom"
+            :disabled="messageListCount == 0"
+            width="300"
+            trigger="hover"
+          >
+            <div
+              v-for="item in messageList.usermes.data"
+              :key="item.iuid"
+              class="msgList flex ai-center jc-between"
+            >
               <div>
-                <div style="font-size: 14px;color: #555;"><span style="color:#000">{{ item.userName }}</span> 申请加入企业</div>
-                <div style="font-size: 12px;color: #999;margin-top: 5px;">{{ item.createTime }}</div>
+                <div style="font-size: 14px;color: #555;">
+                  <span style="color:#000">{{ item.userName }}</span> 申请加入企业
+                </div>
+                <div style="font-size: 12px;color: #999;margin-top: 5px;">
+                  {{ item.createTime }}
+                </div>
               </div>
-              <el-button type="text" size="small" @click="showApplyDialog">查看人员</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="showApplyDialog"
+              >
+                查看人员
+              </el-button>
             </div>
-            <div class="msgList flex ai-center jc-between" v-for="item in messageList.checkmes.data" :key="item.iuid">
+            <div
+              v-for="item in messageList.checkmes.data"
+              :key="item.iuid"
+              class="msgList flex ai-center jc-between"
+            >
               <div>
-                <div style="font-size: 14px;color: #555;"><span style="color:#000">{{ item.creatorName }}</span> 提交的审批</div>
-                <div style="font-size: 12px;color: #999;margin-top: 5px;">{{ item.createTime }}</div>
+                <div style="font-size: 14px;color: #555;">
+                  <span style="color:#000">{{ item.creatorName }}</span> 提交的审批
+                </div>
+                <div style="font-size: 12px;color: #999;margin-top: 5px;">
+                  {{ item.createTime }}
+                </div>
               </div>
-              <el-button type="text" size="small" @click="showApprove(item)">点击查看</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="showApprove(item)"
+              >
+                点击查看
+              </el-button>
             </div>
-            <div class="msgList flex ai-center jc-between" v-for="item in messageList.workflowcheckmes.data" :key="item.iuid">
+            <div
+              v-for="item in messageList.workflowcheckmes.data"
+              :key="item.iuid"
+              class="msgList flex ai-center jc-between"
+            >
               <div>
-                <div style="font-size: 14px;color: #555;"><span style="color:#000">{{ item.creatorName }}</span> 提交的审批</div>
-                <div style="font-size: 12px;color: #999;margin-top: 5px;">{{ item.createTime }}</div>
+                <div style="font-size: 14px;color: #555;">
+                  <span style="color:#000">{{ item.creatorName }}</span> 提交的审批
+                </div>
+                <div style="font-size: 12px;color: #999;margin-top: 5px;">
+                  {{ item.createTime }}
+                </div>
               </div>
-              <el-button type="text" size="small" @click="showApprove(item)">点击查看</el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="showApprove(item)"
+              >
+                点击查看
+              </el-button>
             </div>
             <template slot="reference">
-              <el-badge style="margin-right: 20px;cursor: pointer;margin-top: 7px;" :value="messageListCount" :max="99" :is-dot="false" size="mini" :hidden="messageListCount == 0" type="danger">
+              <el-badge
+                style="margin-right: 20px;cursor: pointer;margin-top: 7px;"
+                :value="messageListCount"
+                :max="99"
+                :is-dot="false"
+                size="mini"
+                :hidden="messageListCount == 0"
+                type="danger"
+              >
                 <!-- <i class="el-icon-bell hover" style="cursor: pointer;font-size:20px"></i> -->
-                <img src="../../assets/newNavBtn/remind.svg" style="cursor: pointer;width: 18px;height: 18px;">
+                <img
+                  src="../../assets/newNavBtn/remind.svg"
+                  style="cursor: pointer;width: 18px;height: 18px;"
+                >
               </el-badge>
             </template>
           </el-popover>
         </div>
         <div class="avatar-wrapper flex ai-center">
-          <img :src="user.avatar ? avatorUrl + encodeURIComponent(encrypt(user.avatar)) : defaultAvatar" style="width:40px" id="user-avatar" class="user-avatar" @click="avatarClick" /><!-- -->
+          <img
+            id="user-avatar"
+            :src="user.avatar ? avatorUrl + encodeURIComponent(encrypt(user.avatar)) : defaultAvatar"
+            style="width:40px"
+            class="user-avatar"
+            @click="avatarClick"
+          ><!-- -->
           <!-- <div style="position:absolute;width:8px;height:8px;border-radius:50%;background-color:#FF3300;top:8px;right:0" v-if="hasNotDealApply"></div> -->
           <corpSpace />
         </div>
       </div>
     </el-menu>
-    <div class="mask" v-if="showMsgList">
-      <chat-box @close="closeMsgList"></chat-box>
+    <div
+      v-if="showMsgList"
+      class="mask"
+    >
+      <chat-box @close="closeMsgList" />
     </div>
-    <person-apply :applyData="applyData" :showApply.sync="showApply" @loadCompanyApplyPerson="loadCompanyApplyPerson"></person-apply>
+    <person-apply
+      :apply-data="applyData"
+      :show-apply.sync="showApply"
+      @loadCompanyApplyPerson="loadCompanyApplyPerson"
+    />
   </div>
 </template>
 <script>
@@ -204,7 +364,7 @@ export default {
       downLoad_in_progress_number: 0,
       dropDownVisible: false,
       homeNavbarVisible: false,
-      avatorUrl: process.env.BASE_API + '/api/home/GetimgFile?fileUrl=',
+      avatorUrl: process.env.VUE_APP_BASE_API + '/api/home/GetimgFile?fileUrl=',
       encrypt
     };
   },

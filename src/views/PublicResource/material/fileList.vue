@@ -1,56 +1,165 @@
 <template>
-    <el-container v-if="visible" class="materialList-box">
-        <el-main class="buildMain">
-            <div class="mainTop" style="margin-bottom:1px;box-sizing: content-box;">
-                <div class="flex ai-center" style="width: 100%;">
-                    <el-button type="primary" size="small" plain icon="el-icon-arrow-left" @click="$emit('closeFileList')">{{ $t('base.button.back') }}</el-button>
-                    <div style="margin-left: 15px;">{{ data.name }}</div>
-                    <div style="display:flex;align-items:center; flex-wrap: wrap;margin-left: auto;">
-                        <el-button type="primary" icon="el-icon-upload2" style="margin-right: 15px;" size="small" @click="handleBuild('ADD')">{{ $t('base.button.upload') }}</el-button>
-                        <el-input placeholder="请输入关键词" prefix-icon="el-icon-search" style="width:180px;margin-right:15px" clearable v-model="searchForm.name" size="small"></el-input>
-                    </div>
+  <el-container
+    v-if="visible"
+    class="materialList-box"
+  >
+    <el-main class="buildMain">
+      <div
+        class="mainTop"
+        style="margin-bottom:1px;box-sizing: content-box;"
+      >
+        <div
+          class="flex ai-center"
+          style="width: 100%;"
+        >
+          <el-button
+            type="primary"
+            size="small"
+            plain
+            icon="el-icon-arrow-left"
+            @click="$emit('closeFileList')"
+          >
+            {{ $t('base.button.back') }}
+          </el-button>
+          <div style="margin-left: 15px;">
+            {{ data.name }}
+          </div>
+          <div style="display:flex;align-items:center; flex-wrap: wrap;margin-left: auto;">
+            <el-button
+              type="primary"
+              icon="el-icon-upload2"
+              style="margin-right: 15px;"
+              size="small"
+              @click="handleBuild('ADD')"
+            >
+              {{ $t('base.button.upload') }}
+            </el-button>
+            <el-input
+              v-model="searchForm.name"
+              placeholder="请输入关键词"
+              prefix-icon="el-icon-search"
+              style="width:180px;margin-right:15px"
+              clearable
+              size="small"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- 图览 -->
+      <el-row style="height:calc(100vh - 158px);background:#fff;overflow:auto">
+        <div class="mainCon">
+          <!-- <div> -->
+          <div
+            class="flex wrap"
+            style="padding:0 20px"
+          >
+            <div
+              v-for="(item, index) in materialListData"
+              :key="index"
+              class="mainConLi img-item"
+            >
+              <div @click="viewInfo(item)">
+                <el-image
+                  :preview-src-list="srcList"
+                  fit="contain"
+                  :src="imageUrl + encodeURIComponent((encrypt(item.filePath)))"
+                  style="object-fit: contain;"
+                  @click="setSrcList(item)"
+                />
+                <div class="filename">
+                  {{ item.fileName }}
                 </div>
+              </div>
+              <div
+                class="mainFlex img-btn"
+                style="position:absolute;bottom:0;width:100%"
+              >
+                <el-button
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1;color: #f56c6c;background-color: #fff;"
+                  class="btn-group"
+                  @click="deleteBuild(false, item)"
+                >
+                  <i
+                    class="el-icon-delete"
+                    style="font-size:15px"
+                  />{{ $t('base.button.delete') }}
+                </el-button>
+              </div>
             </div>
-            <!-- 图览 -->
-            <el-row style="height:calc(100vh - 158px);background:#fff;overflow:auto">
-                <div class="mainCon">
-                    <!-- <div> -->
-                    <div class="flex wrap" style="padding:0 20px">
-                        <div class="mainConLi img-item" v-for="(item, index) in materialListData" :key="index">
-                            <div @click="viewInfo(item)">
-                                <el-image @click="setSrcList(item)" :preview-src-list="srcList" fit="contain" :src="imageUrl + encodeURIComponent((encrypt(item.filePath)))" style="object-fit: contain;" />
-                                <div class="filename">{{ item.fileName }}</div>
-                            </div>
-                            <div class="mainFlex img-btn" style="position:absolute;bottom:0;width:100%">
-                                <el-button size="mini" type="text" style="font-size: 15px;flex:1;color: #f56c6c;background-color: #fff;" class="btn-group" @click="deleteBuild(false, item)"><i class="el-icon-delete" style="font-size:15px"></i>{{ $t('base.button.delete') }}</el-button>
-                            </div>
-                        </div>
-                        <div slot="empty" class="phoEmpty" v-if="materialListData.length == 0">
-                            <span>{{ $t('base.button.noData') }}</span>
-                        </div>
-                    </div>
-                    <!-- </div> -->
-                </div>
-            </el-row>
-            <el-pagination :pager-count="5" class="t-pagination" @size-change="handleSizeChange" @current-change="paginationCurrentChange" :current-page.sync="searchForm.page" :page-sizes="[10, 20, 40]" :page-size="searchForm.rows" layout="total, sizes, prev, pager, next, jumper" :total="total" background></el-pagination>
-            <!-- 新增材质 -->
-            <el-dialog title="上传材质图片" append-to-body :visible.sync="addVisible" width="420px" :modal="true" v-dialogDrag :close-on-click-modal="false">
-                <el-form ref="form" :model="AddForm" size="small" label-width="64px" label-suffix=":">
-                    <el-form-item label="图片" prop="file" required>
-                        <div class="thumbnail">
-                            <el-upload class="avatar-uploader library" action="batchImportUrl" list-type="picture-card" :file-list="fileList" multiple :on-change="uploadSuccess" :on-remove="removeFile" :auto-upload="false" accept="image/*">
-                                <i class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
-                        </div>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="sure">{{ $t('base.button.confirm') }}</el-button>
-                    <el-button @click="addVisible = false">{{ $t('base.button.cancel') }}</el-button>
-                </span>
-            </el-dialog>
-        </el-main>
-    </el-container>
+            <div
+              v-if="materialListData.length == 0"
+              slot="empty"
+              class="phoEmpty"
+            >
+              <span>{{ $t('base.button.noData') }}</span>
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+      </el-row>
+      <el-pagination
+        :pager-count="5"
+        class="t-pagination"
+        :current-page.sync="searchForm.page"
+        :page-sizes="[10, 20, 40]"
+        :page-size="searchForm.rows"
+        layout="total, sizes, prev, pager, next, jumper"
+@size-change="handleSizeChange" :total="total" background @current-change="paginationCurrentChange"
+      />
+      <!-- 新增材质 -->
+      <el-dialog
+        v-dialogDrag
+        title="上传材质图片"
+        append-to-body
+        :visible.sync="addVisible"
+        width="420px"
+        :modal="true"
+        :close-on-click-modal="false"
+      >
+        <el-form
+          ref="form"
+          :model="AddForm"
+          size="small"
+          label-width="64px"
+          label-suffix=":"
+        >
+          <el-form-item
+            label="图片"
+            prop="file"
+            required
+          >
+            <div class="thumbnail">
+              <el-upload
+                class="avatar-uploader library"
+                action="batchImportUrl"
+                list-type="picture-card"
+                :file-list="fileList"
+                multiple
+                :on-change="uploadSuccess"
+                :on-remove="removeFile"
+                :auto-upload="false"
+                accept="image/*"
+              >
+                <i class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+            </div>
+          </el-form-item>
+        </el-form>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click="sure"
+          >{{ $t('base.button.confirm') }}</el-button>
+          <el-button @click="addVisible = false">{{ $t('base.button.cancel') }}</el-button>
+        </span>
+      </el-dialog>
+    </el-main>
+  </el-container>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -60,7 +169,7 @@ import tableEmptyImage from "@/assets/tableEmpty.png";
 import { decrypt, encrypt } from '@/utils'
 import request from '@/utils/request'
 export default {
-    name: 'materialFile',
+    name: 'MaterialFile',
     props: {
         closeFileList: {
             type: Function,
@@ -90,14 +199,14 @@ export default {
             materialListData: [],
             dialogVisible: false,
             addVisible: false,
-            baseUrl: process.env.BASE_API,
+            baseUrl: process.env.VUE_APP_BASE_API,
             detailsData: '',
             pictureMode: true,
             addOrEdit: '',
             AddForm: {
                 file: [], //文件
             },
-            imageUrl: process.env.BASE_API + "/api/home/GetimgFile?fileUrl="
+            imageUrl: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl="
         }
     },
     computed: {

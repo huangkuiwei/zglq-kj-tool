@@ -2,80 +2,162 @@
   <!--左侧宽度：60+220+1-->
   <!-- teamworkClientWidth相关代码被注释未生效 ,原代码 =>  (($store.state.app.activeTab == '团队协作') ? $store.state.app.teamworkClientWidth : 'calc(100vw - 61px)')), -->
   <div>
-    <div v-if="preViewContainerVisible" v-show="preViewContainerVisible" :style="iframeStyle"
-      style="position: fixed; z-index: 1000; background-color: white">
-      <div class="iframeheadercopy" v-if="hasTopBar">
+    <div
+      v-if="preViewContainerVisible"
+      v-show="preViewContainerVisible"
+      :style="iframeStyle"
+      style="position: fixed; z-index: 1000; background-color: white"
+    >
+      <div
+        v-if="hasTopBar"
+        class="iframeheadercopy"
+      >
         <div :class="['iframeheader', { updown: isUpdown }]">
           <div style="font-size: 14px;color: #303133;display: flex;align-items: center;">
             <span class="fileName">{{ fileName }}</span>
           </div>
           <div class="flex ai-center">
-            <el-button size="small" style="font-size: 12px; margin-right: 5px" class="btn-group"
-              v-if="preViewDownloadBtnVisible" @click="downLoad">
-              <i class="iconfont icon-download">
-              </i>{{ $t('base.button.download') }}</el-button>
+            <el-button
+              v-if="preViewDownloadBtnVisible"
+              size="small"
+              style="font-size: 12px; margin-right: 5px"
+              class="btn-group"
+              @click="downLoad"
+            >
+              <i class="iconfont icon-download" />{{ $t('base.button.download') }}
+            </el-button>
             <!-- <el-button size="mini" class="btn-group" @click="copyViewParth" v-if="$modelFileSuffix.indexOf(fileSuffix) > -1"><i class="iconfont icon-share"></i>分享</el-button> -->
-            <collectionBtn class="btn-group" style="margin-right: 5px" :rows="[preViewContainerData]" isPreViewMode
-              v-if="collectionBtnComVisible" />
-            <el-button size="small" type="primary" icon="el-icon-full-screen" v-if="!isFullScreen"
-              @click="startFullScreen">全屏</el-button>
-            <el-button size="small" type="danger" icon="el-icon-full-screen" v-else
-              @click="endFullScreen">退出全屏</el-button>
-            <el-link style="font-size: 12px; margin-left: 20px" @click="hiddenIframe">
-              <i class="iconfont icon-shanchu">
-              </i>
+            <collectionBtn
+              v-if="collectionBtnComVisible"
+              class="btn-group"
+              style="margin-right: 5px"
+              :rows="[preViewContainerData]"
+              is-pre-view-mode
+            />
+            <el-button
+              v-if="!isFullScreen"
+              size="small"
+              type="primary"
+              icon="el-icon-full-screen"
+              @click="startFullScreen"
+            >
+              全屏
+            </el-button>
+            <el-button
+              v-else
+              size="small"
+              type="danger"
+              icon="el-icon-full-screen"
+              @click="endFullScreen"
+            >
+              退出全屏
+            </el-button>
+            <el-link
+              style="font-size: 12px; margin-left: 20px"
+              @click="hiddenIframe"
+            >
+              <i class="iconfont icon-shanchu" />
             </el-link>
           </div>
         </div>
       </div>
       <!--div :style="{height: clientHeight - ($modelFileSuffix.concat($ibimFileSuffix).indexOf(fileSuffix) == -1 ? 48 : 0) + 'px', width: '100%' }"-->
       <div :style="{ height: hasTopBar ? 'calc(100% - 48px)' : '100%', width: '100%', }">
-        <div class="iframe"
+        <div
           v-if="modelPreViewContainerVisible || ($modelFileSuffix.concat($ibimFileSuffix).indexOf(fileSuffix) > -1 && !$modelPreViewModeHasVShow)"
           v-show="modelPreViewContainerDisplayVisible || ($modelFileSuffix.concat($ibimFileSuffix).indexOf(fileSuffix) > -1 && !$modelPreViewModeHasVShow)"
-          style="display: flex;justify-content: center;align-items: center;background-color: #f7f7f7;">
-          <iframe v-if="$supportWebGL()" :src="modelPreViewInitUrl" id="bim-iframe" class="iframe" ref="imodelIframe"
-            @load="sendFileData" style="background-color: white"></iframe>
+          class="iframe"
+          style="display: flex;justify-content: center;align-items: center;background-color: #f7f7f7;"
+        >
+          <iframe
+            v-if="$supportWebGL()"
+            id="bim-iframe"
+            ref="imodelIframe"
+            :src="modelPreViewInitUrl"
+            class="iframe"
+            style="background-color: white"
+            @load="sendFileData"
+          />
           <div v-else>
-            <img :src="notSupportWebGLImg" />
+            <img :src="notSupportWebGLImg">
           </div>
         </div>
-        <div class="iframe" v-if="$videoFileSuffix.concat($otherVideoFileSuffix).indexOf(fileSuffix) > -1">
-          <video :src="$videoFileSuffix.indexOf(fileSuffix) > -1 ? videoPath : videoReturnPath" controls autoplay
-            style="width: 100%; height: 100%; background-color: black">
-          </video>
+        <div
+          v-if="$videoFileSuffix.concat($otherVideoFileSuffix).indexOf(fileSuffix) > -1"
+          class="iframe"
+        >
+          <video
+            :src="$videoFileSuffix.indexOf(fileSuffix) > -1 ? videoPath : videoReturnPath"
+            controls
+            autoplay
+            style="width: 100%; height: 100%; background-color: black"
+          />
         </div>
         <template
-          v-if="$officeFileSuffix.indexOf(fileSuffix) > -1 && (this.$pptFileSuffix.indexOf(fileSuffix) === -1 || (this.$pptFileSuffix.indexOf(fileSuffix) > -1 && !pptFileSizeTooLarge))">
-          <div class="iframe" id="wpsContainer" v-if="offiecFileSign === 'wps'">
+          v-if="$officeFileSuffix.indexOf(fileSuffix) > -1 && (this.$pptFileSuffix.indexOf(fileSuffix) === -1 || (this.$pptFileSuffix.indexOf(fileSuffix) > -1 && !pptFileSizeTooLarge))"
+        >
+          <div
+            v-if="offiecFileSign === 'wps'"
+            id="wpsContainer"
+            class="iframe"
+          >
             <wps :row="preViewContainerData" />
           </div>
-          <div class="iframe" v-if="offiecFileSign != 'wps'">
-            <iframe :src="officeFilePath" class="iframe"
-              :class="['xls', 'xlsx'].includes(fileSuffix.toLowerCase()) ? 'officeXlsIframe' : 'officeIframe'"></iframe>
+          <div
+            v-if="offiecFileSign != 'wps'"
+            class="iframe"
+          >
+            <iframe
+              :src="officeFilePath"
+              class="iframe"
+              :class="['xls', 'xlsx'].includes(fileSuffix.toLowerCase()) ? 'officeXlsIframe' : 'officeIframe'"
+            />
           </div>
         </template>
-        <div class="iframe"
-          v-if="fileSuffix === '.pdf' || (this.$pptFileSuffix.indexOf(fileSuffix) > -1 && pptFileSizeTooLarge)">
+        <div
+          v-if="fileSuffix === '.pdf' || (this.$pptFileSuffix.indexOf(fileSuffix) > -1 && pptFileSizeTooLarge)"
+          class="iframe"
+        >
           <!-- <iframe:src="'/static/web/viewer.html?file=' + 'http%3A%2F%2Flocalhost%3A58976%2Fapi%2Fhome%2FGet UploadPictureFileZip%3FfileUrl%3DFiles%255onlineview.pdf'"class="iframe"></iframe> -->
           <iframe
             :src="assetsPath + 'static/web/viewer.html?file=' + encodeURIComponent(fileSuffix === '.pdf' ? filePath : pptTooLargeFilePath)"
-            class="iframe">
-          </iframe>
+            class="iframe"
+          />
         </div>
-        <div class="iframe" v-if="fileSuffix === '.txt'"
-          style="background-color: white; padding-top: 50px; overflow: auto">
-          <div id="txtContainer">{{ getTxtText() }}</div>
+        <div
+          v-if="fileSuffix === '.txt'"
+          class="iframe"
+          style="background-color: white; padding-top: 50px; overflow: auto"
+        >
+          <div id="txtContainer">
+            {{ getTxtText() }}
+          </div>
         </div>
-        <div class="iframe" v-if="$imageFileSuffix.indexOf(fileSuffix) > -1"
-          style="background-color: white;display: flex;justify-content: center;align-items: center;">
-          <img :src="filePath" style="max-width: 70%; max-height: 70%" />
+        <div
+          v-if="$imageFileSuffix.indexOf(fileSuffix) > -1"
+          class="iframe"
+          style="background-color: white;display: flex;justify-content: center;align-items: center;"
+        >
+          <img
+            :src="filePath"
+            style="max-width: 70%; max-height: 70%"
+          >
         </div>
       </div>
-      <imodelInvokeFunction :rowData="preViewContainerData" :isFullScreen.sync="isFullScreen" @pageClose="hiddenIframe"
-        ref="imodelInvokeContainer" />
-      <linkModel2Dialog :visible.sync="linkModel2Dialog" v-if="linkModel2Dialog" :list="list"
-        :linkModelFiles="linkModelFiles" :openedProject="openedProject" @linkModelSubmit="linkModelSubmit" />
+      <imodelInvokeFunction
+        ref="imodelInvokeContainer"
+        :row-data="preViewContainerData"
+        :is-full-screen.sync="isFullScreen"
+        @pageClose="hiddenIframe"
+      />
+      <linkModel2Dialog
+        v-if="linkModel2Dialog"
+        :visible.sync="linkModel2Dialog"
+        :list="list"
+        :link-model-files="linkModelFiles"
+        :opened-project="openedProject"
+        @linkModelSubmit="linkModelSubmit"
+      />
     </div>
   </div>
 </template>
@@ -104,7 +186,7 @@ export default {
   },
   data() {
     return {
-      iframeUrl: process.env.GisIframeOrigin + "/?model=",
+      iframeUrl: process.env.VUE_APP_GisIframeOrigin + "/?model=",
       isUpdown: true,
       isFullScreen: false,
       shareDialogVisible: false,
@@ -112,7 +194,7 @@ export default {
       notSupportWebGLImg: notSupportWebGLImg,
       offiecFileSign: "MicroSoft",
       pptFileSizeTooLarge: false,
-      assetsPath: process.env.ASSET_PATH,
+      assetsPath: process.env.VUE_APP_ASSET_PATH,
       linkModel2Dialog: false,
       linkModelFiles: [],
       openedProject: "",
@@ -218,8 +300,8 @@ export default {
     videoReturnPath() {
       return this.preViewContainerData
         ? (ddApiRouteNames.indexOf(this.$route.name) > -1
-          ? process.env.BASE_DDAPI
-          : process.env.BASE_API) +
+          ? process.env.VUE_APP_BASE_DDAPI
+          : process.env.VUE_APP_BASE_API) +
         "/api/home/GetVideoFile?fileUrl=" +
         encodeURIComponent(encrypt(this.preViewContainerData.turnPath))
         : null;
@@ -227,8 +309,8 @@ export default {
     videoPath() {
       return this.preViewContainerData
         ? (ddApiRouteNames.indexOf(this.$route.name) > -1
-          ? process.env.BASE_DDAPI
-          : process.env.BASE_API) +
+          ? process.env.VUE_APP_BASE_DDAPI
+          : process.env.VUE_APP_BASE_API) +
         "/api/home/GetVideoFile?fileUrl=" +
         encodeURIComponent(encrypt(this.preViewContainerData.filePath))
         : null;
@@ -242,8 +324,8 @@ export default {
     filePath() {
       return this.preViewContainerData
         ? (ddApiRouteNames.indexOf(this.$route.name) > -1
-          ? process.env.BASE_DDAPI
-          : process.env.BASE_API) +
+          ? process.env.VUE_APP_BASE_DDAPI
+          : process.env.VUE_APP_BASE_API) +
         "/api/home/GetUploadPictureFileZip?IUID=" +
         this.preViewContainerData.iuid +
         "&fileType=" +
@@ -255,7 +337,7 @@ export default {
     officeFilePath() {
       return (
         "https://view.officeapps.live.com/op/view.aspx?src=" +
-        process.env.BASE_API +
+        process.env.VUE_APP_BASE_API +
         "/" +
         this.preViewContainerData.filePath
       );
@@ -263,8 +345,8 @@ export default {
     pptTooLargeFilePath() {
       return this.preViewContainerData
         ? (ddApiRouteNames.indexOf(this.$route.name) > -1
-          ? process.env.BASE_DDAPI
-          : process.env.BASE_API) +
+          ? process.env.VUE_APP_BASE_DDAPI
+          : process.env.VUE_APP_BASE_API) +
         "/api/home/GetUploadPictureFileZip?IUID=" +
         this.preViewContainerData.iuid +
         "&fileType=" +
@@ -307,7 +389,7 @@ export default {
     async sendFileData() {
       // this.$loading().close()
 
-      this.preViewContainerData.fileOriginalUrl = process.env.BASE_API;
+      this.preViewContainerData.fileOriginalUrl = process.env.VUE_APP_BASE_API;
       if (this.shareMode) {
         this.preViewContainerData.canDownload = this.preViewDownloadBtnVisible;
         this.preViewContainerData.isMobile = true;
@@ -327,7 +409,7 @@ export default {
         treeData: this.$root.list,
         currentProj: projectInfo,
         currentFile: this.preViewContainerData,
-        fileOriginalUrl: process.env.BASE_API,
+        fileOriginalUrl: process.env.VUE_APP_BASE_API,
         token: local.getToken(),
       };
       this.$iframePostMes(
@@ -363,10 +445,10 @@ export default {
       //               pathItem.push(encodeURIComponent(item));
       //             });
       //             res.data = pathItem.join("/");
-      //             shijingLinkList.push({ url: process.env.BASE_API + "/" + res.data, name: shijingItem[i].fileName })
+      //             shijingLinkList.push({ url: process.env.VUE_APP_BASE_API + "/" + res.data, name: shijingItem[i].fileName })
       //           }
       //         }else {
-      //           shijingLinkList.push({ url: (process.env.BASE_API + "/" + shijingItem[i].filePath).replace(/\\/g,'/'), name: shijingItem[i].fileName })
+      //           shijingLinkList.push({ url: (process.env.VUE_APP_BASE_API + "/" + shijingItem[i].filePath).replace(/\\/g,'/'), name: shijingItem[i].fileName })
       //         }
       //       }
       //       if (shijingLinkList.length) {

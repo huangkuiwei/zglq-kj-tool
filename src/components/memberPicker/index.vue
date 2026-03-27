@@ -1,60 +1,168 @@
 <!-- 选择企业人员 -->
 
 <template>
-  <el-dialog :title="dialogTitle" append-to-body top="10vh" :visible.sync="dialogVisible" :before-close="close" width="840px">
-    <div class="flex" style="height: 500px;">
+  <el-dialog
+    :title="dialogTitle"
+    append-to-body
+    top="10vh"
+    :visible.sync="dialogVisible"
+    :before-close="close"
+    width="840px"
+  >
+    <div
+      class="flex"
+      style="height: 500px;"
+    >
       <!-- 待选人员 -->
       <div class="left-area">
-        <el-input v-model="userName" style="width:calc(100% - 20px)" placeholder="请输入人员姓名" size="small" suffix-icon="el-icon-search" clearable @change="handleChange"></el-input>
-        <div class="flex ai-center jc-center" style="margin: 10px 0;" v-if="false">
-          <el-button type="primary" size="mini" disabled plain @click="checkType = 'dept'">按架构选</el-button>
-          <el-button type="primary" size="mini" plain @click="checkType = 'member'">按成员选</el-button>
+        <el-input
+          v-model="userName"
+          style="width:calc(100% - 20px)"
+          placeholder="请输入人员姓名"
+          size="small"
+          suffix-icon="el-icon-search"
+          clearable
+          @change="handleChange"
+        />
+        <div
+          v-if="false"
+          class="flex ai-center jc-center"
+          style="margin: 10px 0;"
+        >
+          <el-button
+            type="primary"
+            size="mini"
+            disabled
+            plain
+            @click="checkType = 'dept'"
+          >
+            按架构选
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            @click="checkType = 'member'"
+          >
+            按成员选
+          </el-button>
         </div>
-        <div class="member-list" v-if="checkType == 'member'" v-loading="loading">
-          <div class="flex ai-center member" :class="(i.disabled || (isMultiple && checkListData.length > 0)) ? 'noPoint' : ''" v-for="i in memberListData" @click="handleCheck(i, ...arguments)">
-            <div class="mycheckbox" :class="{ disabled: i.disabled || (isMultiple && checkListData.length > 0), active: i.checked }">
-              <img v-if="i.checked" style="width: 10px;margin: 1px 0 0 1px;display: block;" src="../../assets/iconImg/check.svg">
+        <div
+          v-if="checkType == 'member'"
+          v-loading="loading"
+          class="member-list"
+        >
+          <div
+            v-for="i in memberListData"
+            class="flex ai-center member"
+            :class="(i.disabled || (isMultiple && checkListData.length > 0)) ? 'noPoint' : ''"
+            @click="handleCheck(i, ...arguments)"
+          >
+            <div
+              class="mycheckbox"
+              :class="{ disabled: i.disabled || (isMultiple && checkListData.length > 0), active: i.checked }"
+            >
+              <img
+                v-if="i.checked"
+                style="width: 10px;margin: 1px 0 0 1px;display: block;"
+                src="../../assets/iconImg/check.svg"
+              >
             </div>
-            <img v-if="i.disabled || (isMultiple && checkListData.length > 0)" class="noPoint">
-            <img :src="!!i.ddUserAvatar ? imageUrl + encodeURIComponent(i.ddUserAvatar) : require('../../assets/robot.svg')" class="member-avatar" alt="">
+            <img
+              v-if="i.disabled || (isMultiple && checkListData.length > 0)"
+              class="noPoint"
+            >
+            <img
+              :src="!!i.ddUserAvatar ? imageUrl + encodeURIComponent(i.ddUserAvatar) : require('../../assets/robot.svg')"
+              class="member-avatar"
+              alt=""
+            >
             <span>{{ i.userName }}</span>
           </div>
         </div>
-        <div class="member-list" v-if="checkType == 'dept'">
+        <div
+          v-if="checkType == 'dept'"
+          class="member-list"
+        >
           <div class="flex ai-center jc-between">
-            <el-button type="text" icon="el-icon-arrow-left" @click="handelPrevLevel"></el-button>
+            <el-button
+              type="text"
+              icon="el-icon-arrow-left"
+              @click="handelPrevLevel"
+            />
             <span>{{ currentLevel.name }}</span>
-            <span> </span>
+            <span />
           </div>
-          <el-checkbox-group v-model="checkList" size="normal">
-            <el-checkbox v-for="item in memberList" :key="item.id" class="member-item" :label="item">
-              <div class="flex ai-center" style="width: 100%;">
-                <i class="el-icon-share"></i>
+          <el-checkbox-group
+            v-model="checkList"
+            size="normal"
+          >
+            <el-checkbox
+              v-for="item in memberList"
+              :key="item.id"
+              class="member-item"
+              :label="item"
+            >
+              <div
+                class="flex ai-center"
+                style="width: 100%;"
+              >
+                <i class="el-icon-share" />
                 <span>
                   {{ item.name }}{{ item.usercount ? '(' + item.usercount + ')' : '' }}
                 </span>
-                <el-button type="text" v-if="item.type != 2" style="margin-left: auto;" @click="handleNextLevel(item)">下级</el-button>
+                <el-button
+                  v-if="item.type != 2"
+                  type="text"
+                  style="margin-left: auto;"
+                  @click="handleNextLevel(item)"
+                >
+                  下级
+                </el-button>
               </div>
             </el-checkbox>
           </el-checkbox-group>
         </div>
-
       </div>
       <!-- 已选人员 -->
       <div style="padding:0 20px;">
         <div>已选择{{ checkListData.length }}人</div>
         <div class="check-list flex ai-center wrap">
-          <div v-for="(item, idx) in checkListData" :key="item.userID">
+          <div
+            v-for="(item, idx) in checkListData"
+            :key="item.userID"
+          >
             <div class="flex ai-center check-item">
-              <img src="../../assets/robot.svg" style="width: 24px;height: 24px;margin-right: 3px;" alt="">
+              <img
+                src="../../assets/robot.svg"
+                style="width: 24px;height: 24px;margin-right: 3px;"
+                alt=""
+              >
               <span>{{ item.userName }}</span>
-              <el-button type="text" size="small" icon="el-icon-close" style="margin:0 3px;" @click="remove(item, idx)"></el-button>
+              <el-button
+                type="text"
+                size="small"
+                icon="el-icon-close"
+                style="margin:0 3px;"
+                @click="remove(item, idx)"
+              />
             </div>
           </div>
         </div>
         <div style="margin-top: 20px;">
-          <el-button size="small" @click="close">{{ $t('base.button.cancel') }}</el-button>
-          <el-button size="small" type="primary" @click="$emit('submit', checkListData)">{{ $t('base.button.confirm') }}</el-button>
+          <el-button
+            size="small"
+            @click="close"
+          >
+            {{ $t('base.button.cancel') }}
+          </el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="$emit('submit', checkListData)"
+          >
+            {{ $t('base.button.confirm') }}
+          </el-button>
         </div>
       </div>
     </div>
@@ -63,7 +171,7 @@
 
 <script>
 export default {
-  name: "memberPicker",
+  name: "MemberPicker",
   props: {
     dialogVisible: {
       type: Boolean,
@@ -105,7 +213,7 @@ export default {
       loading: true,
       currentLevel: {},
       prevLevel: {},
-      imageUrl: process.env.BASE_API + "/api/home/GetimgFile?fileUrl="
+      imageUrl: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl="
     };
   },
   watch: {

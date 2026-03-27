@@ -1,20 +1,35 @@
 <template>
-  <div :class="[
-    {
-      'model-comparison-dialog': !isSmallSize,
-      isSmallSize: isSmallSize,
-      isCollapse: isCollapse,
-    },
-  ]">
-    <iframe @load="sendFileData('imodelIframe2', rowData[1])" ref="imodelIframe2" id="imodelIframe2" :src="secondModelUrl" frameborder="0"></iframe>
-    <iframe style="margin-left: 1px;" @load="sendFileData('imodelIframe1', rowData[0])" ref="imodelIframe1" id="imodelIframe1" :src="firstModelUrl" frameborder="0"></iframe>
+  <div
+    :class="[
+      {
+        'model-comparison-dialog': !isSmallSize,
+        isSmallSize: isSmallSize,
+        isCollapse: isCollapse,
+      },
+    ]"
+  >
+    <iframe
+      id="imodelIframe2"
+      ref="imodelIframe2"
+      :src="secondModelUrl"
+      frameborder="0"
+      @load="sendFileData('imodelIframe2', rowData[1])"
+    />
+    <iframe
+      id="imodelIframe1"
+      ref="imodelIframe1"
+      style="margin-left: 1px;"
+      :src="firstModelUrl"
+      frameborder="0"
+      @load="sendFileData('imodelIframe1', rowData[0])"
+    />
   </div>
 </template>
 
 <script>
 import { ElementAPI } from "@/utils/ApiInterface.js";
 export default {
-  name: "modelComparisonDialog",
+  name: "ModelComparisonDialog",
   props: {
     isSmallSize: {
       type: Boolean,
@@ -51,9 +66,25 @@ export default {
 
   data() {
     return {
-      baseUrl: process.env.GisIframeOrigin,
+      baseUrl: process.env.VUE_APP_GisIframeOrigin,
       sec: false,
     };
+  },
+  computed: {
+    isCollapse() {
+      let flag = false;
+      flag = this.$store.state.app.isCollapse;
+      return !flag;
+    },
+    firstModelUrl() {
+      let path = this.rowData[0].turnPath || this.rowData[0].filePath;
+      return this.baseUrl + "/?" + this.$turnEncryptParams(path, "forViewBim");
+    },
+
+    secondModelUrl() {
+      let path = this.rowData[1].turnPath || this.rowData[1].filePath;
+      return this.baseUrl + "/?" + this.$turnEncryptParams(path, "forViewBim");
+    },
   },
 
   watch: {
@@ -115,22 +146,6 @@ export default {
   },
   beforeDestroy() {
     this.$removeIframeListener(this.messageReceived);
-  },
-  computed: {
-    isCollapse() {
-      let flag = false;
-      flag = this.$store.state.app.isCollapse;
-      return !flag;
-    },
-    firstModelUrl() {
-      let path = this.rowData[0].turnPath || this.rowData[0].filePath;
-      return this.baseUrl + "/?" + this.$turnEncryptParams(path, "forViewBim");
-    },
-
-    secondModelUrl() {
-      let path = this.rowData[1].turnPath || this.rowData[1].filePath;
-      return this.baseUrl + "/?" + this.$turnEncryptParams(path, "forViewBim");
-    },
   },
 
   methods: {

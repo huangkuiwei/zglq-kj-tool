@@ -1,44 +1,115 @@
 <template>
   <div class="html-container">
-    <div v-if="isPhone" class="html-content-phone">
-      <el-skeleton :rows="10" animated :loading="htmlContents.length === 0">
-        <el-carousel height="100vh" :autoplay="false" :indicator-position="'none'" :loop="false">
-          <el-carousel-item v-for="(item, index) in htmlContents" :key="index">
-            <div v-html="item" class="html-item-content"></div>
+    <div
+      v-if="isPhone"
+      class="html-content-phone"
+    >
+      <el-skeleton
+        :rows="10"
+        animated
+        :loading="htmlContents.length === 0"
+      >
+        <el-carousel
+          height="100vh"
+          :autoplay="false"
+          :indicator-position="'none'"
+          :loop="false"
+        >
+          <el-carousel-item
+            v-for="(item, index) in htmlContents"
+            :key="index"
+          >
+            <div
+              class="html-item-content"
+              v-html="item"
+            />
           </el-carousel-item>
         </el-carousel>
       </el-skeleton>
 
-      <el-dialog title="模型文件" custom-class="html-model-dialog" fullscreen lock-scroll :modal="false" :visible.sync="dialogVisible">
-        <iframe ref="htmlModelRef" frameborder="0" class="html-iframe" :src="iframeUrl" @load="sendFileData"></iframe>
+      <el-dialog
+        title="模型文件"
+        custom-class="html-model-dialog"
+        fullscreen
+        lock-scroll
+        :modal="false"
+        :visible.sync="dialogVisible"
+      >
+        <iframe
+          ref="htmlModelRef"
+          frameborder="0"
+          class="html-iframe"
+          :src="iframeUrl"
+          @load="sendFileData"
+        />
       </el-dialog>
     </div>
-    <div v-else class="html-content-web">
-
-      <div class="html-report" id="htmlReport">
-
-        <el-skeleton v-if="isTypeHtml !== 2" :rows="22" animated :loading="htmlContents.length === 0">
-          <el-carousel height="100vh" :autoplay="false" :indicator-position="'none'" :loop="false">
-            <el-carousel-item v-for="(item, index) in htmlContents" :key="index">
-              <div v-html="item" class="html-item-content"></div>
+    <div
+      v-else
+      class="html-content-web"
+    >
+      <div
+        id="htmlReport"
+        class="html-report"
+      >
+        <el-skeleton
+          v-if="isTypeHtml !== 2"
+          :rows="22"
+          animated
+          :loading="htmlContents.length === 0"
+        >
+          <el-carousel
+            height="100vh"
+            :autoplay="false"
+            :indicator-position="'none'"
+            :loop="false"
+          >
+            <el-carousel-item
+              v-for="(item, index) in htmlContents"
+              :key="index"
+            >
+              <div
+                class="html-item-content"
+                v-html="item"
+              />
             </el-carousel-item>
           </el-carousel>
         </el-skeleton>
-        <div v-else class='editor-ppt-content'>
-          <div class='ppt-iframe-content'>
-            <iframe :src="pptSrc" :style="{ width: '100%', height: '100%', border: 0 }"></iframe>
+        <div
+          v-else
+          class="editor-ppt-content"
+        >
+          <div class="ppt-iframe-content">
+            <iframe
+              :src="pptSrc"
+              :style="{ width: '100%', height: '100%', border: 0 }"
+            />
           </div>
-          <div class='ppt-relation-content'>
-            <div class='relation-item-content'>
-              <div class='relation-item' v-for="(item, index) in relationList" :key="index" @click="handleRelation(item.id)">
+          <div class="ppt-relation-content">
+            <div class="relation-item-content">
+              <div
+                v-for="(item, index) in relationList"
+                :key="index"
+                class="relation-item"
+                @click="handleRelation(item.id)"
+              >
                 {{ item.text }}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="html-model" id="htmlModel">
-        <iframe ref="htmlModelRef" frameborder="0" class="html-iframe" :src="iframeUrl" @load="sendFileData"></iframe>
+      <div
+        id="htmlModel"
+        class="html-model"
+      >
+        <iframe
+          ref="htmlModelRef"
+          frameborder="0"
+          class="html-iframe"
+          :src="iframeUrl"
+          @load="sendFileData"
+        />
       </div>
     </div>
   </div>
@@ -236,7 +307,7 @@ export default {
           command: 'onlyShowModel',
           Data: {
             onlyShowModel: true,
-            fileOriginalUrl: process.env.BASE_API,
+            fileOriginalUrl: process.env.VUE_APP_BASE_API,
             token: local.getToken()
           },
         },

@@ -155,9 +155,9 @@ export default function addVueExtenssions() {
     return data;
   };
   //针对el组件上传
-  fn.$uploadUrl = process.env.BASE_API + "/api/home/uploadFilePicture";
+  fn.$uploadUrl = process.env.VUE_APP_BASE_API + "/api/home/uploadFilePicture";
   //针对图片预览src指向
-  //fn.$selectUploadImageApiPrefix = process.env.BASE_API + '/api/Home/Get UploadPictureFileZip?fileUrl='
+  //fn.$selectUploadImageApiPrefix = process.env.VUE_APP_BASE_API + '/api/Home/Get UploadPictureFileZip?fileUrl='
   fn.$clientHeight = () => {
     return store.getters.clientHeight;
   };
@@ -330,7 +330,7 @@ export default function addVueExtenssions() {
           }
 
           store.state.app.modelPreViewInitUrl =
-            process.env.GisIframeOrigin + "/?" + turnEncryptParams(path);
+            process.env.VUE_APP_GisIframeOrigin + "/?" + turnEncryptParams(path);
         }
         if (
           fn.$modelFileSuffix
@@ -377,16 +377,16 @@ export default function addVueExtenssions() {
           //   text: '正在加载模型，请稍等...'
           // })
 
-          if (process.env.BASE_API === "http://47.94.131.208:8081" || process.env.BASE_API === "http://111.59.7.106:5007") {
+          if (process.env.VUE_APP_BASE_API === "http://47.94.131.208:8081" || process.env.VUE_APP_BASE_API === "http://111.59.7.106:5007") {
             request("/api/TaskManagement/imodelport").then((res) => {
               if (res.data) {
                 store.state.app.modelPreViewInitUrl =
-                  process.env.GisIframeOrigin + "/?" + turnEncryptParams(path);
+                  process.env.VUE_APP_GisIframeOrigin + "/?" + turnEncryptParams(path);
               } else {
                 request("/api/TaskManagement/openimodel").then((res) => {
                   if (res.data === 1) {
                     store.state.app.modelPreViewInitUrl =
-                      process.env.GisIframeOrigin +
+                      process.env.VUE_APP_GisIframeOrigin +
                       "/?" +
                       turnEncryptParams(path);
                   }
@@ -396,12 +396,12 @@ export default function addVueExtenssions() {
           } else {
             if (type == "h5") {
               store.state.app.modelPreViewInitUrl =
-                process.env.ViewOrigin +
+                process.env.VUE_APP_ViewOrigin +
                 "/?" +
                 turnEncryptParams(path);
             } else {
               store.state.app.modelPreViewInitUrl =
-                process.env.GisIframeOrigin + "/?" + turnEncryptParams(path);
+                process.env.VUE_APP_GisIframeOrigin + "/?" + turnEncryptParams(path);
             }
           }
         }
@@ -413,13 +413,13 @@ export default function addVueExtenssions() {
       fn.$ibimFileSuffix.indexOf(row.fileSuffix.toLowerCase()) > -1
         ? row.filePath
         : row.turnPath;
-    var url = process.env.GisIframeOrigin + "/?" + turnEncryptParams(path);
+    var url = process.env.VUE_APP_GisIframeOrigin + "/?" + turnEncryptParams(path);
     return url;
   };
   fn.$downloadFileProject = async (fileName, iuid, getFileFolderName, data) => {
     // console.log(fileName, iuid, getFileFolderName);
     // 打包下载不需要判断文件状态
-    let downloadUrl = process.env.BASE_API + "/api/home/GetUploadPictureFileZip" + "?IUID=" + iuid + "&fileType=zip" + "&getFileFolderName=" + getFileFolderName;
+    let downloadUrl = process.env.VUE_APP_BASE_API + "/api/home/GetUploadPictureFileZip" + "?IUID=" + iuid + "&fileType=zip" + "&getFileFolderName=" + getFileFolderName;
     store.dispatch("ChangeUploderVisible", "show");
     store.commit("CHANGE_UPLOADERTAB_INDEX", 2);
     let downLoadData = {
@@ -475,7 +475,7 @@ export default function addVueExtenssions() {
           console.log(row);
           store.commit("UPDATEDOWNLOADFILEDATA_CLONE", downLoadData);
 
-          request.get(`${process.env.BASE_API}/${path}`, {
+          request.get(`${process.env.VUE_APP_BASE_API}/${path}`, {
             responseType: "blob",
             withCredentials: false,
             onDownloadProgress: (e) => {
@@ -529,9 +529,9 @@ export default function addVueExtenssions() {
     let downloadUrl = (type) => {
       let url = '';
       // 文件路径编码
-      const BASE_API = "/api/home/GetUploadPictureFile";
+      const VUE_APP_BASE_API = "/api/home/GetUploadPictureFile";
       const STATE_API = "/api/home/GetFileState";
-      let api = type == 'state' ? STATE_API : BASE_API
+      let api = type == 'state' ? STATE_API : VUE_APP_BASE_API
       if (isCompressionFile) {
         url = api + "?IUID=" + compressionFileInfo.iuid + (type != 'state' ? "&fileType=zip" + "&getFileFolderName=" + compressionFileInfo.getFileFolderName : '') + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : '');
       } else if (downloadByUrl) {
@@ -557,7 +557,7 @@ export default function addVueExtenssions() {
       console.log(row);
       store.commit("UPDATEDOWNLOADFILEDATA_CLONE", downLoadData);
 
-      request.get(process.env.BASE_API + downloadUrl(), {
+      request.get(process.env.VUE_APP_BASE_API + downloadUrl(), {
         responseType: "blob",
         onDownloadProgress: (e) => {
           downLoadData.fileSize = Math.round(e.total / 1024 / 1024) + 'M'
@@ -599,7 +599,7 @@ export default function addVueExtenssions() {
       // 打包下载不需要判断文件状态
       handleDownload(row.fileName)
     } else {
-      axios.get(process.env.BASE_API + downloadUrl('state')).then((r) => {
+      axios.get(process.env.VUE_APP_BASE_API + downloadUrl('state')).then((r) => {
         let res = r.data
         if (res.code == -100) {
           fn.$error('资源文件丢失，下载失败！')
@@ -616,7 +616,7 @@ export default function addVueExtenssions() {
             if (res.data) {
               let filePath = res.data
               closemodel(
-                process.env.GisIframeOrigin + "/?" + filePath,
+                process.env.VUE_APP_GisIframeOrigin + "/?" + filePath,
                 closemodelCallback
               );
             }

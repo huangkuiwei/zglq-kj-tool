@@ -1,18 +1,47 @@
 <!--  -->
 <template>
-  <el-dialog title="菜单权限配置" v-dialogDrag append-to-body top="30px" :visible.sync="menuVisible" width="80%" :before-close="handleClose">
-    <el-table :header-cell-style="$thStyle" stripe cell-class-name="cellStyle" :height="'calc(100vh - 220px)'" :data="menuData" row-key="id" :default-expand-all="isExpandAll" :tree-props="{ children: 'children' }">
+  <el-dialog
+    v-dialogDrag
+    title="菜单权限配置"
+    append-to-body
+    top="30px"
+    :visible.sync="menuVisible"
+    width="80%"
+    :before-close="handleClose"
+  >
+    <el-table
+      :header-cell-style="$thStyle"
+      stripe
+      cell-class-name="cellStyle"
+      :height="'calc(100vh - 220px)'"
+      :data="menuData"
+      row-key="id"
+      :default-expand-all="isExpandAll"
+      :tree-props="{ children: 'children' }"
+    >
       <el-table-column width="100">
         <template slot-scope="scope">
-          <el-checkbox @change="checkNode(scope.row, ...arguments)" v-model="scope.row.isselect"></el-checkbox>
+          <el-checkbox
+            v-model="scope.row.isselect"
+            @change="checkNode(scope.row, ...arguments)"
+          />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="项"></el-table-column>
-      <el-table-column prop="id" label="排序"></el-table-column>
+      <el-table-column
+        prop="name"
+        label="项"
+      />
+      <el-table-column
+        prop="id"
+        label="排序"
+      />
     </el-table>
     <span slot="footer">
       <el-button @click="handleClose">{{ $t('base.button.cancel') }}</el-button>
-      <el-button type="primary" @click="updateMenu">{{ $t('base.button.save') }}</el-button>
+      <el-button
+        type="primary"
+        @click="updateMenu"
+      >{{ $t('base.button.save') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -22,7 +51,7 @@ import moment from 'moment'
 import postApi from "@/api/document/indexApi.js";
 
 export default {
-  name: "permissionMenu",
+  name: "PermissionMenu",
   props: ['menuVisible', 'corpId'],
   data() {
     return {
@@ -55,7 +84,7 @@ export default {
     async queryData() {
       let form = new FormData()
       form.append('CorpId', this.corpId)
-      let res = await postApi.post('/api/Adminsetup/GetBasemenuData', form, process.env.BASE_API, this.token)
+      let res = await postApi.post('/api/Adminsetup/GetBasemenuData', form, process.env.VUE_APP_BASE_API, this.token)
       if (res.code == 1) {
         this.menuData = res.data
       }

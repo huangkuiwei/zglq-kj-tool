@@ -1,95 +1,174 @@
 <template>
-    <div>
-        <el-dialog
-            :destroy-on-close="true"
-            v-loading="loading"
-            element-loading-text="正在关闭模型"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-            custom-class="check-model-dialog"
-            title="质量检查"
-            :visible.sync="dialogVisible"
-            :modal-append-to-body="false"
-            :before-close="beforeCloseDialog"
-        >
-            <div class="file-check-content">
-                <div class="info-show-content">
-                    <el-form :inline="true" size="small" :model="formModelCheck">
-                        <!-- <el-form-item label="模型分类">
+  <div>
+    <el-dialog
+      v-loading="loading"
+      :destroy-on-close="true"
+      element-loading-text="正在关闭模型"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      custom-class="check-model-dialog"
+      title="质量检查"
+      :visible.sync="dialogVisible"
+      :modal-append-to-body="false"
+      :before-close="beforeCloseDialog"
+    >
+      <div class="file-check-content">
+        <div class="info-show-content">
+          <el-form
+            :inline="true"
+            size="small"
+            :model="formModelCheck"
+          >
+            <!-- <el-form-item label="模型分类">
                             <el-select v-model="formModelCheck.checkModelType" @change="getLastCheckData" :placeholder="$t('base.button.pleaseSelect')">
                                 <el-option v-for="item in modelTypes" :key="item.value" :label="item.label" :value="item.value" />
                             </el-select>
                         </el-form-item> -->
-                        <!-- <el-form-item label="模型精度等级">
+            <!-- <el-form-item label="模型精度等级">
                             <el-select v-model="formModelCheck.checkModelLevel" @change="getLastCheckData" :placeholder="$t('base.button.pleaseSelect')">
                                 <el-option v-for="item in [2, 3]" :key="item" :label="`L${item}.0`" :value="`lv`+item" />
                             </el-select>
                         </el-form-item> -->
-                        <el-form-item label="检查标准">
-                            <el-select v-model="formModelCheck.checkStandard" :placeholder="$t('base.button.pleaseSelect')" @change="setCheckStandard">
-                                <!-- <el-option :label="$t('base.button.pleaseSelect')" value="" /> -->
-                                <el-option v-for="item in checkStandards" :key="item.value" :label="item.label" :value="item.value" />
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="onSubmit">检查</el-button>
-                        </el-form-item>
-                    </el-form>
-                    <el-tabs v-model="activeTab" @tab-click="tabsChange">
-                        <!-- <el-tab-pane :label="$t('base.button.fileName')" name="fileCheck"></el-tab-pane>
+            <el-form-item label="检查标准">
+              <el-select
+                v-model="formModelCheck.checkStandard"
+                :placeholder="$t('base.button.pleaseSelect')"
+                @change="setCheckStandard"
+              >
+                <!-- <el-option :label="$t('base.button.pleaseSelect')" value="" /> -->
+                <el-option
+                  v-for="item in checkStandards"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                @click="onSubmit"
+              >
+                检查
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <el-tabs
+            v-model="activeTab"
+            @tab-click="tabsChange"
+          >
+            <!-- <el-tab-pane :label="$t('base.button.fileName')" name="fileCheck"></el-tab-pane>
                         <el-tab-pane label="构件分类及编码" name="codeCheck"></el-tab-pane> -->
-                        <el-tab-pane label="构件信息深度" name="attrCheck"></el-tab-pane>
-                        <el-tab-pane label="冗余信息" name="redundancyCheck"></el-tab-pane>
-                    </el-tabs>
-                    <el-table :data="showTableData" :header-cell-style="$thStyle" cell-class-name="cellStyle" v-loading="tableLoading" max-height="485">
-                        <el-table-column type="index" :label="$t('base.button.index')" width="60" align="center"></el-table-column>
-                        <el-table-column v-if="activeTab !== 'fileCheck'" key="11" align="center" label="构件ID">
-                            <template slot-scope="scope">
-                                <span>{{ scope.row.errorContent.id || '' }}</span>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column prop="errorLabel" align="center" label="问题描述"></el-table-column> -->
-                        <el-table-column v-if="activeTab === 'fileCheck'" key="1" prop="errorContent" align="center" label="问题展示"></el-table-column>
-                        <el-table-column v-if="activeTab === 'fileCheck'" key="2" align="center" label="示例">
-                            <template slot-scope="scope">
-                               <div> {{ 'XXX项目_XX标段_XX桥_桥梁上部结构_V1.0' }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column v-if="activeTab === 'codeCheck'" key="3" align="center" label="分类编码">
-                            <template slot-scope="scope">
-                                <span>{{ scope.row.errorContent.value || '' }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column v-if="activeTab === 'codeCheck'" key="4" align="center" label="分类名称">
-                            <template slot-scope="scope">
-                                <div v-html="codeCheckFormater(scope.row)"></div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column v-if="activeTab === 'codeCheck'" key="5" align="center" label="正确值">
-                            <template slot-scope="scope">
-                                <span>{{ scope.row.errorContent.basicValue || '' }}</span>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column v-if="activeTab === 'attrCheck'" key="6" align="center" label="分类编码">
+            <el-tab-pane
+              label="构件信息深度"
+              name="attrCheck"
+            />
+            <el-tab-pane
+              label="冗余信息"
+              name="redundancyCheck"
+            />
+          </el-tabs>
+          <el-table
+            v-loading="tableLoading"
+            :data="showTableData"
+            :header-cell-style="$thStyle"
+            cell-class-name="cellStyle"
+            max-height="485"
+          >
+            <el-table-column
+              type="index"
+              :label="$t('base.button.index')"
+              width="60"
+              align="center"
+            />
+            <el-table-column
+              v-if="activeTab !== 'fileCheck'"
+              key="11"
+              align="center"
+              label="构件ID"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.errorContent.id || '' }}</span>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column prop="errorLabel" align="center" label="问题描述"></el-table-column> -->
+            <el-table-column
+              v-if="activeTab === 'fileCheck'"
+              key="1"
+              prop="errorContent"
+              align="center"
+              label="问题展示"
+            />
+            <el-table-column
+              v-if="activeTab === 'fileCheck'"
+              key="2"
+              align="center"
+              label="示例"
+            >
+              <template slot-scope="scope">
+                <div> {{ 'XXX项目_XX标段_XX桥_桥梁上部结构_V1.0' }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="activeTab === 'codeCheck'"
+              key="3"
+              align="center"
+              label="分类编码"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.errorContent.value || '' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="activeTab === 'codeCheck'"
+              key="4"
+              align="center"
+              label="分类名称"
+            >
+              <template slot-scope="scope">
+                <div v-html="codeCheckFormater(scope.row)" />
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="activeTab === 'codeCheck'"
+              key="5"
+              align="center"
+              label="正确值"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.errorContent.basicValue || '' }}</span>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column v-if="activeTab === 'attrCheck'" key="6" align="center" label="分类编码">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.errorContent.value || '' }}</span>
                             </template>
                         </el-table-column> -->
-                        <el-table-column v-if="activeTab === 'attrCheck'" key="7" align="center" label="已有属性">
-                            <template slot-scope="scope">
-                                <span>{{ scope.row.errorContent.hasCorrectAttrs && scope.row.errorContent.hasCorrectAttrs.join(' ') || '' }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column v-if="activeTab === 'attrCheck'" key="8" align="center" label="缺少属性">
-                            <template slot-scope="scope">
-                                <span>{{ scope.row.errorContent.missAttrs && scope.row.errorContent.missAttrs.join(' ') || '' }}</span>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column v-if="activeTab === 'redundancyCheck'" key="9" align="center" label="冗余构件类型">
+            <el-table-column
+              v-if="activeTab === 'attrCheck'"
+              key="7"
+              align="center"
+              label="已有属性"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.errorContent.hasCorrectAttrs && scope.row.errorContent.hasCorrectAttrs.join(' ') || '' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="activeTab === 'attrCheck'"
+              key="8"
+              align="center"
+              label="缺少属性"
+            >
+              <template slot-scope="scope">
+                <span>{{ scope.row.errorContent.missAttrs && scope.row.errorContent.missAttrs.join(' ') || '' }}</span>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column v-if="activeTab === 'redundancyCheck'" key="9" align="center" label="冗余构件类型">
                             <template slot-scope="scope">
                                 <span>{{ scope.row.errorContent.redundancyType || '' }}</span>
                             </template>
                         </el-table-column> -->
-                        <!-- <el-table-column v-if="activeTab === 'redundancyCheck'" key="10" align="center" label="示例">
+            <!-- <el-table-column v-if="activeTab === 'redundancyCheck'" key="10" align="center" label="示例">
                             <template slot-scope="scope">
                                 <div>
                                     {{
@@ -100,42 +179,58 @@
                                 </div>
                             </template>
                         </el-table-column> -->
-                        <el-table-column v-if="activeTab !== 'fileCheck'" key="12" :label="$t('base.formLabel.operation')" align="center" width="180">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.errorContent.isGeometry">
-                                    <el-button type="text" size="small" @click="viewElement(scope.row)">定位</el-button>
-                                    <el-button type="text" size="small" @click="isolateSelected(scope.row)">突显</el-button>
-                                </span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <div class="imodel-check-page-content">
-                        <el-pagination
-                            hide-on-single-page
-                            :page-size="pageSize"
-                            :current-page.sync="currentPage"
-                            layout="prev, pager, next, total"
-                            :total="total"
-                            @current-change="currentPageChange"
-                        >
-                        </el-pagination>
-                    </div>
-
-                </div>
-                <div class="model-show-content">
-                    <modelFileCheckIframe
-                        v-if="modelFileCheckIframeCanLoad"
-                        ref="modelFileCheckIframeRef"
-                        :row-data="currentFileData"
-                        @modelLoaded="getLastCheckData"
-                    />
-                    <div class="result-chat-content" :class="{'result-chat-content-hide': hideChartData}" ref="chartImodelContentRef">
-                        <chartImodelCheck ref="chartImodelCheckRef" />
-                    </div>
-                </div>
-            </div>
-        </el-dialog>
-    </div>
+            <el-table-column
+              v-if="activeTab !== 'fileCheck'"
+              key="12"
+              :label="$t('base.formLabel.operation')"
+              align="center"
+              width="180"
+            >
+              <template slot-scope="scope">
+                <span v-if="scope.row.errorContent.isGeometry">
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="viewElement(scope.row)"
+                  >定位</el-button>
+                  <el-button
+                    type="text"
+                    size="small"
+                    @click="isolateSelected(scope.row)"
+                  >突显</el-button>
+                </span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="imodel-check-page-content">
+            <el-pagination
+              hide-on-single-page
+              :page-size="pageSize"
+              :current-page.sync="currentPage"
+              layout="prev, pager, next, total"
+              :total="total"
+              @current-change="currentPageChange"
+            />
+          </div>
+        </div>
+        <div class="model-show-content">
+          <modelFileCheckIframe
+            v-if="modelFileCheckIframeCanLoad"
+            ref="modelFileCheckIframeRef"
+            :row-data="currentFileData"
+            @modelLoaded="getLastCheckData"
+          />
+          <div
+            ref="chartImodelContentRef"
+            class="result-chat-content"
+            :class="{'result-chat-content-hide': hideChartData}"
+          >
+            <chartImodelCheck ref="chartImodelCheckRef" />
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -145,7 +240,7 @@ import chartImodelCheck from './showDataCharts.vue';
 const LOCALFORMKEY = 'LastFormModelCheckKey';
 
 export default {
-    name: "modelFileCheckDialog",
+    name: "ModelFileCheckDialog",
     components: {
         modelFileCheckIframe,
         chartImodelCheck,
@@ -181,7 +276,7 @@ export default {
                 checkModelLevel: this.getLocalFormModelCheck('checkModelLevel') || 'lv2',
                 checkStandard: this.getLocalFormModelCheck('checkStandard') || '',
             },
-            baseUrl: process.env.ViewOrigin,
+            baseUrl: process.env.VUE_APP_ViewOrigin,
             checkResultData: [],
             currentTableData: [],
             showTableData: [],

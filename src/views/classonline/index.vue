@@ -1,37 +1,126 @@
 <template>
   <div style="background-color: #DCDFE6;">
-    <el-header id="headerPage" style="height: 50px;z-index: 2000;line-height: 50px;background-color: white;">
-      <div style="display: flex; float: left" class="ksjLogo">
-        <img v-show="!$isOwner" :src="$headerLogo" style="height: 40px; margin: 5px 0 5px 10px" alt="跨~界 云空间" />
+    <el-header
+      id="headerPage"
+      style="height: 50px;z-index: 2000;line-height: 50px;background-color: white;"
+    >
+      <div
+        style="display: flex; float: left"
+        class="ksjLogo"
+      >
+        <img
+          v-show="!$isOwner"
+          :src="$headerLogo"
+          style="height: 40px; margin: 5px 0 5px 10px"
+          alt="跨~界 云空间"
+        >
       </div>
     </el-header>
     <el-container style="height:calc(100vh - 51px)">
-      <el-aside style="width:100vw;height:calc(100vh - 51px)" class="flex jc-between column">
-        <div class="flex ai-center jc-between shrink" style="min-width: 1400px;width:calc(100vw - 20px);margin:10px;">
-          <div class="bgwhite flex ai-center" style="background-color: #000;width: 60%;" @contextmenu.prevent="stopEvent">
-            <video-player ref="video" class="video-player vjs-custom-skin" style="width: 100%;" controlslist="nodownload" :options="playerOptions"></video-player>
+      <el-aside
+        style="width:100vw;height:calc(100vh - 51px)"
+        class="flex jc-between column"
+      >
+        <div
+          class="flex ai-center jc-between shrink"
+          style="min-width: 1400px;width:calc(100vw - 20px);margin:10px;"
+        >
+          <div
+            class="bgwhite flex ai-center"
+            style="background-color: #000;width: 60%;"
+            @contextmenu.prevent="stopEvent"
+          >
+            <video-player
+              ref="video"
+              class="video-player vjs-custom-skin"
+              style="width: 100%;"
+              controlslist="nodownload"
+              :options="playerOptions"
+            />
           </div>
-          <div class="bgwhite" style="width:39.5%;height:100%">
+          <div
+            class="bgwhite"
+            style="width:39.5%;height:100%"
+          >
             <div class="uploadBtn">
-              <el-button size="mini" type="primary" plain icon="el-icon-plus" v-if="user.isadministrator" @click="addVideo">添加视频</el-button>
+              <el-button
+                v-if="user.isadministrator"
+                size="mini"
+                type="primary"
+                plain
+                icon="el-icon-plus"
+                @click="addVideo"
+              >
+                添加视频
+              </el-button>
             </div>
-            <el-tabs class="class-menu-tabs" type="border-card" @tab-click="changeTab" v-model="activeTab">
-              <el-tab-pane label="学习视频" name="学习视频"></el-tab-pane>
-              <el-tab-pane label="功能介绍" name="功能介绍"></el-tab-pane>
+            <el-tabs
+              v-model="activeTab"
+              class="class-menu-tabs"
+              type="border-card"
+              @tab-click="changeTab"
+            >
+              <el-tab-pane
+                label="学习视频"
+                name="学习视频"
+              />
+              <el-tab-pane
+                label="功能介绍"
+                name="功能介绍"
+              />
               <!-- <el-tab-pane label="项目案例" name="项目案例"></el-tab-pane> -->
-              <el-scrollbar wrap-class="scrollbar-wrapper" style="background-color: white;">
-                <div class="flex wrap hide-scroll" :style="{ 'max-height': videoBoxHeight - 70 + 'px' }" style="overflow: hidden;overflow-y: auto;">
-                  <div class="flex ai-center jc-center" style="width: 100%;margin-top: 30px;" v-if="videoList.length == 0">
-                    <i class="el-icon-loading"></i>
+              <el-scrollbar
+                wrap-class="scrollbar-wrapper"
+                style="background-color: white;"
+              >
+                <div
+                  class="flex wrap hide-scroll"
+                  :style="{ 'max-height': videoBoxHeight - 70 + 'px' }"
+                  style="overflow: hidden;overflow-y: auto;"
+                >
+                  <div
+                    v-if="videoList.length == 0"
+                    class="flex ai-center jc-center"
+                    style="width: 100%;margin-top: 30px;"
+                  >
+                    <i class="el-icon-loading" />
                     <span style="font-size: 12px;margin-left: 10px;">加载中</span>
                   </div>
-                  <div v-else class="video-box" v-for="(item, index) in videoList" @click="handleClockVideo(item)">
+                  <div
+                    v-for="(item, index) in videoList"
+                    v-else
+                    class="video-box"
+                    @click="handleClockVideo(item)"
+                  >
                     <div class="videoList-btnBox">
-                      <el-button class="btn" v-if="user.isadministrator" @click.stop="editVideo(item)" circle size="mini" type="primary" icon="el-icon-edit-outline" />
-                      <el-button class="btn" v-if="user.isadministrator" @click.stop="deleteVideo(item)" circle size="mini" type="danger" icon="el-icon-delete" />
+                      <el-button
+                        v-if="user.isadministrator"
+                        class="btn"
+                        circle
+                        size="mini"
+                        type="primary"
+                        icon="el-icon-edit-outline"
+                        @click.stop="editVideo(item)"
+                      />
+                      <el-button
+                        v-if="user.isadministrator"
+                        class="btn"
+                        circle
+                        size="mini"
+                        type="danger"
+                        icon="el-icon-delete"
+                        @click.stop="deleteVideo(item)"
+                      />
                     </div>
-                    <el-image class="video-image" :src="item.frontcover" fit="cover" />
-                    <div class="describe" style="display: flex; width: 100%;">
+                    <el-image
+                      class="video-image"
+                      :src="item.frontcover"
+                      fit="cover"
+                    />
+                    <div
+                      class="describe"
+                      style="display: flex; width: 100%;"
+                    >
                       <div style="width: 100%; text-align: center; margin-top: 2px">
                         <span style="font-size: 14px; font-weight: 800; color: #303133"> {{ item.title }} </span>
                       </div>
@@ -42,36 +131,108 @@
             </el-tabs>
           </div>
         </div>
-        <div class="flex ai-center jc-between grow" style="min-width: 1400px;width:calc(100vw - 20px);margin: 0 10px 10px;height:100%;overflow: hidden;">
-          <div class="bgwhite bot-item" v-for="(item, idx) in botItems" :key="idx" :style="{ width: idx == 2 ? '39.5%' : 'calc(30% - 5px)' }">
+        <div
+          class="flex ai-center jc-between grow"
+          style="min-width: 1400px;width:calc(100vw - 20px);margin: 0 10px 10px;height:100%;overflow: hidden;"
+        >
+          <div
+            v-for="(item, idx) in botItems"
+            :key="idx"
+            class="bgwhite bot-item"
+            :style="{ width: idx == 2 ? '39.5%' : 'calc(30% - 5px)' }"
+          >
             <div class="flex ai-center bot-title">
-              <img class="bot-icon" :src="item.icon" />
+              <img
+                class="bot-icon"
+                :src="item.icon"
+              >
               <span class="bot-name">{{ item.name }}</span>
               <template v-if="user.isadministrator && idx == 1">
                 <div style="margin-left: auto;margin-right: 15px;">
                   <span v-if="manualProgress > 0 && manualProgress < 100">{{ manualProgress }}%</span>
-                  <input ref="manualUploader" type="file" @change="manualUpload" style="display: none;">
-                  <el-button type="primary" size="mini" @click="handleUploadManual">{{ $t('base.button.upload') }}</el-button>
+                  <input
+                    ref="manualUploader"
+                    type="file"
+                    style="display: none;"
+                    @change="manualUpload"
+                  >
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    @click="handleUploadManual"
+                  >
+                    {{ $t('base.button.upload') }}
+                  </el-button>
                 </div>
               </template>
             </div>
-            <div class="bot-content" v-if="item.name == '学习资料'">
-              <div class="flex ai-center jc-between" v-for="(item, idx) in currentFileList" :key="item.iuid">
-                <file-icon :row="item" :visible="false"></file-icon>
-                <el-button type="text" size="default" icon="el-icon-download" @click="downLoadFile(item)">{{ $t('base.button.download') }}</el-button>
+            <div
+              v-if="item.name == '学习资料'"
+              class="bot-content"
+            >
+              <div
+                v-for="(item, idx) in currentFileList"
+                :key="item.iuid"
+                class="flex ai-center jc-between"
+              >
+                <file-icon
+                  :row="item"
+                  :visible="false"
+                />
+                <el-button
+                  type="text"
+                  size="default"
+                  icon="el-icon-download"
+                  @click="downLoadFile(item)"
+                >
+                  {{ $t('base.button.download') }}
+                </el-button>
               </div>
             </div>
-            <div class="bot-content" v-if="item.name == '使用手册'">
-              <div class="flex ai-center jc-between" style="height: 40px;" v-for="(item, idx) in manual" :key="idx">
-                <file-icon :row="item" :visible="false"></file-icon>
+            <div
+              v-if="item.name == '使用手册'"
+              class="bot-content"
+            >
+              <div
+                v-for="(item, idx) in manual"
+                :key="idx"
+                class="flex ai-center jc-between"
+                style="height: 40px;"
+              >
+                <file-icon
+                  :row="item"
+                  :visible="false"
+                />
                 <div>
-                  <el-button type="text" size="default" icon="el-icon-download" @click="downLoadFile(item)">{{ $t('base.button.download') }}</el-button>
-                  <el-button type="text" v-if="user.isadministrator" size="default" style="color:#FF3300" icon="el-icon-close" @click="deleteManual(item)"></el-button>
+                  <el-button
+                    type="text"
+                    size="default"
+                    icon="el-icon-download"
+                    @click="downLoadFile(item)"
+                  >
+                    {{ $t('base.button.download') }}
+                  </el-button>
+                  <el-button
+                    v-if="user.isadministrator"
+                    type="text"
+                    size="default"
+                    style="color:#FF3300"
+                    icon="el-icon-close"
+                    @click="deleteManual(item)"
+                  />
                 </div>
               </div>
             </div>
-            <div class="bot-content" v-if="item.name == '常见问题'">
-              <div class="FAQ-list" v-for="item in FAQList" :key="item.iuid" @click="viewDetail(item)">
+            <div
+              v-if="item.name == '常见问题'"
+              class="bot-content"
+            >
+              <div
+                v-for="item in FAQList"
+                :key="item.iuid"
+                class="FAQ-list"
+                @click="viewDetail(item)"
+              >
                 <el-link> {{ item.row }}. {{ item.title }}</el-link>
               </div>
             </div>
@@ -79,58 +240,196 @@
         </div>
       </el-aside>
       <!-- 查看 -->
-      <el-dialog title="问题详情" :visible.sync="detailVisible" width="800px">
-        <div style="text-align: center;font-size: 18px;font-weight: 500;margin-bottom: 15px;">{{ currentFAQ.title }}</div>
-        <div style="text-align: right;font-size: 14px;color: #999;margin-right: 20px;margin-bottom: 20px;">{{ currentFAQ.createTime }}</div>
-        <div class="ql-editor" v-html="currentFAQ.contenttext"></div>
+      <el-dialog
+        title="问题详情"
+        :visible.sync="detailVisible"
+        width="800px"
+      >
+        <div style="text-align: center;font-size: 18px;font-weight: 500;margin-bottom: 15px;">
+          {{ currentFAQ.title }}
+        </div>
+        <div style="text-align: right;font-size: 14px;color: #999;margin-right: 20px;margin-bottom: 20px;">
+          {{ currentFAQ.createTime }}
+        </div>
+        <div
+          class="ql-editor"
+          v-html="currentFAQ.contenttext"
+        />
       </el-dialog>
       <!-- 视频上传 -->
-      <el-dialog append-to-body width="740px" :title="dialogType" :visible.sync="dialogVisible" @close="resetVideoForm">
-        <el-form ref="form" class="material" :inline="true" :model="form" label-width="88px">
-          <el-form-item prop="title" label="视频标题：">
-            <el-input style="width: 340px;" :placeholder="`请输入${activeTab}标题`" v-model="form.title"></el-input>
+      <el-dialog
+        append-to-body
+        width="740px"
+        :title="dialogType"
+        :visible.sync="dialogVisible"
+        @close="resetVideoForm"
+      >
+        <el-form
+          ref="form"
+          class="material"
+          :inline="true"
+          :model="form"
+          label-width="88px"
+        >
+          <el-form-item
+            prop="title"
+            label="视频标题："
+          >
+            <el-input
+              v-model="form.title"
+              style="width: 340px;"
+              :placeholder="`请输入${activeTab}标题`"
+            />
           </el-form-item>
-          <el-form-item prop="sort" label="排序：">
-            <el-input-number style="width: 140px;" v-model="form.sort" :min="1"></el-input-number>
+          <el-form-item
+            prop="sort"
+            label="排序："
+          >
+            <el-input-number
+              v-model="form.sort"
+              style="width: 140px;"
+              :min="1"
+            />
           </el-form-item>
-          <el-form-item prop="FilePath" label="上传视频：">
-            <div class="videoBox flex column ai-center" v-if="form.filePath">
-              <video controls :src="form.videoUrl" @contextmenu="stopEvent" controlslist="nodownload" class="poster" />
-              <el-button type='text' v-if="uploaded" @click="handleUploadVideo">更换</el-button>
+          <el-form-item
+            prop="FilePath"
+            label="上传视频："
+          >
+            <div
+              v-if="form.filePath"
+              class="videoBox flex column ai-center"
+            >
+              <video
+                controls
+                :src="form.videoUrl"
+                controlslist="nodownload"
+                class="poster"
+                @contextmenu="stopEvent"
+              />
+              <el-button
+                v-if="uploaded"
+                type="text"
+                @click="handleUploadVideo"
+              >
+                更换
+              </el-button>
             </div>
-            <div v-else class="avatar-uploader" @click="handleUploadVideo">
-              <i class="el-icon-plus avatar-uploader-icon"></i>
+            <div
+              v-else
+              class="avatar-uploader"
+              @click="handleUploadVideo"
+            >
+              <i class="el-icon-plus avatar-uploader-icon" />
             </div>
-            <div class="flex ai-center" v-if="fileProgress > 0 && fileProgress < 100" style="height: 40px;">
-              <el-progress style="width:240px" :percentage="parseInt(fileProgress)"></el-progress>
+            <div
+              v-if="fileProgress > 0 && fileProgress < 100"
+              class="flex ai-center"
+              style="height: 40px;"
+            >
+              <el-progress
+                style="width:240px"
+                :percentage="parseInt(fileProgress)"
+              />
               <!-- parseInt取整，否则会串行 -->
             </div>
-            <input ref="videoUploader" type="file" accept="video/*" @change="submitFile" style="display: none;">
+            <input
+              ref="videoUploader"
+              type="file"
+              accept="video/*"
+              style="display: none;"
+              @change="submitFile"
+            >
           </el-form-item>
-          <el-form-item prop="frontcover" label="视频封面：">
-            <div class="videoBox flex column ai-center" v-if="form.thumbImg">
-              <img :src="form.thumbImg" class="poster" />
-              <el-button type='text' v-if="uploaded" @click="handleUploadImage">更换</el-button>
+          <el-form-item
+            prop="frontcover"
+            label="视频封面："
+          >
+            <div
+              v-if="form.thumbImg"
+              class="videoBox flex column ai-center"
+            >
+              <img
+                :src="form.thumbImg"
+                class="poster"
+              >
+              <el-button
+                v-if="uploaded"
+                type="text"
+                @click="handleUploadImage"
+              >
+                更换
+              </el-button>
             </div>
-            <div v-else class="avatar-uploader" @click="handleUploadImage">
-              <i class="el-icon-plus avatar-uploader-icon"></i>
+            <div
+              v-else
+              class="avatar-uploader"
+              @click="handleUploadImage"
+            >
+              <i class="el-icon-plus avatar-uploader-icon" />
             </div>
-            <input ref="imageUploader" type="file" accept="image/*" :value="imgfile" @change="thumbUpload" style="display: none;">
+            <input
+              ref="imageUploader"
+              type="file"
+              accept="image/*"
+              :value="imgfile"
+              style="display: none;"
+              @change="thumbUpload"
+            >
           </el-form-item>
-          <el-form-item label="学习资料" style="width: 100%;" size="normal">
-            <div class="flex ai-center jc-between" v-for="(item, idx) in fileList" :key="item.iuid">
+          <el-form-item
+            label="学习资料"
+            style="width: 100%;"
+            size="normal"
+          >
+            <div
+              v-for="(item, idx) in fileList"
+              :key="item.iuid"
+              class="flex ai-center jc-between"
+            >
               <div>{{ item.fileName }}</div>
-              <el-button type="text" size="default" icon="el-icon-close" style="color: #FF3300;margin-left: 15px;" @click="deleteFile(item)"></el-button>
+              <el-button
+                type="text"
+                size="default"
+                icon="el-icon-close"
+                style="color: #FF3300;margin-left: 15px;"
+                @click="deleteFile(item)"
+              />
             </div>
-            <div v-if="showUploading">正在上传...</div>
-            <el-button size="mini" plain type="primary" @click="handleUploadFile">{{ $t('base.button.upload') }}</el-button>
-            <input ref="fileUploader" type="file" multiple @change="fileUpload" style="display: none;">
+            <div v-if="showUploading">
+              正在上传...
+            </div>
+            <el-button
+              size="mini"
+              plain
+              type="primary"
+              @click="handleUploadFile"
+            >
+              {{ $t('base.button.upload') }}
+            </el-button>
+            <input
+              ref="fileUploader"
+              type="file"
+              multiple
+              style="display: none;"
+              @change="fileUpload"
+            >
           </el-form-item>
-
         </el-form>
         <div slot="footer">
-          <el-button size="small" @click="dialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-          <el-button size="small" style="margin-right: 10px;" type="primary" @click="submit">{{ $t('base.button.confirm') }}</el-button>
+          <el-button
+            size="small"
+            @click="dialogVisible = false"
+          >
+            {{ $t('base.button.cancel') }}
+          </el-button>
+          <el-button
+            size="small"
+            style="margin-right: 10px;"
+            type="primary"
+            @click="submit"
+          >
+            {{ $t('base.button.confirm') }}
+          </el-button>
         </div>
       </el-dialog>
     </el-container>
@@ -302,7 +601,7 @@ export default {
     },
     downLoadFile(item) {
       // let filePath = encodeURIComponent(encrypt(item.filePath))
-      const downloadUrl = process.env.BASE_API + "/api/home/GetUploadPictureFile?IUID=" + item.iuid;
+      const downloadUrl = process.env.VUE_APP_BASE_API + "/api/home/GetUploadPictureFile?IUID=" + item.iuid;
       let aLink = document.createElement("a");
       aLink.download = item.fileName;
       aLink.style.display = "none";
@@ -340,7 +639,7 @@ export default {
       this.getFileList(item.iuid, 'edit')
       this.form = JSON.parse(JSON.stringify(item))
       this.form.thumbImg = this.form.frontcover
-      let videoUrl = process.env.BASE_API + '/api/home/GetVideoFile?fileUrl=' + encodeURIComponent(item.filePath)
+      let videoUrl = process.env.VUE_APP_BASE_API + '/api/home/GetVideoFile?fileUrl=' + encodeURIComponent(item.filePath)
       this.form.videoUrl = videoUrl
       this.$nextTick(() => {
         this.dialogVisible = true
@@ -422,7 +721,7 @@ export default {
       let DebrisIUID = this.$NewGuid()
       await this.fileSubt(files[0], 0, 'video', DebrisIUID)
       if (this.fileProgress == 100.00) {
-        let videoUrl = process.env.BASE_API + '/api/home/GetVideoFile?fileUrl=' + encodeURIComponent(this.form.filePath)
+        let videoUrl = process.env.VUE_APP_BASE_API + '/api/home/GetVideoFile?fileUrl=' + encodeURIComponent(this.form.filePath)
         this.form.videoUrl = videoUrl
         this.disabled = false
         this.uploaded = true
@@ -541,7 +840,7 @@ export default {
       let url = encodeURIComponent(item.filePath)
       this.getFileList(item.iuid)
       this.currentVideo = item
-      let videoUrl = process.env.BASE_API + '/api/home/GetVideoFile?fileUrl=' + url
+      let videoUrl = process.env.VUE_APP_BASE_API + '/api/home/GetVideoFile?fileUrl=' + url
       this.playerOptions.sources = []
       this.playerOptions.poster = item.frontcover
       this.playerOptions.sources.push({

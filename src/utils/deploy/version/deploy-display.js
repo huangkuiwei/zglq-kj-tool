@@ -44,7 +44,7 @@ export const appList = [
     appName: "BIM Windows",
     title: "看模王",
     isEdit: false,
-    origin: 'KmwOrigin'
+    origin: 'VUE_APP_KmwOrigin'
   },
   {
     type: "bimstation",
@@ -65,7 +65,7 @@ export const appList = [
     appName: "BIM-GPT",
     title: "总模王",
     isEdit: true,
-    origin: 'BimGPTOrigin'
+    origin: 'VUE_APP_BimGPTOrigin'
   },
   {
     type: "cscmodeler",

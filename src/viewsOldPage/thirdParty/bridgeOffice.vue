@@ -1,14 +1,14 @@
 <template>
-    <div :style="{height:clientHeight + 'px'}">
-        <iframe
-          v-if="modelPreViewInitUrl"
-          :src="modelPreViewInitUrl"
-          ref="imodelIframe"
-          :height="clientHeight"
-          @load="sendFileData"
-          style="background-color: white;border:none;height:100%;width:100%"
-        ></iframe>
-    </div>
+  <div :style="{height:clientHeight + 'px'}">
+    <iframe
+      v-if="modelPreViewInitUrl"
+      ref="imodelIframe"
+      :src="modelPreViewInitUrl"
+      :height="clientHeight"
+      style="background-color: white;border:none;height:100%;width:100%"
+      @load="sendFileData"
+    />
+  </div>
 </template>
 
 <script>
@@ -28,7 +28,7 @@ export default {
         var masterFileRes = await postApi.post("/api/ProjectManagement/GetMasterfileData?IUID=5cc625c1-c0c6-4b72-9faa-0434895e6804","");
             if(masterFileRes.code === 1){
                 this.currentFile = masterFileRes.data
-                this.modelPreViewInitUrl =  process.env.GisIframeOrigin + "/?" + masterFileRes.data.turnPath +"?大桥局"
+                this.modelPreViewInitUrl =  process.env.VUE_APP_GisIframeOrigin + "/?" + masterFileRes.data.turnPath +"?大桥局"
             }
     },
     methods:{

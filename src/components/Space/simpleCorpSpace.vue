@@ -1,77 +1,160 @@
 <template>
   <div id="user-space">
-    <div class="box" v-if="corpSpaceContainerVisible" @mouseleave="mouseLeave" @mouseenter="mouseenter">
+    <div
+      v-if="corpSpaceContainerVisible"
+      class="box"
+      @mouseleave="mouseLeave"
+      @mouseenter="mouseenter"
+    >
       <div class="corpInfoContainer">
         <div class="flex ai-center corpMargin">
-          <img :src="corpSpaceModel.ddUserAvatar && corpSpaceModel.ddUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.ddUserAvatar)) : defaultCorpLogo" class="corpAvatar" />
+          <img
+            :src="corpSpaceModel.ddUserAvatar && corpSpaceModel.ddUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.ddUserAvatar)) : defaultCorpLogo"
+            class="corpAvatar"
+          >
           <div>
-            <div class="userName">{{ corpSpaceModel.username }}</div>
-            <div class="corpName">{{ corpSpaceModel.corpName }}</div>
+            <div class="userName">
+              {{ corpSpaceModel.username }}
+            </div>
+            <div class="corpName">
+              {{ corpSpaceModel.corpName }}
+            </div>
           </div>
         </div>
-        <div style="width: 100%;height: 1px;background-color: #d5d5d5;margin: 15px 0 5px;"></div>
-        <div class="flex ai-center corpSpaceContainerUl jc-between" @click="editPersonalInfo">
+        <div style="width: 100%;height: 1px;background-color: #d5d5d5;margin: 15px 0 5px;" />
+        <div
+          class="flex ai-center corpSpaceContainerUl jc-between"
+          @click="editPersonalInfo"
+        >
           <div class="flex ai-center">
-            <img style="width: 20px;" src="../../assets/newNavBtn/account.svg" alt="">
+            <img
+              style="width: 20px;"
+              src="../../assets/newNavBtn/account.svg"
+              alt=""
+            >
             <span>{{ $t('userCenter.account') }}</span>
             <!-- <div style="position:absolute;width:8px;height:8px;border-radius:50%;background-color:#FF3300;top:8px;right:-10px" v-if="hasNotDealApply"></div> -->
           </div>
         </div>
-        <div class="flex ai-center corpSpaceContainerUl jc-between" v-if="corpSpaceModel.isadministrator" @click="handleDetail">
+        <div
+          v-if="corpSpaceModel.isadministrator"
+          class="flex ai-center corpSpaceContainerUl jc-between"
+          @click="handleDetail"
+        >
           <div class="flex ai-center">
-            <img style="width: 20px;" src="../../assets/newNavBtn/storage.svg" alt="">
+            <img
+              style="width: 20px;"
+              src="../../assets/newNavBtn/storage.svg"
+              alt=""
+            >
             <span>{{ $t('userCenter.storage') }}</span>
           </div>
-          <div class="count">{{ corpSpaceModel.usedSpace }}</div>
+          <div class="count">
+            {{ corpSpaceModel.usedSpace }}
+          </div>
         </div>
-        <div class="flex ai-center corpSpaceContainerUl jc-between" v-if="corpSpaceModel.isadministrator" @click="registedUserDetail">
+        <div
+          v-if="corpSpaceModel.isadministrator"
+          class="flex ai-center corpSpaceContainerUl jc-between"
+          @click="registedUserDetail"
+        >
           <div class="flex ai-center">
-            <img style="width: 20px;" src="../../assets/newNavBtn/member.svg" alt="">
+            <img
+              style="width: 20px;"
+              src="../../assets/newNavBtn/member.svg"
+              alt=""
+            >
             <span>{{ $t('userCenter.corpMember') }}</span>
           </div>
-          <div class="count">{{ corpSpaceModel.registedUserCount + $t('userCenter.countName') }}</div>
+          <div class="count">
+            {{ corpSpaceModel.registedUserCount + $t('userCenter.countName') }}
+          </div>
         </div>
-        <div class="flex ai-center corpSpaceContainerUl jc-between" @click="exitLogin">
+        <div
+          class="flex ai-center corpSpaceContainerUl jc-between"
+          @click="exitLogin"
+        >
           <div class="flex ai-center">
-            <img style="width: 20px;" src="../../assets/newNavBtn/exit.svg" alt="">
+            <img
+              style="width: 20px;"
+              src="../../assets/newNavBtn/exit.svg"
+              alt=""
+            >
             <span>{{ $t('userCenter.exit') }}</span>
           </div>
         </div>
       </div>
     </div>
-    <el-dialog v-dialogDrag append-to-body :title="$t('base.button.accountSetting')" :visible.sync="dialogVisible" width="420px">
+    <el-dialog
+      v-dialogDrag
+      append-to-body
+      :title="$t('base.button.accountSetting')"
+      :visible.sync="dialogVisible"
+      width="420px"
+    >
       <div>
         <div class="flex ai-center jc-between info-item">
           <div class="flex ai-center">
-            <img class="corpAvatar" :src="userData.avatar" alt="">
+            <img
+              class="corpAvatar"
+              :src="userData.avatar"
+              alt=""
+            >
             <div style="margin-left: 10px;">
-              <div class="infoTitle">{{$t('base.button.username')}}</div>
-              <div style="margin-top: 5px;">{{ userData.userName }}</div>
+              <div class="infoTitle">
+                {{ $t('base.button.username') }}
+              </div>
+              <div style="margin-top: 5px;">
+                {{ userData.userName }}
+              </div>
             </div>
           </div>
-          <el-button type="text" @click="openEdit('editUserInfo')">{{ $t('base.button.edit') }}</el-button>
+          <el-button
+            type="text"
+            @click="openEdit('editUserInfo')"
+          >
+            {{ $t('base.button.edit') }}
+          </el-button>
         </div>
         <div class="info-item">
-          <div class="infoTitle">{{$t('base.button.password')}}</div>
+          <div class="infoTitle">
+            {{ $t('base.button.password') }}
+          </div>
           <div class="flex ai-center jc-between ">
-            <span style="color: #999;">{{$t('base.button.modifyPassword')}}</span>
-            <el-button type="text" @click="openEdit('editPwd')">{{$t('base.button.modify')}}</el-button>
+            <span style="color: #999;">{{ $t('base.button.modifyPassword') }}</span>
+            <el-button
+              type="text"
+              @click="openEdit('editPwd')"
+            >
+              {{ $t('base.button.modify') }}
+            </el-button>
           </div>
         </div>
         <div class="info-item">
-          <div class="infoTitle">{{$t('base.button.phone')}}</div>
+          <div class="infoTitle">
+            {{ $t('base.button.phone') }}
+          </div>
           <div class="flex ai-center jc-between ">
             <span>{{ userData.phone }}</span>
-            <el-button type="text" @click="openEdit('editPhone')">{{$t('base.button.replace')}}</el-button>
+            <el-button
+              type="text"
+              @click="openEdit('editPhone')"
+            >
+              {{ $t('base.button.replace') }}
+            </el-button>
           </div>
         </div>
       </div>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">{{$t('base.button.close')}}</el-button>
+        <el-button @click="dialogVisible = false">{{ $t('base.button.close') }}</el-button>
       </span>
     </el-dialog>
 
-    <opeDialog :opeType="baseInfoOpeType" :userModel="userData" :dialogVisible.sync="baseInfoDialogVisible" />
+    <opeDialog
+      :ope-type="baseInfoOpeType"
+      :user-model="userData"
+      :dialog-visible.sync="baseInfoDialogVisible"
+    />
   </div>
 </template>
 <script>
@@ -132,7 +215,7 @@ export default {
       },
       baseInfoOpeType: null,
       baseInfoDialogVisible: false,
-      avatorUrl: process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+      avatorUrl: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
       encrypt
     };
   },

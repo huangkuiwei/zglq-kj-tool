@@ -2,18 +2,35 @@
   <div style="padding: 52px 360px">
     <div class="flex ai-center jc-between">
       <div class="flex ai-center">
-        <img :src="kjPayCenterLogo" style="width: 272px;margin-top: -12px;" />
-        <div class="titleText">支付中心</div>
+        <img
+          :src="kjPayCenterLogo"
+          style="width: 272px;margin-top: -12px;"
+        >
+        <div class="titleText">
+          支付中心
+        </div>
       </div>
       <div>
         <!-- <img :src="corpSpaceModel.dDUserAvatar && corpSpaceModel.dDUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.dDUserAvatar)) : defaultAvator" style=" width: 30px; height: 30px; border-radius: 50%; vertical-align: middle; " /> -->
         <span style="margin-left: 10px">{{ corpSpaceModel.username }} {{ corpSpaceModel.hasCorp ? " | " + corpSpaceModel.corpName : "" }}</span>
       </div>
     </div>
-    <div class="corpPayContent" style="height: calc(100vh - 275px);margin-bottom: 63px">
-      <div class="corpPayTitleContainer flex jc-center" style="align-items: flex-end;">
+    <div
+      class="corpPayContent"
+      style="height: calc(100vh - 275px);margin-bottom: 63px"
+    >
+      <div
+        class="corpPayTitleContainer flex jc-center"
+        style="align-items: flex-end;"
+      >
         <div class="corpPayTitleBottom">
-          <div class="inlineBlock" :class="{ rectangleActived: item.actived, defaultRectangle: !item.actived, }" v-for="(item, index) in payCenterTabs" @click="handlePayCenterTabsChange(index)" :key="index">
+          <div
+            v-for="(item, index) in payCenterTabs"
+            :key="index"
+            class="inlineBlock"
+            :class="{ rectangleActived: item.actived, defaultRectangle: !item.actived, }"
+            @click="handlePayCenterTabsChange(index)"
+          >
             {{ item.title }}
           </div>
         </div>
@@ -21,17 +38,37 @@
       <div class="corpPayBodyContainer">
         <!--版本升级-->
         <template v-if="payCenterTabsActivedIndex === 0">
-          <div v-for="(item, index) in versionUpgradeTabs" :key="index" class="versionUpgradeTab" @click="handleVersionUpgradeTabsChange(index)" :class="{
-            versionUpgradeTabActive: item.actived,
-            versionUpgradeTabDefault: !item.actived,
-          }">
+          <div
+            v-for="(item, index) in versionUpgradeTabs"
+            :key="index"
+            class="versionUpgradeTab"
+            :class="{
+              versionUpgradeTabActive: item.actived,
+              versionUpgradeTabDefault: !item.actived,
+            }"
+            @click="handleVersionUpgradeTabsChange(index)"
+          >
             <template v-if="item.title === '个人版'">
-              <i v-if="item.actived" style="font-size: 32px;display: inline-block;margin-top: 24px;margin-left: 70px;vertical-align: bottom;margin-right: 34px;float: left;" class="iconfont icon-gerenban-moren"></i>
-              <div v-if="!item.actived" class="personalVersionDefault"></div>
+              <i
+                v-if="item.actived"
+                style="font-size: 32px;display: inline-block;margin-top: 24px;margin-left: 70px;vertical-align: bottom;margin-right: 34px;float: left;"
+                class="iconfont icon-gerenban-moren"
+              />
+              <div
+                v-if="!item.actived"
+                class="personalVersionDefault"
+              />
             </template>
             <template v-else>
-              <i v-if="item.actived" style="font-size: 32px;display: inline-block;margin-top: 24px;margin-left: 70px;vertical-align: bottom;margin-right: 34px;float: left;color: linear-gradient(180deg, #6be2ff 0%, #048fed 100%);" class="iconfont icon-qiyeban-moren"></i>
-              <div class="companyVersionDefault" v-if="!item.actived"></div>
+              <i
+                v-if="item.actived"
+                style="font-size: 32px;display: inline-block;margin-top: 24px;margin-left: 70px;vertical-align: bottom;margin-right: 34px;float: left;color: linear-gradient(180deg, #6be2ff 0%, #048fed 100%);"
+                class="iconfont icon-qiyeban-moren"
+              />
+              <div
+                v-if="!item.actived"
+                class="companyVersionDefault"
+              />
             </template>
             <div style="display: inline-block; float: left; margin-top: 20px">
               <div style="font-size: 20px; font-weight: 400">
@@ -44,46 +81,116 @@
           </div>
           <div class="versionUpgradePriceCardContainer">
             <div style="width: 100%; overflow: auto">
-              <swiper class="swiper" :options="swiperOption" ref="mySwiper">
-                <swiper-slide class="swiper-slide versionUpgradePriceCard" :style="{ background: item.canNotCheck ? 'gray' : '#ffffff', opacity: item.canNotCheck ? '0.4' : '1', }" :class="{ versionUpgradePriceCardBorder: item.actived }" v-for="(item, index) in versionPrices" :key="index">
-                  <div style="width: 100%; height: 100%; padding-top: 31px" @click="!item.canNotCheck && handleVersionUpgradePriceCardChange(item, index, $event)">
-                    <div style="font-size: 14px">{{ item.goodsText }}</div>
+              <swiper
+                ref="mySwiper"
+                class="swiper"
+                :options="swiperOption"
+              >
+                <swiper-slide
+                  v-for="(item, index) in versionPrices"
+                  :key="index"
+                  class="swiper-slide versionUpgradePriceCard"
+                  :style="{ background: item.canNotCheck ? 'gray' : '#ffffff', opacity: item.canNotCheck ? '0.4' : '1', }"
+                  :class="{ versionUpgradePriceCardBorder: item.actived }"
+                >
+                  <div
+                    style="width: 100%; height: 100%; padding-top: 31px"
+                    @click="!item.canNotCheck && handleVersionUpgradePriceCardChange(item, index, $event)"
+                  >
+                    <div style="font-size: 14px">
+                      {{ item.goodsText }}
+                    </div>
                     <div style="color: #ff6a00;font-size: 32px;font-weight: 600;margin-top: 14px;">
                       ¥{{ item.goodsPrice }}
                     </div>
                   </div>
                 </swiper-slide>
-                <div class="swiper-button-prev" slot="button-prev"></div>
-                <div class="swiper-button-next" slot="button-next"></div>
+                <div
+                  slot="button-prev"
+                  class="swiper-button-prev"
+                />
+                <div
+                  slot="button-next"
+                  class="swiper-button-next"
+                />
               </swiper>
             </div>
             <div style="height: 180px;background: white;border-radius: 8px;margin-top: 30px;margin-bottom: 30px;">
-              <vueQr style="float: left" ref="qrCode" :logoSrc="QRLogo" v-if="versionPrices[versionPricesActivedIndex].goodsPrice > 0" :text="payUrl" :size="180"></vueQr>
-              <div style="float: left; margin-top: 16px" :style="{ 'margin-left': versionPrices[versionPricesActivedIndex].goodsPrice == 0 ? '20px' : '0', }">
+              <vueQr
+                v-if="versionPrices[versionPricesActivedIndex].goodsPrice > 0"
+                ref="qrCode"
+                style="float: left"
+                :logo-src="QRLogo"
+                :text="payUrl"
+                :size="180"
+              />
+              <div
+                style="float: left; margin-top: 16px"
+                :style="{ 'margin-left': versionPrices[versionPricesActivedIndex].goodsPrice == 0 ? '20px' : '0', }"
+              >
                 <span style="color: #333333; font-size: 14px">实付:</span>
                 <span style="color: #ff6a00; font-size: 25px">{{ versionPrices[versionPricesActivedIndex].goodsPrice }}元
                 </span>
-                <div v-if="versionPrices[versionPricesActivedIndex].goodsPrice > 0" style="color: #333333; margin-top: 20px">
-                  <img class="payImg" src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623142062241/daeb82dda5a4568783ed28eae.png" />
+                <div
+                  v-if="versionPrices[versionPricesActivedIndex].goodsPrice > 0"
+                  style="color: #333333; margin-top: 20px"
+                >
+                  <img
+                    class="payImg"
+                    src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623142062241/daeb82dda5a4568783ed28eae.png"
+                  >
                   <span>支付宝</span>
-                  <img style="margin-left: 20px" class="payImg" src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623141005470/%E5%BE%AE%E4%BF%A1.png" />
+                  <img
+                    style="margin-left: 20px"
+                    class="payImg"
+                    src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623141005470/%E5%BE%AE%E4%BF%A1.png"
+                  >
                   <span>微信</span>
                 </div>
               </div>
-              <div style="float: right; margin-top: 124px; margin-right: 25px" v-if="versionPrices[versionPricesActivedIndex].goodsPrice == 0">
-                <el-button class="changeOrder" size="medium" @click="handleChangeVersionOrder">变更套餐</el-button>
+              <div
+                v-if="versionPrices[versionPricesActivedIndex].goodsPrice == 0"
+                style="float: right; margin-top: 124px; margin-right: 25px"
+              >
+                <el-button
+                  class="changeOrder"
+                  size="medium"
+                  @click="handleChangeVersionOrder"
+                >
+                  变更套餐
+                </el-button>
               </div>
             </div>
           </div>
         </template>
         <!--容量套餐-->
         <template v-else>
-          <div class="corpPayBodyContainer" style="padding-top: 0">
-            <div class="versionUpgradePriceCardContainer" style="margin-top: 12px">
+          <div
+            class="corpPayBodyContainer"
+            style="padding-top: 0"
+          >
+            <div
+              class="versionUpgradePriceCardContainer"
+              style="margin-top: 12px"
+            >
               <div style="width: 100%; overflow: auto">
-                <swiper class="swiper" :options="swiperOption2" ref="mySwiper">
-                  <swiper-slide class="versionUpgradePriceCard" style="box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.16)" v-for="(item, index) in spacePrices" :key="index" :style="{ background: item.canNotCheck ? 'gray' : '#ffffff', opacity: item.canNotCheck ? '0.4' : '1', }" :class="{ versionUpgradePriceCardBorder: item.actived }">
-                    <div @click="!item.canNotCheck && handleSpaceUpgradePriceCardChange(item, index)" style="height: 100%; padding-top: 28px">
+                <swiper
+                  ref="mySwiper"
+                  class="swiper"
+                  :options="swiperOption2"
+                >
+                  <swiper-slide
+                    v-for="(item, index) in spacePrices"
+                    :key="index"
+                    class="versionUpgradePriceCard"
+                    style="box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.16)"
+                    :style="{ background: item.canNotCheck ? 'gray' : '#ffffff', opacity: item.canNotCheck ? '0.4' : '1', }"
+                    :class="{ versionUpgradePriceCardBorder: item.actived }"
+                  >
+                    <div
+                      style="height: 100%; padding-top: 28px"
+                      @click="!item.canNotCheck && handleSpaceUpgradePriceCardChange(item, index)"
+                    >
                       <div style="font-size: 28px;color: #2a2a2a;font-weight: 500;">
                         {{ item.goodsSpace >= 1024 ? item.goodsSpace / 1024 + "TB" : item.goodsSpace + "GB" }}
                       </div>
@@ -94,20 +201,39 @@
                       </div>
                     </div>
                   </swiper-slide>
-                  <div class="swiper-button-prev" slot="button-prev"></div>
-                  <div class="swiper-button-next" slot="button-next"></div>
+                  <div
+                    slot="button-prev"
+                    class="swiper-button-prev"
+                  />
+                  <div
+                    slot="button-next"
+                    class="swiper-button-next"
+                  />
                 </swiper>
               </div>
               <div style="height: 180px;background: white;border-radius: 8px;margin-top: 30px;">
-                <vueQr style="float: left" ref="qrCode" :logoSrc="QRLogo" :text="payUrl" :size="180"></vueQr>
+                <vueQr
+                  ref="qrCode"
+                  style="float: left"
+                  :logo-src="QRLogo"
+                  :text="payUrl"
+                  :size="180"
+                />
                 <div style="float: left; margin-top: 16px">
                   <span style="color: #333333; font-size: 14px">实付:</span>
                   <span style="color: #ff6a00; font-size: 25px">{{ spacePrices[spacePricesActivedIndex].goodsPrice }}元
                   </span>
                   <div style="color: #333333; margin-top: 20px">
-                    <img class="payImg" src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623142062241/daeb82dda5a4568783ed28eae.png" />
+                    <img
+                      class="payImg"
+                      src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623142062241/daeb82dda5a4568783ed28eae.png"
+                    >
                     <span>支付宝</span>
-                    <img style="margin-left: 20px" class="payImg" src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623141005470/%E5%BE%AE%E4%BF%A1.png" />
+                    <img
+                      style="margin-left: 20px"
+                      class="payImg"
+                      src="https://staticsns.cdn.bcebos.com/amis/2021-6/1623141005470/%E5%BE%AE%E4%BF%A1.png"
+                    >
                     <span>微信</span>
                   </div>
                 </div>
@@ -115,37 +241,61 @@
             </div>
           </div>
         </template>
-        <a class="versionDetailHref" @click="bwPriceVisible = !bwPriceVisible">购买说明</a>
+        <a
+          class="versionDetailHref"
+          @click="bwPriceVisible = !bwPriceVisible"
+        >购买说明</a>
       </div>
     </div>
     <div style="text-align: center;width: 100%;color: rgb(153, 153, 153);font-size: 14px;height: 80px;line-height: 80px;">
       Copyright © 1999-2023 | 北京跨世纪软件技术有限公司 | 京ICP备2020036512号-2	
     </div>
-    <el-dialog v-dialogDrag :close-on-click-modal="false" title="购买说明" :visible.sync="bwPriceVisible" width="950px">
+    <el-dialog
+      v-dialogDrag
+      :close-on-click-modal="false"
+      title="购买说明"
+      :visible.sync="bwPriceVisible"
+      width="950px"
+    >
       <div style="color: #333333">
         <p>
           1.版本升级/降级规则：从一个版本升级或降级到另一个版本时，付款时会扣除已开通版本剩余时间段内的价值，如果剩余价值≥现在要开通版本的价格，系统会提示支付0元，多余的剩余价值将换算成新版的等值时长，付款成功后立即生效。
         </p>
-        <p></p>
+        <p />
         <p>2.续费同一版本时将直接增加时长，不会执行扣除剩余价值的规则。</p>
-        <p></p>
+        <p />
         <p>3.请注意购买成功后概不退款，购买前请确认好需要开通的版本。</p>
-        <p></p>
+        <p />
         <p>4.版本价格表：</p>
       </div>
       <div style="width: 100%; height: 545px; color: #333333">
         <table class="priceTable">
           <tr style="background: rgba(228, 234, 245, 0.3)">
-            <td width="155">人数</td>
-            <td width="100">周期</td>
+            <td width="155">
+              人数
+            </td>
+            <td width="100">
+              周期
+            </td>
             <td>价格（元）</td>
-            <td width="100">备注</td>
+            <td width="100">
+              备注
+            </td>
           </tr>
-          <tr v-for="(item, index) in priceData" :key="index" :style="{ background: (index + 1) % 2 == 0 ? 'rgba(228, 234, 245, 0.3)' : 'unset', }">
+          <tr
+            v-for="(item, index) in priceData"
+            :key="index"
+            :style="{ background: (index + 1) % 2 == 0 ? 'rgba(228, 234, 245, 0.3)' : 'unset', }"
+          >
             <td>{{ item.number }}</td>
             <template v-if="index + 1 == priceData.length">
               <td colspan="3">
-                <div class="priceTableBtn" @click="$showPhoneNumber()">联系供应商</div>
+                <div
+                  class="priceTableBtn"
+                  @click="$showPhoneNumber()"
+                >
+                  联系供应商
+                </div>
               </td>
             </template>
             <template v-else>
@@ -156,16 +306,25 @@
           </tr>
         </table>
         <div class="priceRemarks">
-          <div class="priceRemarksItem" style="border-bottom: 1px solid #d8d8d8">
+          <div
+            class="priceRemarksItem"
+            style="border-bottom: 1px solid #d8d8d8"
+          >
             <div style="margin-bottom: 13px">
-              <img class="priceRemarksItemImg" src="../../assets/corpDetailImg/payCenterFileSpace.png" />
+              <img
+                class="priceRemarksItemImg"
+                src="../../assets/corpDetailImg/payCenterFileSpace.png"
+              >
               <span>存储空间说明</span>
             </div>
             <span class="priceRemarksText">以上各版本的初始容量均为10G，储存容量达到上限后需扩容或者删掉部分文件才能继续上传新文件，扩容套餐价格请咨询服务商。</span>
           </div>
           <div class="priceRemarksItem">
             <div style="margin-bottom: 13px">
-              <img class="priceRemarksItemImg" src="../../assets/corpDetailImg/payCenterfileShare.png" />
+              <img
+                class="priceRemarksItemImg"
+                src="../../assets/corpDetailImg/payCenterfileShare.png"
+              >
               <span>文件分享说明</span>
             </div>
             <span class="priceRemarksText">以上各版本的文件分享数量与对应的人数相关，分享文件数量上限=人数*5，如1人版分享上限为5个，5人版为25个，15人版为75个...以此类推，分享数量达到上限后需升级版本或者取消已分享的文件才能继续分享。</span>
@@ -293,9 +452,9 @@ export default {
         personPercent: 0,
       },
       avatorUrl:
-        process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+        process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
 
-      payUrl: process.env.BASE_API + "/api/WebOrder/preUnifiedorder",
+      payUrl: process.env.VUE_APP_BASE_API + "/api/WebOrder/preUnifiedorder",
       priceData: [
         { number: "免费试用", date: "1个月", price: null, remarks: null },
         { number: "1（个人版）", date: "1个月", price: 18, remarks: null },
@@ -412,7 +571,7 @@ export default {
       clg
     },
     handlePayCenterTabsChange(index) {
-      this.payUrl = process.env.BASE_API + "/api/WebOrder/preUnifiedorder";
+      this.payUrl = process.env.VUE_APP_BASE_API + "/api/WebOrder/preUnifiedorder";
       this.payCenterTabsActivedIndex = index;
       var payCenterActivedTab = this.payCenterTabs.filter((item) => {
         return item.actived == true;
@@ -445,7 +604,7 @@ export default {
     },
     handleVersionUpgradePriceCardChange(item, index, event) {
       console.log("event", event);
-      this.payUrl = process.env.BASE_API + "/api/WebOrder/preUnifiedorder";
+      this.payUrl = process.env.VUE_APP_BASE_API + "/api/WebOrder/preUnifiedorder";
       this.versionPricesActivedIndex = index;
       var versionPrice = this.versionPrices.filter((a) => {
         return a.actived == true;
@@ -462,7 +621,7 @@ export default {
         decrypt(local.getToken());
     },
     handleSpaceUpgradePriceCardChange(item, index) {
-      this.payUrl = process.env.BASE_API + "/api/WebOrder/preUnifiedorder";
+      this.payUrl = process.env.VUE_APP_BASE_API + "/api/WebOrder/preUnifiedorder";
       this.spacePricesActivedIndex = index;
       var payCenterActivedTab = this.spacePrices.filter((a) => {
         return a.actived == true;

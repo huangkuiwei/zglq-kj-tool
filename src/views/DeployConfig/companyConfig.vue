@@ -1,26 +1,69 @@
 <template>
   <div class="app-container">
-    <el-divider direction='horizontal' content-position="left">企业信息设置</el-divider>
-    <el-form :model="form" :rules="rules" style="width: 500px;margin-top: 20px;" ref="form" label-suffix=":" size="small" label-width="150px">
-      <el-form-item prop="CorpName" label="企业名称">
-        <el-input v-model="form.CorpName"></el-input>
+    <el-divider
+      direction="horizontal"
+      content-position="left"
+    >
+      企业信息设置
+    </el-divider>
+    <el-form
+      ref="form"
+      :model="form"
+      :rules="rules"
+      style="width: 500px;margin-top: 20px;"
+      label-suffix=":"
+      size="small"
+      label-width="150px"
+    >
+      <el-form-item
+        prop="CorpName"
+        label="企业名称"
+      >
+        <el-input v-model="form.CorpName" />
       </el-form-item>
-      <el-form-item prop="CorpCode" label="组织机构代码">
-        <el-input v-model="form.CorpCode"></el-input>
+      <el-form-item
+        prop="CorpCode"
+        label="组织机构代码"
+      >
+        <el-input v-model="form.CorpCode" />
       </el-form-item>
-      <el-form-item prop="superintend" label="管理员姓名">
-        <el-input v-model="form.superintend"></el-input>
+      <el-form-item
+        prop="superintend"
+        label="管理员姓名"
+      >
+        <el-input v-model="form.superintend" />
       </el-form-item>
-      <el-form-item prop="superintendphone" label="管理员手机号">
-        <el-input v-model="form.superintendphone"></el-input>
+      <el-form-item
+        prop="superintendphone"
+        label="管理员手机号"
+      >
+        <el-input v-model="form.superintendphone" />
       </el-form-item>
-      <el-form-item prop="verifyFiles" label="上传授权文件">
+      <el-form-item
+        prop="verifyFiles"
+        label="上传授权文件"
+      >
         <el-input v-model="form.verifyFiles">
-          <el-button slot="append" icon="el-icon-plus" @click="uploadFile"></el-button>
-          <input type="file" v-show="false" name="authFile" ref="authFile">
+          <el-button
+            slot="append"
+            icon="el-icon-plus"
+            @click="uploadFile"
+          />
+          <input
+            v-show="false"
+            ref="authFile"
+            type="file"
+            name="authFile"
+          >
         </el-input>
       </el-form-item>
-      <el-button type="primary" style="width: 350px;margin-left: 150px;" @click="save">{{ $t('base.button.create') }}</el-button>
+      <el-button
+        type="primary"
+        style="width: 350px;margin-left: 150px;"
+        @click="save"
+      >
+        {{ $t('base.button.create') }}
+      </el-button>
     </el-form>
   </div>
 </template>
@@ -66,13 +109,13 @@ export default {
   },
   methods: {
     async querCorp() {
-      let res = await postApi.post('/api/Adminsetup/GetCorptop', null, process.env.BASE_API, this.token)
+      let res = await postApi.post('/api/Adminsetup/GetCorptop', null, process.env.VUE_APP_BASE_API, this.token)
       if (res.code == 1) {
         this.form = res.data
       }
     },
     async save(){
-      let res = await postApi.post('/api/Adminsetup/CorpAddEdit', this.$objectToFormData(this.form), process.env.BASE_API, this.token)
+      let res = await postApi.post('/api/Adminsetup/CorpAddEdit', this.$objectToFormData(this.form), process.env.VUE_APP_BASE_API, this.token)
       if (res.code == 1) {
         this.$succss(res.msg)
         // this.menuData = res.data

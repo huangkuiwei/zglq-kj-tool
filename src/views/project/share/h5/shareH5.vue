@@ -1,63 +1,161 @@
 <template>
   <div style="padding-top: 15px;">
     <!-- 提取码 -->
-    <div class="passwordBox" v-if="verifyContainerVisible && !shareDataContainerVisible && !errorContainerVisible">
+    <div
+      v-if="verifyContainerVisible && !shareDataContainerVisible && !errorContainerVisible"
+      class="passwordBox"
+    >
       <div class="flex">
-        <div v-if="shareUserAvatarDivVisible" class="headNameImg">{{ splitPersonName }}</div>
-        <img v-if="shareUserAvatarImgVisible" :src="shareUserAvatarImg" style="border-radius: 50%; width: 60px; height: 60px" />
+        <div
+          v-if="shareUserAvatarDivVisible"
+          class="headNameImg"
+        >
+          {{ splitPersonName }}
+        </div>
+        <img
+          v-if="shareUserAvatarImgVisible"
+          :src="shareUserAvatarImg"
+          style="border-radius: 50%; width: 60px; height: 60px"
+        >
         <div class="userInfo">
-          <div class="headName">{{ shareUserName }}</div>
-          <div class="headName">{{ corpName }}</div>
+          <div class="headName">
+            {{ shareUserName }}
+          </div>
+          <div class="headName">
+            {{ corpName }}
+          </div>
         </div>
       </div>
       <div style="margin-top:30px">
-        <input class='passValue' type="text" placeholder="请输入提取码" v-model="sharePassword" />
-        <button class="passValue" style="font-size:16px;background:rgba(9,170,255,1);color:#fff" @click="enterShareIndexPage">提取文件</button>
+        <input
+          v-model="sharePassword"
+          class="passValue"
+          type="text"
+          placeholder="请输入提取码"
+        >
+        <button
+          class="passValue"
+          style="font-size:16px;background:rgba(9,170,255,1);color:#fff"
+          @click="enterShareIndexPage"
+        >
+          提取文件
+        </button>
         <!-- <div class="effectiveDate">永久有效</div> -->
       </div>
     </div>
     <!-- 错误 -->
-    <div v-if="errorContainerVisible" style="width: 100%;height: 20%;position:absolute;left:0;right:0;bottom:0;top:0;margin:auto;">
+    <div
+      v-if="errorContainerVisible"
+      style="width: 100%;height: 20%;position:absolute;left:0;right:0;bottom:0;top:0;margin:auto;"
+    >
       <div style="text-align:center">
-        <img :src="shareErrorImg" style="width: 50%;" />
-        <div style="color: #909399; font-size: 15px">Sorry {{ errorText ? ',' + errorText : '' }}</div>
+        <img
+          :src="shareErrorImg"
+          style="width: 50%;"
+        >
+        <div style="color: #909399; font-size: 15px">
+          Sorry {{ errorText ? ',' + errorText : '' }}
+        </div>
       </div>
     </div>
 
-    <div class="fileBox" v-if="shareDataContainerVisible && !errorContainerVisible">
-      <div class="flex" style="padding:0 20px">
-        <div class="headNameImg" style="margin:0" v-if="shareUserAvatarDivVisible">{{ splitPersonName }}</div>
-        <img v-if="shareUserAvatarImgVisible" :src="shareUserAvatarImg" style="border-radius: 50%; width: 60px; height: 60px" />
-        <div class="userInfo" style="margin:auto 10px;height:40px;">
-          <div class="headName">{{ shareUserName }}</div>
-          <div class="headName" style="font-size: 14px;">{{ corpName }}</div>
+    <div
+      v-if="shareDataContainerVisible && !errorContainerVisible"
+      class="fileBox"
+    >
+      <div
+        class="flex"
+        style="padding:0 20px"
+      >
+        <div
+          v-if="shareUserAvatarDivVisible"
+          class="headNameImg"
+          style="margin:0"
+        >
+          {{ splitPersonName }}
+        </div>
+        <img
+          v-if="shareUserAvatarImgVisible"
+          :src="shareUserAvatarImg"
+          style="border-radius: 50%; width: 60px; height: 60px"
+        >
+        <div
+          class="userInfo"
+          style="margin:auto 10px;height:40px;"
+        >
+          <div class="headName">
+            {{ shareUserName }}
+          </div>
+          <div
+            class="headName"
+            style="font-size: 14px;"
+          >
+            {{ corpName }}
+          </div>
         </div>
       </div>
-      <div class="tabsContent" style="height:calc(100% - 89px)">
+      <div
+        class="tabsContent"
+        style="height:calc(100% - 89px)"
+      >
         <div style="font-size:16px;padding:15px 16px">
-          <span style="color:#606266;font-weight:700" @click="folderMenuClick(true)"> 全部文件 /</span>
-          <span style="color:#606266;" v-for="(item, index) in folderLists" :key="index"><a @click="folderMenuClick(false, item)">{{ item.name }}</a> <i style="color:#C0C4CC">/</i></span>
+          <span
+            style="color:#606266;font-weight:700"
+            @click="folderMenuClick(true)"
+          > 全部文件 /</span>
+          <span
+            v-for="(item, index) in folderLists"
+            :key="index"
+            style="color:#606266;"
+          ><a @click="folderMenuClick(false, item)">{{ item.name }}</a> <i style="color:#C0C4CC">/</i></span>
         </div>
         <div id="box">
-          <div v-for="(item, index) in DataList" :key="index" :class="{ bagActive: item.isClick == true }">
-            <div class="tabsCon flex" style="width:100%">
-              <div class="flex width100" @click="$viewMode(item)" v-if="$preViewLinkCheck(item)">
+          <div
+            v-for="(item, index) in DataList"
+            :key="index"
+            :class="{ bagActive: item.isClick == true }"
+          >
+            <div
+              class="tabsCon flex"
+              style="width:100%"
+            >
+              <div
+                v-if="$preViewLinkCheck(item)"
+                class="flex width100"
+                @click="$viewMode(item)"
+              >
                 <fileIconComponends :scope="item" />
                 <fileStatusComponends :scope="item" />
               </div>
-              <div class="flex width100" @click="linkToFilePage(item)" v-else-if="item.fileSuffix.toLowerCase() == ''">
+              <div
+                v-else-if="item.fileSuffix.toLowerCase() == ''"
+                class="flex width100"
+                @click="linkToFilePage(item)"
+              >
                 <fileIconComponends :scope="item" />
                 <fileStatusComponends :scope="item" />
               </div>
-              <div class="flex width100" v-else @click="noView()">
+              <div
+                v-else
+                class="flex width100"
+                @click="noView()"
+              >
                 <fileIconComponends :scope="item" />
                 <fileStatusComponends :scope="item" />
               </div>
             </div>
           </div>
-          <div class="noData" v-if='DataList.length == 0'>
-            <img style="" :src="require('@/assets/errorImg/nodata.png')" />
-            <div class="noDataTit">{{ $t('base.button.noData') }}</div>
+          <div
+            v-if="DataList.length == 0"
+            class="noData"
+          >
+            <img
+              style=""
+              :src="require('@/assets/errorImg/nodata.png')"
+            >
+            <div class="noDataTit">
+              {{ $t('base.button.noData') }}
+            </div>
           </div>
         </div>
       </div>
@@ -73,7 +171,7 @@ import shareErrorImg from "@/assets/errorImg/shareError.png";
 import { decrypt, encrypt } from '@/utils'
 import postApi from '@/api/document/indexApi'
 export default ({
-  name:'shareH5',
+  name:'ShareH5',
   components: {
     fileIconComponends,
     fileStatusComponends,
@@ -104,6 +202,46 @@ export default ({
       corpName: null
     }
 
+  },
+  async created() {
+    document.title = this.$webTitle
+    this.$store.state.app.shareMode = true
+    this.shareIuid = Object.keys(this.$route.query)[0];
+
+    postApi.get("/api/WebOrder/ServiceTimeVerify").then(async () => {
+      var res = await shareApi.getShareInfo(this.shareIuid);
+      if (res.code == 1) {
+        this.canDownload = res.data.isallow == "1" ? true : false;
+        this.shareUserName = res.data.userName;
+        this.splitPersonName = (this.shareUserName.split("").reverse().join("").substring(0, 2)).split("").reverse().join("")
+        // this.fileOrFileFolderId = res.data.mainIUID;
+        this.shareUserAvatarImg = process.env.VUE_APP_BASE_API +
+            "/api/home/GetimgFile?fileUrl=" +
+            encodeURIComponent(encrypt(res.data.ddUserAvatar));
+        this.corpName = res.data.corpName;
+        if (!res.data.sharebit) {
+          this.errorText = "分享内容已过期"
+          this.errorContainerVisible = true
+        } else if (!res.data.isvisible) {
+          this.verifyContainerVisible = true;
+        } else {
+          //直接通过、无需提取码
+          this.$store.state.app.preViewDownloadBtnVisible = this.canDownload;
+          this.shareDataContainerVisible = true; //显示分享数据容器
+          this.loadData()
+        }
+        if (res.data.ddUserAvatar) {
+          this.shareUserAvatarImgVisible = true;
+        } else {
+          this.shareUserAvatarDivVisible = true;
+        }
+      } else {
+        this.errorText = "服务器繁忙"
+        this.errorContainerVisible = true
+      }
+    }).catch(() => {
+      localStorage.setItem('shareUrl', this.$route.fullPath)
+    })
   },
   methods: {
     folderMenuClick(initMode, data) {
@@ -189,46 +327,6 @@ export default ({
       this.$customToast('功能暂停，服务端未支持', 'error')
     }
 
-  },
-  async created() {
-    document.title = this.$webTitle
-    this.$store.state.app.shareMode = true
-    this.shareIuid = Object.keys(this.$route.query)[0];
-
-    postApi.get("/api/WebOrder/ServiceTimeVerify").then(async () => {
-      var res = await shareApi.getShareInfo(this.shareIuid);
-      if (res.code == 1) {
-        this.canDownload = res.data.isallow == "1" ? true : false;
-        this.shareUserName = res.data.userName;
-        this.splitPersonName = (this.shareUserName.split("").reverse().join("").substring(0, 2)).split("").reverse().join("")
-        // this.fileOrFileFolderId = res.data.mainIUID;
-        this.shareUserAvatarImg = process.env.BASE_API +
-            "/api/home/GetimgFile?fileUrl=" +
-            encodeURIComponent(encrypt(res.data.ddUserAvatar));
-        this.corpName = res.data.corpName;
-        if (!res.data.sharebit) {
-          this.errorText = "分享内容已过期"
-          this.errorContainerVisible = true
-        } else if (!res.data.isvisible) {
-          this.verifyContainerVisible = true;
-        } else {
-          //直接通过、无需提取码
-          this.$store.state.app.preViewDownloadBtnVisible = this.canDownload;
-          this.shareDataContainerVisible = true; //显示分享数据容器
-          this.loadData()
-        }
-        if (res.data.ddUserAvatar) {
-          this.shareUserAvatarImgVisible = true;
-        } else {
-          this.shareUserAvatarDivVisible = true;
-        }
-      } else {
-        this.errorText = "服务器繁忙"
-        this.errorContainerVisible = true
-      }
-    }).catch(() => {
-      localStorage.setItem('shareUrl', this.$route.fullPath)
-    })
   },
 })
 </script>

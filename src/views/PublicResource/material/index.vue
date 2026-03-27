@@ -1,117 +1,364 @@
 <template>
-	<el-container style="height:100%;margin-left: 1px;" class="commonKu">
-		<el-main class="buildMain">
-			<div class="mainTop" style="margin-bottom:1px;box-sizing: content-box;">
-				<div class="flex ai-center" style="width: 100%;">
-					<el-button type="primary" size="small" icon="el-icon-plus" @click="handleBuild('ADD')">{{ $t('base.button.create') }}</el-button>
-					<el-form style="display:flex;align-items:center; flex-wrap: wrap;margin-left: auto;">
-						<el-form-item label="" style="display:flex;margin-right:15px">
-							<el-select size='small' :placeholder="$t('base.button.kind')" v-model="searchForm.materialLibraryTypeIUID" clearable style="width:120px">
-								<el-option :label="item.itemText" :value="item.iuid" v-for="(item, index) in typeList" :key="index"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="" style="display:flex;margin-right:15px">
-							<el-select size='small' :placeholder="$t('base.button.label')" v-model="searchForm.label" clearable style="width:120px">
-								<el-option :label="item" :value="item" v-for="(item, index) in labelData" :key="item + index"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-input :placeholder="$t('base.button.inputKeyword')" prefix-icon="el-icon-search" style="width:180px;margin-right:15px" clearable v-model="searchForm.name" size="small">
-						</el-input>
-					</el-form>
-					<el-button type="primary" size="small" plain :icon="pictureMode ? 'el-icon-menu' : 'el-icon-tickets'" @click="pictureMode = !pictureMode">{{ pictureMode ? $t('base.label.list') : $t('base.label.picture') }}</el-button>
-				</div>
-			</div>
-			<!-- 列表 -->
-			<el-row style="height:calc(100vh - 158px);background:#fff" v-if="!pictureMode">
-				<el-table class="t-table" ref="multipleTable" :data="materialData" stripe :header-cell-style="$thStyle" style="font-size: 13px" height="100%">
-					<el-table-column width="100px" type="index" align="center" v-if="page != 'resource'" :label="$t('base.button.index')"></el-table-column>
-					<el-table-column align="center" :label="$t('base.button.preview')">
-						<template slot-scope="scope">
-							<img style="width:80px;height:80px;border:none;padding:10px 0;cursor:pointer;object-fit: contain;" :src="imageUrl + encodeURIComponent((encrypt(item.imgFilePath)))" @click="openFileList(scope.row)">
-						</template>
-					</el-table-column>
-					<el-table-column :label="$t('base.button.name')">
-						<template slot-scope="scope">
-							<el-link style="cursor:pointer" @click="openFileList(scope.row)" :underline="false">
-								{{ scope.row.name }}
-							</el-link>
-						</template>
-					</el-table-column>
-					<el-table-column prop="materialLibraryTypeName" align="center" :label="$t('base.button.kind')"></el-table-column>
-					<el-table-column prop="label" align="center" :label="$t('base.button.label')"></el-table-column>
-					<el-table-column prop="remark" align="center" :label="$t('base.button.remark')"></el-table-column>
-					<el-table-column :label="$t('base.formLabel.operation')" align="center" width="220">
-						<template slot-scope="scope">
-							<el-button v-if="user.iscorpadmin" type="text" @click="handleBuild('EDIT', scope.row)">{{ $t('base.button.edit') }}</el-button>
-							<el-button v-if="user.iscorpadmin" type="text" style="color: #F56C6C;" @click="deleteBuild(scope.row)">{{ $t('base.button.delete') }}</el-button>
-						</template>
-					</el-table-column>
-					<div slot="empty" class="empty">
-						<img :src="tableEmptyImage" />
-						<span>{{ $t('base.button.noData') }}</span>
-					</div>
-				</el-table>
-			</el-row>
-			<!-- 图览 -->
-			<el-row style="height:calc(100vh - 158px);background:#fff;overflow:auto" v-else>
-				<div class="mainCon">
-					<!-- <div> -->
-					<div class="flex wrap" style="padding:0 20px">
-						<div class="mainConLi img-item" v-for="(item, index) in materialData" :key="index">
-							<div @click="openFileList(item)">
-								<img :src="imageUrl + encodeURIComponent((encrypt(item.imgFilePath)))" style="object-fit: contain;">
-								<div class="filename">{{ item.name }}</div>
-							</div>
-							<div class="mainFlex img-btn" style="position:absolute;bottom:0;width:100%">
-								<el-button size="mini" type="text" style="font-size: 15px;flex:1" class="btn-group" @click="handleBuild('EDIT', item)"><i class="el-icon-edit" style="font-size:15px"></i>{{ $t('base.button.edit') }}</el-button>
-								<el-button size="mini" type="text" style="font-size: 15px;flex:1" class="btn-group" @click="deleteBuild(item)"><i class="el-icon-delete" style="font-size:15px"></i>{{ $t('base.button.delete') }}</el-button>
-							</div>
-						</div>
-						<div slot="empty" class="phoEmpty" v-if="materialData.length == 0">
-							<span>{{ $t('base.button.noData') }}</span>
-						</div>
-					</div>
-					<!-- </div> -->
-				</div>
-			</el-row>
-			<el-pagination :pager-count="5" class="t-pagination" @size-change="handleSizeChange" @current-change="paginationCurrentChange" :current-page.sync="searchForm.page" :page-sizes="[10, 20, 40]" :page-size="searchForm.rows" layout="total, sizes, prev, pager, next, jumper" :total="total" background></el-pagination>
-			<!-- 材质数据列表 -->
-			<file-list :data="currentMaterialData" @closeFileList="closeFileList" :visible.sync="listDataVisible"></file-list>
-			<!-- 新增编辑材质库 -->
-			<el-dialog :title="addOrEdit == 'ADD' ? '创建材质库' : '编辑材质库'" :visible.sync="addVisible" width="420px" :modal="true" v-dialogDrag :close-on-click-modal="false">
-				<el-form ref="form" :model="AddForm" :rules="rules" size="small" label-width="88px" label-suffix=":">
-					<el-form-item :label="$t('base.button.name')" prop="name">
-						<el-input type="text" placeholder="请输入名称" v-model="AddForm.name" />
-					</el-form-item>
-					<el-form-item :label="$t('base.button.kind')" prop="materialLibraryTypeIUID">
-						<el-select size='small' placeholder="请选择分类" v-model="AddForm.materialLibraryTypeIUID" clearable style="width:100%">
-							<el-option :label="item.itemText" :value="item.iuid" v-for="(item, index) in typeList" :key="index"></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item :label="$t('base.button.label')">
-						<el-select v-model="AddForm.label" style="width: 100%;" allow-create filterable placeholder="请输入标签" clearable>
-							<el-option :label="item" :value="item" v-for="(item, index) in labelData" :key="index"></el-option>
-						</el-select>
-					</el-form-item>
-					<el-form-item label="缩略图" required>
-						<el-upload class="avatar-uploader library" action="batchImportUrl" :on-change="uploadSuccess" :on-remove="removeFile" :auto-upload="false" accept="image/*" :show-file-list="false">
-							<img v-if="posterUrl" :src="posterUrl" class="avatar">
-							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-						</el-upload>
-
-					</el-form-item>
-					<el-form-item :label="$t('base.button.remark')">
-						<el-input type="text" placeholder="备注" v-model="AddForm.remark">
-						</el-input>
-					</el-form-item>
-				</el-form>
-				<span slot="footer" class="dialog-footer">
-					<el-button type="primary" @click="sure">{{ $t('base.button.confirm') }}</el-button>
-					<el-button @click="addVisible = false">{{ $t('base.button.cancel') }}</el-button>
-				</span>
-			</el-dialog>
-		</el-main>
-	</el-container>
+  <el-container
+    style="height:100%;margin-left: 1px;"
+    class="commonKu"
+  >
+    <el-main class="buildMain">
+      <div
+        class="mainTop"
+        style="margin-bottom:1px;box-sizing: content-box;"
+      >
+        <div
+          class="flex ai-center"
+          style="width: 100%;"
+        >
+          <el-button
+            type="primary"
+            size="small"
+            icon="el-icon-plus"
+            @click="handleBuild('ADD')"
+          >
+            {{ $t('base.button.create') }}
+          </el-button>
+          <el-form style="display:flex;align-items:center; flex-wrap: wrap;margin-left: auto;">
+            <el-form-item
+              label=""
+              style="display:flex;margin-right:15px"
+            >
+              <el-select
+                v-model="searchForm.materialLibraryTypeIUID"
+                size="small"
+                :placeholder="$t('base.button.kind')"
+                clearable
+                style="width:120px"
+              >
+                <el-option
+                  v-for="(item, index) in typeList"
+                  :key="index"
+                  :label="item.itemText"
+                  :value="item.iuid"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label=""
+              style="display:flex;margin-right:15px"
+            >
+              <el-select
+                v-model="searchForm.label"
+                size="small"
+                :placeholder="$t('base.button.label')"
+                clearable
+                style="width:120px"
+              >
+                <el-option
+                  v-for="(item, index) in labelData"
+                  :key="item + index"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+            <el-input
+              v-model="searchForm.name"
+              :placeholder="$t('base.button.inputKeyword')"
+              prefix-icon="el-icon-search"
+              style="width:180px;margin-right:15px"
+              clearable
+              size="small"
+            />
+          </el-form>
+          <el-button
+            type="primary"
+            size="small"
+            plain
+            :icon="pictureMode ? 'el-icon-menu' : 'el-icon-tickets'"
+            @click="pictureMode = !pictureMode"
+          >
+            {{ pictureMode ? $t('base.label.list') : $t('base.label.picture') }}
+          </el-button>
+        </div>
+      </div>
+      <!-- 列表 -->
+      <el-row
+        v-if="!pictureMode"
+        style="height:calc(100vh - 158px);background:#fff"
+      >
+        <el-table
+          ref="multipleTable"
+          class="t-table"
+          :data="materialData"
+          stripe
+          :header-cell-style="$thStyle"
+          style="font-size: 13px"
+          height="100%"
+        >
+          <el-table-column
+            v-if="page != 'resource'"
+            width="100px"
+            type="index"
+            align="center"
+            :label="$t('base.button.index')"
+          />
+          <el-table-column
+            align="center"
+            :label="$t('base.button.preview')"
+          >
+            <template slot-scope="scope">
+              <img
+                style="width:80px;height:80px;border:none;padding:10px 0;cursor:pointer;object-fit: contain;"
+                :src="imageUrl + encodeURIComponent((encrypt(item.imgFilePath)))"
+                @click="openFileList(scope.row)"
+              >
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('base.button.name')">
+            <template slot-scope="scope">
+              <el-link
+                style="cursor:pointer"
+                :underline="false"
+                @click="openFileList(scope.row)"
+              >
+                {{ scope.row.name }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="materialLibraryTypeName"
+            align="center"
+            :label="$t('base.button.kind')"
+          />
+          <el-table-column
+            prop="label"
+            align="center"
+            :label="$t('base.button.label')"
+          />
+          <el-table-column
+            prop="remark"
+            align="center"
+            :label="$t('base.button.remark')"
+          />
+          <el-table-column
+            :label="$t('base.formLabel.operation')"
+            align="center"
+            width="220"
+          >
+            <template slot-scope="scope">
+              <el-button
+                v-if="user.iscorpadmin"
+                type="text"
+                @click="handleBuild('EDIT', scope.row)"
+              >
+                {{ $t('base.button.edit') }}
+              </el-button>
+              <el-button
+                v-if="user.iscorpadmin"
+                type="text"
+                style="color: #F56C6C;"
+                @click="deleteBuild(scope.row)"
+              >
+                {{ $t('base.button.delete') }}
+              </el-button>
+            </template>
+          </el-table-column>
+          <div
+            slot="empty"
+            class="empty"
+          >
+            <img :src="tableEmptyImage">
+            <span>{{ $t('base.button.noData') }}</span>
+          </div>
+        </el-table>
+      </el-row>
+      <!-- 图览 -->
+      <el-row
+        v-else
+        style="height:calc(100vh - 158px);background:#fff;overflow:auto"
+      >
+        <div class="mainCon">
+          <!-- <div> -->
+          <div
+            class="flex wrap"
+            style="padding:0 20px"
+          >
+            <div
+              v-for="(item, index) in materialData"
+              :key="index"
+              class="mainConLi img-item"
+            >
+              <div @click="openFileList(item)">
+                <img
+                  :src="imageUrl + encodeURIComponent((encrypt(item.imgFilePath)))"
+                  style="object-fit: contain;"
+                >
+                <div class="filename">
+                  {{ item.name }}
+                </div>
+              </div>
+              <div
+                class="mainFlex img-btn"
+                style="position:absolute;bottom:0;width:100%"
+              >
+                <el-button
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1"
+                  class="btn-group"
+                  @click="handleBuild('EDIT', item)"
+                >
+                  <i
+                    class="el-icon-edit"
+                    style="font-size:15px"
+                  />{{ $t('base.button.edit') }}
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1"
+                  class="btn-group"
+                  @click="deleteBuild(item)"
+                >
+                  <i
+                    class="el-icon-delete"
+                    style="font-size:15px"
+                  />{{ $t('base.button.delete') }}
+                </el-button>
+              </div>
+            </div>
+            <div
+              v-if="materialData.length == 0"
+              slot="empty"
+              class="phoEmpty"
+            >
+              <span>{{ $t('base.button.noData') }}</span>
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+      </el-row>
+      <el-pagination
+        :pager-count="5"
+        class="t-pagination"
+        :current-page.sync="searchForm.page"
+        :page-sizes="[10, 20, 40]"
+        :page-size="searchForm.rows"
+        layout="total, sizes, prev, pager, next, jumper"
+@size-change="handleSizeChange" :total="total" background @current-change="paginationCurrentChange"
+      />
+      <!-- 材质数据列表 -->
+      <file-list
+        :data="currentMaterialData"
+        :visible.sync="listDataVisible"
+        @closeFileList="closeFileList"
+      />
+      <!-- 新增编辑材质库 -->
+      <el-dialog
+        v-dialogDrag
+        :title="addOrEdit == 'ADD' ? '创建材质库' : '编辑材质库'"
+        :visible.sync="addVisible"
+        width="420px"
+        :modal="true"
+        :close-on-click-modal="false"
+      >
+        <el-form
+          ref="form"
+          :model="AddForm"
+          :rules="rules"
+          size="small"
+          label-width="88px"
+          label-suffix=":"
+        >
+          <el-form-item
+            :label="$t('base.button.name')"
+            prop="name"
+          >
+            <el-input
+              v-model="AddForm.name"
+              type="text"
+              placeholder="请输入名称"
+            />
+          </el-form-item>
+          <el-form-item
+            :label="$t('base.button.kind')"
+            prop="materialLibraryTypeIUID"
+          >
+            <el-select
+              v-model="AddForm.materialLibraryTypeIUID"
+              size="small"
+              placeholder="请选择分类"
+              clearable
+              style="width:100%"
+            >
+              <el-option
+                v-for="(item, index) in typeList"
+                :key="index"
+                :label="item.itemText"
+                :value="item.iuid"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('base.button.label')">
+            <el-select
+              v-model="AddForm.label"
+              style="width: 100%;"
+              allow-create
+              filterable
+              placeholder="请输入标签"
+              clearable
+            >
+              <el-option
+                v-for="(item, index) in labelData"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="缩略图"
+            required
+          >
+            <el-upload
+              class="avatar-uploader library"
+              action="batchImportUrl"
+              :on-change="uploadSuccess"
+              :on-remove="removeFile"
+              :auto-upload="false"
+              accept="image/*"
+              :show-file-list="false"
+            >
+              <img
+                v-if="posterUrl"
+                :src="posterUrl"
+                class="avatar"
+              >
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+              />
+            </el-upload>
+          </el-form-item>
+          <el-form-item :label="$t('base.button.remark')">
+            <el-input
+              v-model="AddForm.remark"
+              type="text"
+              placeholder="备注"
+            />
+          </el-form-item>
+        </el-form>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click="sure"
+          >{{ $t('base.button.confirm') }}</el-button>
+          <el-button @click="addVisible = false">{{ $t('base.button.cancel') }}</el-button>
+        </span>
+      </el-dialog>
+    </el-main>
+  </el-container>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -123,7 +370,7 @@ import fileList from "./fileList.vue";
 import request from '@/utils/request'
 
 export default {
-	name: 'materialLibrary',
+	name: 'MaterialLibrary',
 	components: {
 		fileList
 	},
@@ -150,7 +397,7 @@ export default {
 			listDataVisible: false,
 			dialogVisible: false,
 			addVisible: false,
-			baseUrl: process.env.BASE_API,
+			baseUrl: process.env.VUE_APP_BASE_API,
 
 			pictureMode: true,
 			addOrEdit: '',
@@ -162,7 +409,7 @@ export default {
 				remark: '', //备注
 			},
 			posterUrl: '',
-      imageUrl: process.env.BASE_API + "/api/home/GetimgFile?fileUrl="
+      imageUrl: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl="
 		}
 	},
 	computed: {

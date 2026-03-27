@@ -1,35 +1,113 @@
 <template>
-  <div class="app-container background table-box" :style="{ height: 'calc(100vh - 51px)' }" style="padding: 0; width: 100%">
+  <div
+    class="app-container background table-box"
+    :style="{ height: 'calc(100vh - 51px)' }"
+    style="padding: 0; width: 100%"
+  >
     <template v-if="hasCorp">
       <div class="flex ai-center oper-bar">
-        <el-button icon="el-icon-plus" type="primary" plain v-if="$hasPermi('projects:projectchunkson:projectadd')" size="small" @click="handleAdd()">{{ $t("projects.button.add") }}</el-button>
-        <el-button icon="el-icon-delete" plain size="small" v-if="tableSelection.length > 0 && pathName != 'myCollectionProject' && pathName != 'lately'" @click="handleDelete(true)" type="danger">{{ $t("base.button.delete") }}</el-button>
-        <div class="flex ai-center" style="margin-left: auto">
+        <el-button
+          v-if="$hasPermi('projects:projectchunkson:projectadd')"
+          icon="el-icon-plus"
+          type="primary"
+          plain
+          size="small"
+          @click="handleAdd()"
+        >
+          {{ $t("projects.button.add") }}
+        </el-button>
+        <el-button
+          v-if="tableSelection.length > 0 && pathName != 'myCollectionProject' && pathName != 'lately'"
+          icon="el-icon-delete"
+          plain
+          size="small"
+          type="danger"
+          @click="handleDelete(true)"
+        >
+          {{ $t("base.button.delete") }}
+        </el-button>
+        <div
+          class="flex ai-center"
+          style="margin-left: auto"
+        >
           <!-- 查询 -->
-          <el-input class="top-search" style="width: 183px;margin-right: 15px;" size="small" :placeholder="$t('projects.search')" v-model="searchForm.ProjectName" @change="handleSearch"></el-input>
-          <el-form :model="searchForm" class="searchForm" ref="form" label-width="74px" :inline="true" size="small" @submit.native.prevent>
+          <el-input
+            v-model="searchForm.ProjectName"
+            class="top-search"
+            style="width: 183px;margin-right: 15px;"
+            size="small"
+            :placeholder="$t('projects.search')"
+            @change="handleSearch"
+          />
+          <el-form
+            ref="form"
+            :model="searchForm"
+            class="searchForm"
+            label-width="74px"
+            :inline="true"
+            size="small"
+            @submit.native.prevent
+          >
             <el-form-item v-if="$deployName == 'luqiao'">
-              <el-select style="width: 140px" v-model="searchForm.province" :placeholder="$t('projects.label.country')" @visible-change="(e) => { if (e) { this.queryCountries(); } }" @change="handleSearch" clearable>
-                <el-option v-for="(item, idx) in countriesOptions" :key="item.province + idx" :label="item.province" :value="item.province">
-                </el-option>
+              <el-select
+                v-model="searchForm.province"
+                style="width: 140px"
+                :placeholder="$t('projects.label.country')"
+                clearable
+                @visible-change="(e) => { if (e) { this.queryCountries(); } }"
+                @change="handleSearch"
+              >
+                <el-option
+                  v-for="(item, idx) in countriesOptions"
+                  :key="item.province + idx"
+                  :label="item.province"
+                  :value="item.province"
+                />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-select style="width: 140px" v-model="searchForm.projectTypeIUID" :placeholder="$t('projects.label.type')" @change="handleSearch" clearable>
-                <el-option v-for="item in projectTypeOptions" :key="item.iuid" :label="item.name" :value="item.iuid">
-                </el-option>
+              <el-select
+                v-model="searchForm.projectTypeIUID"
+                style="width: 140px"
+                :placeholder="$t('projects.label.type')"
+                clearable
+                @change="handleSearch"
+              >
+                <el-option
+                  v-for="item in projectTypeOptions"
+                  :key="item.iuid"
+                  :label="item.name"
+                  :value="item.iuid"
+                />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-cascader style="width: 140px" :options="ProjectDesignPhaseOptions" v-model="searchForm.DesignPhaseIUID" :placeholder="$t('base.label.projectPhase')" clearable :props="{ value: 'iuid', label: 'itemText', children: 'child' }" @change="handleSearch">
-              </el-cascader>
+              <el-cascader
+                v-model="searchForm.DesignPhaseIUID"
+                style="width: 140px"
+                :options="ProjectDesignPhaseOptions"
+                :placeholder="$t('base.label.projectPhase')"
+                clearable
+                :props="{ value: 'iuid', label: 'itemText', children: 'child' }"
+                @change="handleSearch"
+              />
             </el-form-item>
             <el-form-item>
-              <el-date-picker type="month" style="width: 140px" v-model="searchForm.CreateTime" value-format="yyyy-MM" @change="handleSearch(...arguments, 'time')" :placeholder="$t('base.label.createDate')" clearable>
-              </el-date-picker>
+              <el-date-picker
+                v-model="searchForm.CreateTime"
+                type="month"
+                style="width: 140px"
+                value-format="yyyy-MM"
+                :placeholder="$t('base.label.createDate')"
+                clearable
+                @change="handleSearch(...arguments, 'time')"
+              />
             </el-form-item>
             <el-form-item>
-              <div class="flex ai-center" style="position: relative">
+              <div
+                class="flex ai-center"
+                style="position: relative"
+              >
                 <!-- <div class="search-box flex ai-center" :class="{ show: showSearch }">
                   <el-button type="text" icon="el-icon-search" size="small" style="padding: 0 11px" @click="handleSearch"></el-button>
                 </div> -->
@@ -39,156 +117,413 @@
                 <!-- 刷新 -->
                 <!-- <el-button circle icon="el-icon-refresh-right" size="small" style="margin-left: 5px" @click=" searchForm.ProjectName = ''; loadData();"></el-button> -->
                 <!-- 图览 -->
-                <el-button v-if="!pictureMode" icon="el-icon-menu" size="small" @click="modeChange(true)" key="picture">{{ $t('base.label.picture') }}</el-button>
+                <el-button
+                  v-if="!pictureMode"
+                  key="picture"
+                  icon="el-icon-menu"
+                  size="small"
+                  @click="modeChange(true)"
+                >
+                  {{ $t('base.label.picture') }}
+                </el-button>
                 <!-- 列表 -->
-                <el-button v-else icon="el-icon-s-fold" size="small" @click="modeChange(false)" key="list">{{ $t('base.label.list') }}</el-button>
+                <el-button
+                  v-else
+                  key="list"
+                  icon="el-icon-s-fold"
+                  size="small"
+                  @click="modeChange(false)"
+                >
+                  {{ $t('base.label.list') }}
+                </el-button>
               </div>
             </el-form-item>
           </el-form>
         </div>
       </div>
-      <div class="container-padding" :style="{ padding: '0 20px' }">
-        <el-row class="content-inner table" style="margin-bottom: 0" v-if="!pictureMode">
-          <el-table class="t-table" ref="multipleTable" :data="tableData" stripe :header-cell-style="$thStyle" style="font-size: 13px" :style="{ 'margin-top': '0' }" :height="'100%'" @selection-change="handleSelectionChange" @sort-change="sortChange" :default-sort="{ prop: $route.name == 'lately' ? 'browseDate' : 'createTime', order: 'descending', }">
-            <el-table-column type="selection" width="55" />
-            <el-table-column show-overflow-tooltip :label="$t('projects.label.name')">
+      <div
+        class="container-padding"
+        :style="{ padding: '0 20px' }"
+      >
+        <el-row
+          v-if="!pictureMode"
+          class="content-inner table"
+          style="margin-bottom: 0"
+        >
+          <el-table
+            ref="multipleTable"
+            class="t-table"
+            :data="tableData"
+            stripe
+            :header-cell-style="$thStyle"
+            style="font-size: 13px"
+            :style="{ 'margin-top': '0' }"
+            :height="'100%'"
+            :default-sort="{ prop: $route.name == 'lately' ? 'browseDate' : 'createTime', order: 'descending', }"
+@selection-change="handleSelectionChange" @sort-change="sortChange"
+          >
+            <el-table-column
+              type="selection"
+              width="55"
+            />
+            <el-table-column
+              show-overflow-tooltip
+              :label="$t('projects.label.name')"
+            >
               <template slot-scope="scope">
-                <i class="iconFile">
-                </i>
-                <el-link @click="linkToFilePage(scope.row)" :underline="false">{{ scope.row.projectName }}</el-link>
+                <i class="iconFile" />
+                <el-link
+                  :underline="false"
+                  @click="linkToFilePage(scope.row)"
+                >
+                  {{ scope.row.projectName }}
+                </el-link>
               </template>
             </el-table-column>
-            <el-table-column prop="projectTypeName" width="140px" :label="$t('projects.label.type')">
-            </el-table-column>
+            <el-table-column
+              prop="projectTypeName"
+              width="140px"
+              :label="$t('projects.label.type')"
+            />
             <!--el-table-column prop="projectTemplate" label="项目模板"></el-table-column-->
-            <el-table-column prop="projectAddress" show-overflow-tooltip :label="$t('projects.label.address')">
-              <template slot-scope="scope">{{ scope.row.projectAddress ? scope.row.projectAddress : scope.row.province ?
-                scope.row.province + "/" + scope.row.city + (scope.row.district ? "/" + scope.row.district : "") : ""
-                }}</template>
+            <el-table-column
+              prop="projectAddress"
+              show-overflow-tooltip
+              :label="$t('projects.label.address')"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.projectAddress ? scope.row.projectAddress : scope.row.province ?
+                  scope.row.province + "/" + scope.row.city + (scope.row.district ? "/" + scope.row.district : "") : ""
+                }}
+              </template>
             </el-table-column>
-            <el-table-column v-if="$route.name == 'lately'" prop="browseDate" sortable="custom" :label="$t('base.formLabel.latelyTime')">
-            </el-table-column>
-            <el-table-column prop="createTime" sortable="custom" :label="$t('base.label.createTime')">
-            </el-table-column>
-            <el-table-column width="180px" prop="active" :label="$t('base.formLabel.operation')">
+            <el-table-column
+              v-if="$route.name == 'lately'"
+              prop="browseDate"
+              sortable="custom"
+              :label="$t('base.formLabel.latelyTime')"
+            />
+            <el-table-column
+              prop="createTime"
+              sortable="custom"
+              :label="$t('base.label.createTime')"
+            />
+            <el-table-column
+              width="180px"
+              prop="active"
+              :label="$t('base.formLabel.operation')"
+            >
               <template slot-scope="scope">
                 <template v-if="!$isRead">
-                  <el-tooltip v-if="scope.row.isCollection == 0" effect="dark" :content="$t('projects.cardtips.collect')" placement="top" style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; ">
-                    <el-link :underline="false" icon="iconfont icon-quxiaoshoucang" @click="collectionPoject(scope.row)">
-                    </el-link>
+                  <el-tooltip
+                    v-if="scope.row.isCollection == 0"
+                    effect="dark"
+                    :content="$t('projects.cardtips.collect')"
+                    placement="top"
+                    style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; "
+                  >
+                    <el-link
+                      :underline="false"
+                      icon="iconfont icon-quxiaoshoucang"
+                      @click="collectionPoject(scope.row)"
+                    />
                   </el-tooltip>
-                  <el-tooltip v-if="scope.row.isCollection == 1" effect="dark" :content="$t('projects.cardtips.cancelCollect')" placement="top" style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; ">
-                    <el-link :underline="false" icon="iconfont icon-shoucang" @click="cancelCollectionPoject(scope.row)" style="color: #ffe039">
-                    </el-link>
+                  <el-tooltip
+                    v-if="scope.row.isCollection == 1"
+                    effect="dark"
+                    :content="$t('projects.cardtips.cancelCollect')"
+                    placement="top"
+                    style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; "
+                  >
+                    <el-link
+                      :underline="false"
+                      icon="iconfont icon-shoucang"
+                      style="color: #ffe039"
+                      @click="cancelCollectionPoject(scope.row)"
+                    />
                   </el-tooltip>
-                  <el-tooltip class="tableOpeColMargin" effect="dark" :content="$t('projects.cardtips.detail')" placement="top">
-                    <el-link :underline="false" icon="el-icon-tickets" @click="handleOpeProject('DETAIL', scope.row)">
-                    </el-link>
+                  <el-tooltip
+                    class="tableOpeColMargin"
+                    effect="dark"
+                    :content="$t('projects.cardtips.detail')"
+                    placement="top"
+                  >
+                    <el-link
+                      :underline="false"
+                      icon="el-icon-tickets"
+                      @click="handleOpeProject('DETAIL', scope.row)"
+                    />
                   </el-tooltip>
-                  <el-dropdown v-if="scope.row.isCreator === 1" class="tableOpeColMargin" trigger="click" size="small">
-                    <el-link :underline="false" icon="el-icon-setting"></el-link>
+                  <el-dropdown
+                    v-if="scope.row.isCreator === 1"
+                    class="tableOpeColMargin"
+                    trigger="click"
+                    size="small"
+                  >
+                    <el-link
+                      :underline="false"
+                      icon="el-icon-setting"
+                    />
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="handleEdit('base', scope.row)">{{ $t("projects.nav.base") }}</el-dropdown-item>
-                      <el-dropdown-item @click.native="handleEdit('member', scope.row)">{{ $t("projects.nav.member") }}</el-dropdown-item>
-                      <el-dropdown-item @click.native="handleEdit('permission', scope.row)">{{ $t("projects.nav.permission") }}</el-dropdown-item>
-                      <el-dropdown-item @click.native="handleEdit('workflow', scope.row)">{{ $t("projects.nav.workflow") }}</el-dropdown-item>
+                      <el-dropdown-item @click.native="handleEdit('base', scope.row)">
+                        {{ $t("projects.nav.base") }}
+                      </el-dropdown-item>
+                      <el-dropdown-item @click.native="handleEdit('member', scope.row)">
+                        {{ $t("projects.nav.member") }}
+                      </el-dropdown-item>
+                      <el-dropdown-item @click.native="handleEdit('permission', scope.row)">
+                        {{ $t("projects.nav.permission") }}
+                      </el-dropdown-item>
+                      <el-dropdown-item @click.native="handleEdit('workflow', scope.row)">
+                        {{ $t("projects.nav.workflow") }}
+                      </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <el-tooltip v-if="scope.row.isCreator === 1" class="tableOpeColMargin" effect="dark" :content="$t('projects.cardtips.delete')" placement="top">
-                    <el-link :underline="false" icon="iconfont icon-delete" @click="handleDelete(false, scope.row)">
-                    </el-link>
+                  <el-tooltip
+                    v-if="scope.row.isCreator === 1"
+                    class="tableOpeColMargin"
+                    effect="dark"
+                    :content="$t('projects.cardtips.delete')"
+                    placement="top"
+                  >
+                    <el-link
+                      :underline="false"
+                      icon="iconfont icon-delete"
+                      @click="handleDelete(false, scope.row)"
+                    />
                   </el-tooltip>
                 </template>
 
                 <template v-else>
-                  <el-tooltip v-if="scope.row.isCollection == 0 && !scope.row.bitmyxm" effect="dark" :content="$t('projects.cardtips.syncProject')" placement="top" style=" width: 20px; height: 25px; line-height: 25px; text-align: center; ">
-                    <el-link :underline="false" icon="el-icon el-icon-refresh" @click="syncProject(scope.row)">
-                    </el-link>
+                  <el-tooltip
+                    v-if="scope.row.isCollection == 0 && !scope.row.bitmyxm"
+                    effect="dark"
+                    :content="$t('projects.cardtips.syncProject')"
+                    placement="top"
+                    style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
+                  >
+                    <el-link
+                      :underline="false"
+                      icon="el-icon el-icon-refresh"
+                      @click="syncProject(scope.row)"
+                    />
                   </el-tooltip>
                 </template>
               </template>
             </el-table-column>
-            <div slot="empty" class="empty">
-              <img :src="tableEmptyImage" />
+            <div
+              slot="empty"
+              class="empty"
+            >
+              <img :src="tableEmptyImage">
               <span>{{ $t('base.button.noData') }}</span>
             </div>
             <!-- <tableEmptyCom /> -->
           </el-table>
         </el-row>
-        <el-row class="content-inner scrollContainer hide-scroll" v-else style="width: 100%; overflow: auto">
-          <div v-if="noData" class="flex ai-center jc-center" style="margin-top: 10vh; color: #999"> {{ $t('base.button.noData') }} </div>
-          <div ref="cardBox" class="flex wrap">
-            <div class="card-item" v-for="(item, index) in tableData" :key="index">
-              <div class="grid-content bg-purple" :class="{ projecBorder: tableSelection.length > 0 ? tableSelection[0].iuid == item.iuid : false, }" @contextmenu.prevent="openMenu($event, item)">
-                <el-image style=" width: 100%; height: 176px; border-top-left-radius: 8px; border-top-right-radius: 8px; " :src="item.images" v-if="item.images" fit="cover" @click="linkToFilePage(item)">
-                  <div slot="error" class="image-slot" @click="linkToFilePage(item)">
-                    <img :src="defaultProjectImage" style=" width: 100%; height: 176px; border-top-left-radius: 8px; border-top-right-radius: 8px; background-size: cover; border: 1px solid #ebeef5; " />
+        <el-row
+          v-else
+          class="content-inner scrollContainer hide-scroll"
+          style="width: 100%; overflow: auto"
+        >
+          <div
+            v-if="noData"
+            class="flex ai-center jc-center"
+            style="margin-top: 10vh; color: #999"
+          >
+            {{ $t('base.button.noData') }}
+          </div>
+          <div
+            ref="cardBox"
+            class="flex wrap"
+          >
+            <div
+              v-for="(item, index) in tableData"
+              :key="index"
+              class="card-item"
+            >
+              <div
+                class="grid-content bg-purple"
+                :class="{ projecBorder: tableSelection.length > 0 ? tableSelection[0].iuid == item.iuid : false, }"
+                @contextmenu.prevent="openMenu($event, item)"
+              >
+                <el-image
+                  v-if="item.images"
+                  style=" width: 100%; height: 176px; border-top-left-radius: 8px; border-top-right-radius: 8px; "
+                  :src="item.images"
+                  fit="cover"
+                  @click="linkToFilePage(item)"
+                >
+                  <div
+                    slot="error"
+                    class="image-slot"
+                    @click="linkToFilePage(item)"
+                  >
+                    <img
+                      :src="defaultProjectImage"
+                      style=" width: 100%; height: 176px; border-top-left-radius: 8px; border-top-right-radius: 8px; background-size: cover; border: 1px solid #ebeef5; "
+                    >
                   </div>
                 </el-image>
-                <el-image style=" width: 100%; height: 176px; border-top-left-radius: 8px; border-top-right-radius: 8px; border: 1px solid #ebeef5; " :src="defaultProjectImage" v-else fit="cover" @click="linkToFilePage(item)">
-                </el-image>
+                <el-image
+                  v-else
+                  style=" width: 100%; height: 176px; border-top-left-radius: 8px; border-top-right-radius: 8px; border: 1px solid #ebeef5; "
+                  :src="defaultProjectImage"
+                  fit="cover"
+                  @click="linkToFilePage(item)"
+                />
                 <div class="describe">
-                  <h3 style="font-size: 16px; color: #303133; margin-bottom: 0" @click="linkToFilePage(item)"> {{
-                    item.projectName }} </h3>
+                  <h3
+                    style="font-size: 16px; color: #303133; margin-bottom: 0"
+                    @click="linkToFilePage(item)"
+                  >
+                    {{
+                      item.projectName }}
+                  </h3>
                   <div style="display: flex; width: 100%">
-                    <p style=" margin-top: 5px; height: 15px; width: 75%; flex-grow: 1; " @click="linkToFilePage(item)">
-                      {{ item.projectTypeName }} </p>
+                    <p
+                      style=" margin-top: 5px; height: 15px; width: 75%; flex-grow: 1; "
+                      @click="linkToFilePage(item)"
+                    >
+                      {{ item.projectTypeName }}
+                    </p>
                     <div style=" margin-top: 5px; margin-left: 35px; width: fit-content; flex-shrink: 0; ">
                       <template v-if="!$isRead">
-                        <el-tooltip v-if="item.isCollection == 0 && !item.bitmyxm" effect="dark" :content="$t('projects.cardtips.collect')" placement="top" style=" width: 20px; height: 25px; line-height: 25px; text-align: center; ">
-                          <el-link :underline="false" icon="iconfont icon-quxiaoshoucang" @click="collectionPoject(item)">
-                          </el-link>
+                        <el-tooltip
+                          v-if="item.isCollection == 0 && !item.bitmyxm"
+                          effect="dark"
+                          :content="$t('projects.cardtips.collect')"
+                          placement="top"
+                          style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
+                        >
+                          <el-link
+                            :underline="false"
+                            icon="iconfont icon-quxiaoshoucang"
+                            @click="collectionPoject(item)"
+                          />
                         </el-tooltip>
-                        <el-tooltip v-if="item.isCollection == 1 && !item.bitmyxm" effect="dark" :content="$t('projects.cardtips.cancelCollect')" placement="top" style=" width: 20px; height: 25px; line-height: 25px; text-align: center; ">
-                          <el-link :underline="false" icon="iconfont icon-shoucang" @click="cancelCollectionPoject(item)" style="color: #ffe039">
-                          </el-link>
+                        <el-tooltip
+                          v-if="item.isCollection == 1 && !item.bitmyxm"
+                          effect="dark"
+                          :content="$t('projects.cardtips.cancelCollect')"
+                          placement="top"
+                          style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
+                        >
+                          <el-link
+                            :underline="false"
+                            icon="iconfont icon-shoucang"
+                            style="color: #ffe039"
+                            @click="cancelCollectionPoject(item)"
+                          />
                         </el-tooltip>
                         <template v-if="user.iscorpadmin || item.isCreator">
-                          <el-dropdown trigger="click" size="small" :placement="'bottom'">
-                            <el-link :underline="false" style="font-size: 14px; margin-top: -2px" icon="el-icon-setting"></el-link>
+                          <el-dropdown
+                            trigger="click"
+                            size="small"
+                            :placement="'bottom'"
+                          >
+                            <el-link
+                              :underline="false"
+                              style="font-size: 14px; margin-top: -2px"
+                              icon="el-icon-setting"
+                            />
                             <el-dropdown-menu slot="dropdown">
-                              <el-dropdown-item @click.native="handleEdit('base', item)">{{ $t("projects.nav.base") }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="handleEdit('member', item)">{{ $t("projects.nav.member") }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="handleEdit('permission', item)">{{ $t("projects.nav.permission") }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="handleEdit('workflow', item)">{{ $t("projects.nav.workflow") }}</el-dropdown-item>
+                              <el-dropdown-item @click.native="handleEdit('base', item)">
+                                {{ $t("projects.nav.base") }}
+                              </el-dropdown-item>
+                              <el-dropdown-item @click.native="handleEdit('member', item)">
+                                {{ $t("projects.nav.member") }}
+                              </el-dropdown-item>
+                              <el-dropdown-item @click.native="handleEdit('permission', item)">
+                                {{ $t("projects.nav.permission") }}
+                              </el-dropdown-item>
+                              <el-dropdown-item @click.native="handleEdit('workflow', item)">
+                                {{ $t("projects.nav.workflow") }}
+                              </el-dropdown-item>
                             </el-dropdown-menu>
                           </el-dropdown>
-                          <el-tooltip effect="dark" v-if="!item.bitmyxm" :content="$t('projects.cardtips.delete')" placement="top" style=" width: 20px; height: 25px; line-height: 25px; text-align: center; ">
-                            <el-link :underline="false" class="el-icon-delete" @click="handleDelete(false, item)">
-                            </el-link>
+                          <el-tooltip
+                            v-if="!item.bitmyxm"
+                            effect="dark"
+                            :content="$t('projects.cardtips.delete')"
+                            placement="top"
+                            style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
+                          >
+                            <el-link
+                              :underline="false"
+                              class="el-icon-delete"
+                              @click="handleDelete(false, item)"
+                            />
                           </el-tooltip>
                         </template>
                       </template>
 
                       <template v-else>
-                        <el-tooltip v-if="item.isCollection == 0 && !item.bitmyxm" effect="dark" :content="$t('projects.cardtips.syncProject')" placement="top" style=" width: 20px; height: 25px; line-height: 25px; text-align: center; ">
-                          <el-link :underline="false" icon="el-icon el-icon-refresh" @click="syncProject(item)">
-                          </el-link>
+                        <el-tooltip
+                          v-if="item.isCollection == 0 && !item.bitmyxm"
+                          effect="dark"
+                          :content="$t('projects.cardtips.syncProject')"
+                          placement="top"
+                          style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
+                        >
+                          <el-link
+                            :underline="false"
+                            icon="el-icon el-icon-refresh"
+                            @click="syncProject(item)"
+                          />
                         </el-tooltip>
                       </template>
                     </div>
                   </div>
                 </div>
                 <el-row class="buttonStyle">
-                  <div class="flex ai-center jc-between" style="padding: 0 15px">
+                  <div
+                    class="flex ai-center jc-between"
+                    style="padding: 0 15px"
+                  >
                     <div class="flex ai-center">
-                      <img style=" width: 30px; height: 30px; border-radius: 50%; margin-right: 5px; " :src="item.adminUserAvatar ? imageOrigin + encodeURIComponent(encrypt(item.adminUserAvatar)) : defaultAvatar" />
+                      <img
+                        style=" width: 30px; height: 30px; border-radius: 50%; margin-right: 5px; "
+                        :src="item.adminUserAvatar ? imageOrigin + encodeURIComponent(encrypt(item.adminUserAvatar)) : defaultAvatar"
+                      >
                       <span class="account-name">{{ item.adminName }}</span>
                     </div>
-                    <div style="color: #c0c4cc; font-size: 14px"> {{ $dayjs(item.createTime) }} </div>
+                    <div style="color: #c0c4cc; font-size: 14px">
+                      {{ $dayjs(item.createTime) }}
+                    </div>
                   </div>
                 </el-row>
               </div>
             </div>
-            <div style="width: 306px; height: 0" v-for="i in compensateCount"></div>
+            <div
+              v-for="i in compensateCount"
+              style="width: 306px; height: 0"
+            />
           </div>
         </el-row>
       </div>
-      <pagination :pageTotal="total" :pageIndex="pageIndex" :pageNumber="pageSize" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange">
-      </pagination>
+      <pagination
+        :page-total="total"
+        :page-index="pageIndex"
+        :page-number="pageSize"
+        @handleCurrentChange="paginationCurrentChange"
+        @handleSizeChange="handleSizeChange"
+      />
     </template>
-    <el-dialog v-dialogDrag :modal="true" title="项目详情" :visible.sync="detailDialogVisble" width="425px">
-      <el-form ref="form" :model="projectForm" label-suffix="：" label-width="100px" size="small">
+    <el-dialog
+      v-dialogDrag
+      :modal="true"
+      title="项目详情"
+      :visible.sync="detailDialogVisble"
+      width="425px"
+    >
+      <el-form
+        ref="form"
+        :model="projectForm"
+        label-suffix="："
+        label-width="100px"
+        size="small"
+      >
         <el-form-item :label="$t('projects.label.name')">
           <label>{{ projectForm.projectName }}</label>
         </el-form-item>
@@ -211,19 +546,40 @@
             + "/" + projectForm.city + (projectForm.district ? "/" + projectForm.district : "") : "" }}</label>
         </el-form-item>
         <el-form-item :label="$t('projects.label.image')">
-          <img v-if="projectForm.images" style="width: 200px" :src="projectForm.images" class="avatar" />
+          <img
+            v-if="projectForm.images"
+            style="width: 200px"
+            :src="projectForm.images"
+            class="avatar"
+          >
         </el-form-item>
         <el-form-item :label="$t('projects.label.overview')">
           <label>{{ projectForm.overview }}</label>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="detailDialogVisble = false" style="width: 88px" size="small">{{
-          $t("base.button.close") }}</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          style="width: 88px"
+          size="small"
+          @click="detailDialogVisble = false"
+        >
+          {{
+            $t("base.button.close") }}
+        </el-button>
       </div>
     </el-dialog>
-    <project-setting @loadData="loadData" @openProject="linkToFilePage(projectForm)" :projectData="projectForm" :projectTypeOptions="projectTypeOptions" :ProjectDesignPhaseOptions="ProjectDesignPhaseOptions" :type.sync="projectOpeType">
-    </project-setting>
+    <project-setting
+      :project-data="projectForm"
+      :project-type-options="projectTypeOptions"
+      :project-design-phase-options="ProjectDesignPhaseOptions"
+      :type.sync="projectOpeType"
+      @loadData="loadData"
+      @openProject="linkToFilePage(projectForm)"
+    />
   </div>
 </template>
 
@@ -360,7 +716,7 @@ export default {
       companyMemberChecked: [],
       companyMemberCheckAll: false,
       isIndeterminate: true,
-      imageOrigin: process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+      imageOrigin: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
       encrypt,
       lastProjectInfo: {},
       ProjectDesignPhaseOptions: [], //项目状态选项

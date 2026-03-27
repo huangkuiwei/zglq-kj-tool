@@ -1,117 +1,299 @@
 <template>
-  <el-container style="height:100%;margin-left: 1px;" class="commonKu">
+  <el-container
+    style="height:100%;margin-left: 1px;"
+    class="commonKu"
+  >
     <el-main class="buildMain">
       <!-- 检索栏 -->
-      <div class="mainTop" style="margin-bottom:1px;box-sizing: content-box;padding: 0;">
-        <div class="flex ai-center" style="width: 100%;">
-          <el-button type="primary" size="small" icon="el-icon-upload2" @click="multipleUpload">上传</el-button>
+      <div
+        class="mainTop"
+        style="margin-bottom:1px;box-sizing: content-box;padding: 0;"
+      >
+        <div
+          class="flex ai-center"
+          style="width: 100%;"
+        >
+          <el-button
+            type="primary"
+            size="small"
+            icon="el-icon-upload2"
+            @click="multipleUpload"
+          >
+            上传
+          </el-button>
           <el-form style="display:flex;align-items:center; flex-wrap: wrap;margin-left: auto;">
-            <el-input placeholder="请输入关键词找构件" prefix-icon="el-icon-search" style="width:180px;margin-right:15px"
-              clearable v-model="searchForm.FileName" size="small">
-            </el-input>
+            <el-input
+              v-model="searchForm.FileName"
+              placeholder="请输入关键词找构件"
+              prefix-icon="el-icon-search"
+              style="width:180px;margin-right:15px"
+              clearable
+              size="small"
+            />
           </el-form>
         </div>
       </div>
       <!-- 列表 -->
       <el-row style="background:#fff;height:calc(100vh - 170px)">
-        <el-table class="t-table" ref="multipleTable" :data="publicData" stripe :header-cell-style="$thStyle"
-          style="font-size: 13px" height="100%">
-          <el-table-column type="index" align="center" :label="$t('base.button.index')" />
+        <el-table
+          ref="multipleTable"
+          class="t-table"
+          :data="publicData"
+          stripe
+          :header-cell-style="$thStyle"
+          style="font-size: 13px"
+          height="100%"
+        >
+          <el-table-column
+            type="index"
+            align="center"
+            :label="$t('base.button.index')"
+          />
           <el-table-column :label="$t('base.button.name')">
             <template slot-scope="scope">
-              <el-link @click="viewInfo(scope.row)" style="cursor:pointer" :underline="false">
+              <el-link
+                style="cursor:pointer"
+                :underline="false"
+                @click="viewInfo(scope.row)"
+              >
                 {{ scope.row.fileName }}
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column width="120px" prop="parameterization" align="center" label="是否参数化" />
-          <el-table-column width="120px" prop="fileSize" align="center" :label="$t('base.button.fileSize')" />
-          <el-table-column :label="$t('base.formLabel.operation')" align="center" width="220">
+          <el-table-column
+            width="120px"
+            prop="parameterization"
+            align="center"
+            label="是否参数化"
+          />
+          <el-table-column
+            width="120px"
+            prop="fileSize"
+            align="center"
+            :label="$t('base.button.fileSize')"
+          />
+          <el-table-column
+            :label="$t('base.formLabel.operation')"
+            align="center"
+            width="220"
+          >
             <template slot-scope="scope">
-              <el-button type="text" @click="handleBuild('EDIT', scope.row)">{{ $t('base.button.edit') }}</el-button>
-              <el-button type="text" style="color: #F56C6C;" @click="deleteBuild(false, scope.row)">{{ $t('base.button.delete') }}</el-button>
+              <el-button
+                type="text"
+                @click="handleBuild('EDIT', scope.row)"
+              >
+                {{ $t('base.button.edit') }}
+              </el-button>
+              <el-button
+                type="text"
+                style="color: #F56C6C;"
+                @click="deleteBuild(false, scope.row)"
+              >
+                {{ $t('base.button.delete') }}
+              </el-button>
             </template>
           </el-table-column>
-          <div slot="empty" class="empty">
-            <img :src="tableEmptyImage" />
+          <div
+            slot="empty"
+            class="empty"
+          >
+            <img :src="tableEmptyImage">
             <span>{{ $t('base.button.noData') }}</span>
           </div>
         </el-table>
       </el-row>
-      <el-pagination :pager-count="5" class="t-pagination" @size-change="handleSizeChange"
-        @current-change="paginationCurrentChange" :current-page.sync="searchForm.page" :page-sizes="[10, 20, 40]"
-        :page-size="searchForm.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"
-        background></el-pagination>
+      <el-pagination
+        :pager-count="5"
+        class="t-pagination"
+        :current-page.sync="searchForm.page"
+        :page-sizes="[10, 20, 40]"
+        :page-size="searchForm.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        background
+        @size-change="handleSizeChange"
+        @current-change="paginationCurrentChange"
+      />
 
       <!-- 编辑构件 -->
-      <el-dialog title="编辑构件" :visible.sync="addVisible" width="420px" :modal="true" v-dialogDrag
-        :close-on-click-modal="false">
-        <el-form ref="form" :model="AddForm" :rules="rules" label-width="100px" label-suffix="：">
-          <el-form-item :label="$t('base.button.kind')" required>
-            <el-cascader style="width: 100%" size="large" ref="type" clearable :props="typeProps" :emitPath="true"
-              :options="typeArr" v-model="AddForm.oneTypeIuid">
-              <el-button slot="append" icon="el-icon-plus"></el-button>
+      <el-dialog
+        v-dialogDrag
+        title="编辑构件"
+        :visible.sync="addVisible"
+        width="420px"
+        :modal="true"
+        :close-on-click-modal="false"
+      >
+        <el-form
+          ref="form"
+          :model="AddForm"
+          :rules="rules"
+          label-width="100px"
+          label-suffix="："
+        >
+          <el-form-item
+            :label="$t('base.button.kind')"
+            required
+          >
+            <el-cascader
+              ref="type"
+              v-model="AddForm.oneTypeIuid"
+              style="width: 100%"
+              size="large"
+              clearable
+              :props="typeProps"
+              :emit-path="true"
+              :options="typeArr"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-plus"
+              />
             </el-cascader>
           </el-form-item>
-          <el-form-item label="文件上传" prop="filePath">
-            <el-input v-model="uploadFileName" disabled placeholder="请选择文件" :readonly="true">
+          <el-form-item
+            label="文件上传"
+            prop="filePath"
+          >
+            <el-input
+              v-model="uploadFileName"
+              disabled
+              placeholder="请选择文件"
+              :readonly="true"
+            >
               <!-- <el-button v-if="addOrEdit=='Add'" slot="append" icon="el-icon-plus">
                 <input class="fileFolderUploadBtn" type="file" name="file" @change="submitFile" alt="请选择文件" />
               </el-button> -->
             </el-input>
-            <el-progress style="margin-top: 5px;" :status="fileProgress >= 100 ? 'success' : null"
-              :percentage="fileProgress" v-if="fileProgress != 0"></el-progress>
+            <el-progress
+              v-if="fileProgress != 0"
+              style="margin-top: 5px;"
+              :status="fileProgress >= 100 ? 'success' : null"
+              :percentage="fileProgress"
+            />
           </el-form-item>
           <el-form-item label="是否参数化">
-            <el-select v-model="AddForm.Parameterization" :placeholder="$t('base.button.pleaseSelect')" clearable style="width:100%">
-              <el-option :label="item.itemText" :value="item.iuid" v-for="(item, index) in parameterData"
-                :key="index"></el-option>
+            <el-select
+              v-model="AddForm.Parameterization"
+              :placeholder="$t('base.button.pleaseSelect')"
+              clearable
+              style="width:100%"
+            >
+              <el-option
+                v-for="(item, index) in parameterData"
+                :key="index"
+                :label="item.itemText"
+                :value="item.iuid"
+              />
             </el-select>
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="sure">{{ $t('base.button.confirm') }}</el-button>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click="sure"
+          >{{ $t('base.button.confirm') }}</el-button>
           <el-button @click="handleClose">{{ $t('base.button.cancel') }}</el-button>
         </span>
       </el-dialog>
       <!-- 批量上传构件 -->
-      <el-dialog title="上传构件" :visible.sync="listAddVisible" width="420px" :modal="true" v-dialogDrag
-        :close-on-click-modal="false">
-        <el-form ref="form" :model="AddForm" :rules="rules" label-width="100px" label-suffix="：">
-          <el-form-item :label="$t('base.button.kind')" required>
-            <el-cascader style="width: 100%" size="large" ref="type" clearable :props="typeProps" :emitPath="true"
-              :options="typeArr" v-model="AddForm.oneTypeIuid">
-            </el-cascader>
+      <el-dialog
+        v-dialogDrag
+        title="上传构件"
+        :visible.sync="listAddVisible"
+        width="420px"
+        :modal="true"
+        :close-on-click-modal="false"
+      >
+        <el-form
+          ref="form"
+          :model="AddForm"
+          :rules="rules"
+          label-width="100px"
+          label-suffix="："
+        >
+          <el-form-item
+            :label="$t('base.button.kind')"
+            required
+          >
+            <el-cascader
+              ref="type"
+              v-model="AddForm.oneTypeIuid"
+              style="width: 100%"
+              size="large"
+              clearable
+              :props="typeProps"
+              :emit-path="true"
+              :options="typeArr"
+            />
           </el-form-item>
-          <el-form-item label="文件上传" prop="filePath">
-            <el-button icon="el-icon-plus" size="small"
-              :disabled="this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == ''">
+          <el-form-item
+            label="文件上传"
+            prop="filePath"
+          >
+            <el-button
+              icon="el-icon-plus"
+              size="small"
+              :disabled="this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == ''"
+            >
               上传
-              <input class="fileFolderUploadBtn"
-                v-show="!(this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == '')" type="file"
-                name="file" multiple @change="submitFile" alt="请选择bim文件" />
+              <input
+                v-show="!(this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == '')"
+                class="fileFolderUploadBtn"
+                type="file"
+                name="file"
+                multiple
+                alt="请选择bim文件"
+                @change="submitFile"
+              >
             </el-button>
             <div v-if="listUploadTotal > 0">
               正在上传：
               {{ listUploadCount }}
-              {{ listPercent > 0 && listPercent < 100 ? ` (${listPercent}%) ` : '' }} / {{ listUploadTotal }} </div>
+              {{ listPercent > 0 && listPercent < 100 ? ` (${listPercent}%) ` : '' }} / {{ listUploadTotal }}
+            </div>
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button :disabled="listUploadCount < listUploadTotal" @click="listAddVisible = false">{{
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            :disabled="listUploadCount < listUploadTotal"
+            @click="listAddVisible = false"
+          >{{
             listUploadCount !=
               0 &&
               listUploadCount == listUploadTotal ? '完 成' : '关 闭' }}</el-button>
         </span>
       </el-dialog>
       <!-- 模型浏览 -->
-      <div class="mask" v-if="showMask">
-        <div class="close" @click="closeModel">
-          <i class="el-icon-error" size="30" style="color: #fff;"></i>
+      <div
+        v-if="showMask"
+        class="mask"
+      >
+        <div
+          class="close"
+          @click="closeModel"
+        >
+          <i
+            class="el-icon-error"
+            size="30"
+            style="color: #fff;"
+          />
         </div>
       </div>
-      <iframe v-if="showModel" :src="FileUrl" @load="sendFileData" ref="imodelIframe1" frameborder="0"
-        class="common-lib-iframe"></iframe>
+      <iframe
+        v-if="showModel"
+        ref="imodelIframe1"
+        :src="FileUrl"
+        frameborder="0"
+        class="common-lib-iframe"
+        @load="sendFileData"
+      />
     </el-main>
   </el-container>
 </template>
@@ -123,7 +305,7 @@ import tableEmptyImage from "@/assets/tableEmpty.png";
 import { decrypt } from '@/utils'
 import Axios from 'axios'
 let axios = Axios.create({
-  baseURL: process.env.BASE_API,
+  baseURL: process.env.VUE_APP_BASE_API,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -131,7 +313,7 @@ let axios = Axios.create({
 })
 
 export default {
-  name: 'comResource',
+  name: 'ComResource',
   components: {
   },
 
@@ -178,8 +360,8 @@ export default {
       listFiles: [],
 
       labelList: [],
-      baseUrl: process.env.BASE_API,
-      baseImageUrl: process.env.BASE_API + '/api/home/GetimgFile?fileUrl=',
+      baseUrl: process.env.VUE_APP_BASE_API,
+      baseImageUrl: process.env.VUE_APP_BASE_API + '/api/home/GetimgFile?fileUrl=',
       typeArr: [],
       detailsData: '',
       pictureMode: true,
@@ -295,7 +477,7 @@ export default {
       this.showModel = true;
       let filePath = data.turnPath ? data.turnPath : data.filePath;
       this.FileIUID = data.iuid;
-      this.FileUrl = process.env.ViewOrigin + "/?" + this.$turnEncryptParams(filePath);
+      this.FileUrl = process.env.VUE_APP_ViewOrigin + "/?" + this.$turnEncryptParams(filePath);
       this.sendFileData()
     },
     // 查看模型

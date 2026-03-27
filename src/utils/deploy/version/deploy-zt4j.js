@@ -37,7 +37,7 @@ export let appList = [
     appName: "BIM Windows",
     title: "看模王",
     isEdit: false,
-    origin: 'KmwOrigin'
+    origin: 'VUE_APP_KmwOrigin'
   },
   // {
   //   type: "bimComposer",

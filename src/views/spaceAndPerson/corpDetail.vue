@@ -1,19 +1,33 @@
 <template>
-  <div class="corpSpaceDetail" style="overflow: auto; height: auto !important;">
+  <div
+    class="corpSpaceDetail"
+    style="overflow: auto; height: auto !important;"
+  >
     <div class="corpSpaceDetailHeader">
       <div style="text-align: left;overflow: hidden;">
-        <img :src="user.avatar ? avatorUrl + encodeURIComponent(encrypt(user.avatar)) : defaultAvator" style=" width: 48px; height: 48px; border-radius: 50%; float: left; margin-top: 5px; " />
+        <img
+          :src="user.avatar ? avatorUrl + encodeURIComponent(encrypt(user.avatar)) : defaultAvator"
+          style=" width: 48px; height: 48px; border-radius: 50%; float: left; margin-top: 5px; "
+        >
         <div class="avatarRightContainer">
           <div> {{ corpSpaceModel.username }} {{ corpSpaceModel.corpName ? "（" + corpSpaceModel.corpName + "）" : "" }} </div>
-          <div style="margin-top: 15px" v-if="!$isOwner">
-            <div class="corpVersion"> {{ corpSpaceModel.orderIsNull ? "0-无限制" : corpSpaceModel.isTryOut ? "试用版" : corpSpaceModel.isPersonal ? "个人版" : "企业版" }} </div>
+          <div
+            v-if="!$isOwner"
+            style="margin-top: 15px"
+          >
+            <div class="corpVersion">
+              {{ corpSpaceModel.orderIsNull ? "0-无限制" : corpSpaceModel.isTryOut ? "试用版" : corpSpaceModel.isPersonal ? "个人版" : "企业版" }}
+            </div>
             <span style="margin-left: 12px">{{ $t('base.button.validTo') }}：{{ $t('base.button.indefinitely') }}</span>
           </div>
         </div>
         <!-- <div class="corpOperateBtn" v-if="!corpSpaceModel.orderIsNull" @click="linkToPayCenter">续费升级</div> -->
       </div>
       <div style="margin-top: 30px">
-        <div style=" height: 12px; border-radius: 10px; display: inline-block; width: 100%; vertical-align: middle; " :style="{ background: 'linear-gradient(90deg, #6DD400 ' + corpSpaceModel.usedPercent + '%, #ebeef5 0%)', }"></div>
+        <div
+          style=" height: 12px; border-radius: 10px; display: inline-block; width: 100%; vertical-align: middle; "
+          :style="{ background: 'linear-gradient(90deg, #6DD400 ' + corpSpaceModel.usedPercent + '%, #ebeef5 0%)', }"
+        />
       </div>
       <div style="margin-top: 10px">
         <span>{{ $t('base.button.used') }}：{{ corpSpaceModel.usedSpace }} / {{ corpSpaceModel.bwForPrivatization ? $t('base.button.unlimited') : corpSpaceModel.usableSpace + '(' + corpSpaceModel.usedPercent.toFixed(2) + '%)' }}</span>
@@ -23,96 +37,304 @@
       </div> -->
     </div>
     <div class="corpSpaceDetailBody">
-      <div class="corpRecordContainer" :style="{ height: clientHeight - 380 + 'px' }">
+      <div
+        class="corpRecordContainer"
+        :style="{ height: clientHeight - 380 + 'px' }"
+      >
         <div class="corpRecordTableTabContainer">
-          <div v-for="(item, index) in corpRecordTabList" :key="index" class="corpRecordTableTab">
-            <div :class="{ corpRecordTabActived: item.active }" class="corpRecordTableTabA" @click="handleCorpRecordTabChange(index)"> {{ item.text }} </div>
+          <div
+            v-for="(item, index) in corpRecordTabList"
+            :key="index"
+            class="corpRecordTableTab"
+          >
+            <div
+              :class="{ corpRecordTabActived: item.active }"
+              class="corpRecordTableTabA"
+              @click="handleCorpRecordTabChange(index)"
+            >
+              {{ item.text }}
+            </div>
           </div>
         </div>
         <template v-if="corpRecordTabActived == 999">
-          <el-table class="t-table" ref="multipleTable" :data="tableData" stripe :height="clientHeight - 440 + 'px'" :header-cell-style="$thStyle" style="width: 100%">
-            <el-table-column prop="AAA" width="30px">
-            </el-table-column>
-            <el-table-column prop="orderId" label="订单号"></el-table-column>
-            <el-table-column prop="standardFee" label="标价（元）"></el-table-column>
-            <el-table-column prop="payFee" label="付费金额"></el-table-column>
-            <el-table-column prop="goodsName" label="购买商品"></el-table-column>
-            <el-table-column prop="createTime" label="消费时间"></el-table-column>
+          <el-table
+            ref="multipleTable"
+            class="t-table"
+            :data="tableData"
+            stripe
+            :height="clientHeight - 440 + 'px'"
+            :header-cell-style="$thStyle"
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="AAA"
+              width="30px"
+            />
+            <el-table-column
+              prop="orderId"
+              label="订单号"
+            />
+            <el-table-column
+              prop="standardFee"
+              label="标价（元）"
+            />
+            <el-table-column
+              prop="payFee"
+              label="付费金额"
+            />
+            <el-table-column
+              prop="goodsName"
+              label="购买商品"
+            />
+            <el-table-column
+              prop="createTime"
+              label="消费时间"
+            />
           </el-table>
         </template>
         <template v-if="corpRecordTabActived == 9999">
-          <el-table class="t-table" :height="clientHeight - 440 + 'px'" ref="multipleTable" :data="tableData" stripe :header-cell-style="$thStyle" style="width: 100%">
-            <el-table-column prop="AAA" width="30px">
+          <el-table
+            ref="multipleTable"
+            class="t-table"
+            :height="clientHeight - 440 + 'px'"
+            :data="tableData"
+            stripe
+            :header-cell-style="$thStyle"
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="AAA"
+              width="30px"
+            />
+            <el-table-column
+              prop="spaceType"
+              label="容量构成方式"
+            />
+            <el-table-column
+              prop="standardFee"
+              label="标价（元）"
+            />
+            <el-table-column
+              prop="createTime"
+              label="获得时间"
+            />
+            <el-table-column
+              prop="goodsName"
+              label="套餐名称"
+            />
+            <el-table-column
+              prop="payFee"
+              label="订单金额（元）"
+            />
+            <el-table-column
+              prop="orderSpace"
+              label="容量大小"
+            >
+              <template slot-scope="scope">
+                {{ $getFileSize(scope.row.orderSpace) }}
+              </template>
             </el-table-column>
-            <el-table-column prop="spaceType" label="容量构成方式"></el-table-column>
-            <el-table-column prop="standardFee" label="标价（元）"></el-table-column>
-            <el-table-column prop="createTime" label="获得时间"></el-table-column>
-            <el-table-column prop="goodsName" label="套餐名称"></el-table-column>
-            <el-table-column prop="payFee" label="订单金额（元）"></el-table-column>
-            <el-table-column prop="orderSpace" label="容量大小">
-              <template slot-scope="scope"> {{ $getFileSize(scope.row.orderSpace) }} </template>
+            <el-table-column
+              prop="usableSpace"
+              label="总容量"
+            >
+              <template slot-scope="scope">
+                {{ $getFileSize(scope.row.usableSpace) }}
+              </template>
             </el-table-column>
-            <el-table-column prop="usableSpace" label="总容量">
-              <template slot-scope="scope"> {{ $getFileSize(scope.row.usableSpace) }} </template>
-            </el-table-column>
-            <el-table-column prop="serviceStopTime" label="有效期"></el-table-column>
+            <el-table-column
+              prop="serviceStopTime"
+              label="有效期"
+            />
           </el-table>
         </template>
         <template v-if="corpRecordTabActived == 0">
-          <el-table class="t-table" :height="clientHeight - 440 + 'px'" ref="multipleTable" :data="tableData" stripe :header-cell-style="$thStyle" style="width: 100%">
-            <el-table-column prop="AAA" width="30px">
-            </el-table-column>
-            <el-table-column prop="projectName" :label="$t('projects.label.name')" key="projectName">
+          <el-table
+            ref="multipleTable"
+            class="t-table"
+            :height="clientHeight - 440 + 'px'"
+            :data="tableData"
+            stripe
+            :header-cell-style="$thStyle"
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="AAA"
+              width="30px"
+            />
+            <el-table-column
+              key="projectName"
+              prop="projectName"
+              :label="$t('projects.label.name')"
+            >
               <template slot-scope="scope">
-                <img src="@/assets/corpDetailImg/文件夹.png" style="width:14px;height:14px;vertical-align:text-top;margin-right:6px;" />
+                <img
+                  src="@/assets/corpDetailImg/文件夹.png"
+                  style="width:14px;height:14px;vertical-align:text-top;margin-right:6px;"
+                >
                 <span>{{ scope.row.projectName }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="fileUsedSpace" key="fileUsedSpace" width="160" align="center" :label="$t('base.button.occupyingCapacity')"></el-table-column>
-            <el-table-column prop="adminName" width="120" align="center" :label="$t('base.button.projectLeader')"></el-table-column>
-            <el-table-column prop="projectType" width="180" align="center" :label="$t('projects.label.type')"></el-table-column>
-            <el-table-column prop="createTime" width="180" align="center" :label="$t('base.button.createTime')"></el-table-column>
+            <el-table-column
+              key="fileUsedSpace"
+              prop="fileUsedSpace"
+              width="160"
+              align="center"
+              :label="$t('base.button.occupyingCapacity')"
+            />
+            <el-table-column
+              prop="adminName"
+              width="120"
+              align="center"
+              :label="$t('base.button.projectLeader')"
+            />
+            <el-table-column
+              prop="projectType"
+              width="180"
+              align="center"
+              :label="$t('projects.label.type')"
+            />
+            <el-table-column
+              prop="createTime"
+              width="180"
+              align="center"
+              :label="$t('base.button.createTime')"
+            />
           </el-table>
         </template>
         <template v-if="corpRecordTabActived == 1">
-          <el-table class="t-table" :max-height="clientHeight - 440 + 'px'" :height="clientHeight - 440 + 'px'" ref="multipleTable" :data="tableData" stripe :header-cell-style="$thStyle" style="width: 100%">
-            <el-table-column :label="$t('base.button.index')" align="center" width="100" key="index">
-              <template slot-scope="scope"> {{ scope.$index + 1 }} </template>
+          <el-table
+            ref="multipleTable"
+            class="t-table"
+            :max-height="clientHeight - 440 + 'px'"
+            :height="clientHeight - 440 + 'px'"
+            :data="tableData"
+            stripe
+            :header-cell-style="$thStyle"
+            style="width: 100%"
+          >
+            <el-table-column
+              key="index"
+              :label="$t('base.button.index')"
+              align="center"
+              width="100"
+            >
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
             </el-table-column>
-            <el-table-column prop="phone" :label="$t('base.label.phone')" key="phone"></el-table-column>
-            <el-table-column prop="userName" align="center" :label="$t('base.label.name')"></el-table-column>
-            <el-table-column prop="registersTime" align="center" :label="$t('base.button.joinTime')">
-              
-            </el-table-column>
+            <el-table-column
+              key="phone"
+              prop="phone"
+              :label="$t('base.label.phone')"
+            />
+            <el-table-column
+              prop="userName"
+              align="center"
+              :label="$t('base.label.name')"
+            />
+            <el-table-column
+              prop="registersTime"
+              align="center"
+              :label="$t('base.button.joinTime')"
+            />
           </el-table>
         </template>
 
         <template v-if="corpRecordTabActived == 2">
-          <el-table class="t-table" :max-height="clientHeight - 440 + 'px'" :height="clientHeight - 440 + 'px'" ref="multipleTable" :data="tableData" stripe :header-cell-style="$thStyle" style="width: 100%">
-            <el-table-column :label="$t('base.button.index')" align="center" width="100" key="index">
-              <template slot-scope="scope"> {{ scope.$index + 1 }} </template>
+          <el-table
+            ref="multipleTable"
+            class="t-table"
+            :max-height="clientHeight - 440 + 'px'"
+            :height="clientHeight - 440 + 'px'"
+            :data="tableData"
+            stripe
+            :header-cell-style="$thStyle"
+            style="width: 100%"
+          >
+            <el-table-column
+              key="index"
+              :label="$t('base.button.index')"
+              align="center"
+              width="100"
+            >
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
             </el-table-column>
-            <el-table-column prop="phone" :label="$t('base.label.phone')" key="phone"></el-table-column>
-            <el-table-column prop="userName" align="center" :label="$t('base.label.name')"></el-table-column>
-            <el-table-column prop="registersTime" align="center" :label="$t('base.button.joinTime')">
-
-            </el-table-column>
+            <el-table-column
+              key="phone"
+              prop="phone"
+              :label="$t('base.label.phone')"
+            />
+            <el-table-column
+              prop="userName"
+              align="center"
+              :label="$t('base.label.name')"
+            />
+            <el-table-column
+              prop="registersTime"
+              align="center"
+              :label="$t('base.button.joinTime')"
+            />
           </el-table>
         </template>
-
       </div>
-      <pagination style="border: none" v-if="corpRecordTabActived != 3" :pageTotal="total" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange" :pageNumber="10"></pagination>
+      <pagination
+        v-if="corpRecordTabActived != 3"
+        style="border: none"
+        :page-total="total"
+        :page-number="10"
+        @handleCurrentChange="paginationCurrentChange"
+        @handleSizeChange="handleSizeChange"
+      />
       <!--<div style=" text-align: center; width: 100%; color: #999999; font-size: 14px; height: 50px; line-height: 50px; "> Copyright © 1999-2023 | 北京跨世纪软件技术有限公司 | 京ICP备2020036512号-2 </div>-->
     </div>
-    <el-dialog v-dialogDrag :modal="true" title="容量组成说明" :visible.sync="dialogVisible" width="850px" style="padding-bottom: 10px">
-      <el-table class="t-table" ref="multipleTable" :data="spaceMakeUpData" stripe :header-cell-style="$thStyle" style="width: 100%; font-size: 13px" height="160px">
-        <el-table-column prop="makeUpWay" label="容量构成方式"></el-table-column>
-        <el-table-column prop="getDate" label="获得时间"></el-table-column>
-        <el-table-column prop="orderName" label="套餐名称"></el-table-column>
-        <el-table-column prop="orderAmount" label="订单金额"></el-table-column>
-        <el-table-column prop="spaceNumber" label="容量大小"></el-table-column>
-        <el-table-column prop="spaceAll" label="总容量"></el-table-column>
-        <el-table-column prop="serviceStopTime" label="有效期"></el-table-column>
+    <el-dialog
+      v-dialogDrag
+      :modal="true"
+      title="容量组成说明"
+      :visible.sync="dialogVisible"
+      width="850px"
+      style="padding-bottom: 10px"
+    >
+      <el-table
+        ref="multipleTable"
+        class="t-table"
+        :data="spaceMakeUpData"
+        stripe
+        :header-cell-style="$thStyle"
+        style="width: 100%; font-size: 13px"
+        height="160px"
+      >
+        <el-table-column
+          prop="makeUpWay"
+          label="容量构成方式"
+        />
+        <el-table-column
+          prop="getDate"
+          label="获得时间"
+        />
+        <el-table-column
+          prop="orderName"
+          label="套餐名称"
+        />
+        <el-table-column
+          prop="orderAmount"
+          label="订单金额"
+        />
+        <el-table-column
+          prop="spaceNumber"
+          label="容量大小"
+        />
+        <el-table-column
+          prop="spaceAll"
+          label="总容量"
+        />
+        <el-table-column
+          prop="serviceStopTime"
+          label="有效期"
+        />
       </el-table>
     </el-dialog>
   </div>
@@ -161,9 +383,60 @@ export default {
         usedPercent: 0,
       },
       noTime: "无限制",
-      avatorUrl: process.env.BASE_API + '/api/home/GetimgFile?fileUrl=',
+      avatorUrl: process.env.VUE_APP_BASE_API + '/api/home/GetimgFile?fileUrl=',
       encrypt
     };
+  },
+  async mounted() {
+    var _self = this
+    window.addEventListener('storage', event => {
+      if (event.key == "payCenterChangeMesssage") {
+        _self.$success(res.msg)
+        _self.handleCorpRecordTabChange(0)
+        if (event.newValue) {
+          localStorage.removeItem("payCenterChangeMesssage")
+        }
+      }
+      if (event.key == "payCenterPaySuccessMesssage") {
+        _self.$success(res.msg)
+        _self.handleCorpRecordTabChange(0)
+        if (event.newValue) {
+          localStorage.removeItem("payCenterPaySuccessMesssage")
+        }
+      }
+    })
+
+    var res = await commonApi.queryCorpSpace();
+    if (res.code == 1) {
+      this.corpSpaceModel = res.data;
+    }
+    this.corpRecordTabList = [
+      // { text: "购买记录", active: true },
+      // { text: "扩容记录", active: false },
+      { text: this.$t('base.button.storageDetails'), active: false },
+    ]
+    if (this.user.corpIdbit) {
+      this.corpRecordTabList.push({ text: this.$t('base.button.memberDetails'), active: false })
+      this.corpRecordTabList.push({ text: this.$t('base.button.outsourcedMember'), active: false })
+    }
+    this.spaceMakeUpData = [
+      {
+        makeUpWay: "长期容量",
+        getDate: this.user.paidtime,
+        orderName: "初始容量",
+        orderAmount: "0元",
+        spaceNumber: this.user.usableSpace,
+        spaceAll: this.user.usableSpace,
+        serviceStopTime: "长期有效",
+      },
+    ];
+    var actived = local.getCorpRecordTabActived()
+    if (!actived) {
+      actived = 0
+    }
+    this.handleCorpRecordTabChange(actived)
+    local.removeCorpRecordTabActived()
+    // this.queryOrderData();
   },
   methods: {
     async loadProjectSpace() {
@@ -259,57 +532,6 @@ export default {
       this.corpRecordTabActived = index;
       this.loadData()
     },
-  },
-  async mounted() {
-    var _self = this
-    window.addEventListener('storage', event => {
-      if (event.key == "payCenterChangeMesssage") {
-        _self.$success(res.msg)
-        _self.handleCorpRecordTabChange(0)
-        if (event.newValue) {
-          localStorage.removeItem("payCenterChangeMesssage")
-        }
-      }
-      if (event.key == "payCenterPaySuccessMesssage") {
-        _self.$success(res.msg)
-        _self.handleCorpRecordTabChange(0)
-        if (event.newValue) {
-          localStorage.removeItem("payCenterPaySuccessMesssage")
-        }
-      }
-    })
-
-    var res = await commonApi.queryCorpSpace();
-    if (res.code == 1) {
-      this.corpSpaceModel = res.data;
-    }
-    this.corpRecordTabList = [
-      // { text: "购买记录", active: true },
-      // { text: "扩容记录", active: false },
-      { text: this.$t('base.button.storageDetails'), active: false },
-    ]
-    if (this.user.corpIdbit) {
-      this.corpRecordTabList.push({ text: this.$t('base.button.memberDetails'), active: false })
-      this.corpRecordTabList.push({ text: this.$t('base.button.outsourcedMember'), active: false })
-    }
-    this.spaceMakeUpData = [
-      {
-        makeUpWay: "长期容量",
-        getDate: this.user.paidtime,
-        orderName: "初始容量",
-        orderAmount: "0元",
-        spaceNumber: this.user.usableSpace,
-        spaceAll: this.user.usableSpace,
-        serviceStopTime: "长期有效",
-      },
-    ];
-    var actived = local.getCorpRecordTabActived()
-    if (!actived) {
-      actived = 0
-    }
-    this.handleCorpRecordTabChange(actived)
-    local.removeCorpRecordTabActived()
-    // this.queryOrderData();
   },
 };
 </script>

@@ -26,7 +26,7 @@ function endLoading() {
 const commonRouteName = ["blueprint", "StandardInfo"];
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API,
+  baseURL: process.env.VUE_APP_BASE_API,
   timeout: 60 * 60 * 1000,
   withCredentials: true,
 });
@@ -39,12 +39,12 @@ let _request;
 service.interceptors.request.use(
   (config) => {
     // console.log('currentName',router.history.current.name)
-    // commonRouteName.indexOf(router.history.current.name) > -1? process.env.BASE_DDAPI : process.env.BASE_API
+    // commonRouteName.indexOf(router.history.current.name) > -1? process.env.VUE_APP_BASE_DDAPI : process.env.VUE_APP_BASE_API
     // debugger
     if (config.apiUrl) {
       config.baseURL = config.apiUrl;
     } else {
-      config.baseURL = process.env.BASE_API;
+      config.baseURL = process.env.VUE_APP_BASE_API;
     }
     errorMsgShow = config.errorMsgShow == undefined ? true : config.errorMsgShow;
     config.headers["userInfoToken"] = config.token ? config.token : local.getToken();
@@ -105,7 +105,7 @@ service.interceptors.response.use(
         if (res.data) {
           let filePath = res.data
           closemodel(
-            process.env.GisIframeOrigin + "/?" + filePath,
+            process.env.VUE_APP_GisIframeOrigin + "/?" + filePath,
             closemodelCallback
           );
         }

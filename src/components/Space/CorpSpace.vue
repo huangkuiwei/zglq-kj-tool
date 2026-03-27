@@ -1,23 +1,49 @@
 <template>
   <div id="user-space">
-    <div class="box" v-if="corpSpaceContainerVisible" @mouseleave="mouseLeave" @mouseenter="mouseenter">
+    <div
+      v-if="corpSpaceContainerVisible"
+      class="box"
+      @mouseleave="mouseLeave"
+      @mouseenter="mouseenter"
+    >
       <!-- <div style="padding-top: 30px;width:258px;position: fixed;right: 28px;top: 20px;z-index: 1000;" @mouseleave="mouseLeave" @mouseenter="mouseenter"> -->
-      <div class="corpInfoContainer" :style="$isnotInDingTalk() ? 'padding-bottom:0px' : 'padding-bottom:10px'">
+      <div
+        class="corpInfoContainer"
+        :style="$isnotInDingTalk() ? 'padding-bottom:0px' : 'padding-bottom:10px'"
+      >
         <div style="padding-left: 15px;padding-right: 20px;border-bottom: 1px solid #eeeeee;padding-bottom: 10px;">
-          <img :src="corpSpaceModel.ddUserAvatar && corpSpaceModel.ddUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.ddUserAvatar)) : defaultCorpLogo" class="corpAvatar" />
+          <img
+            :src="corpSpaceModel.ddUserAvatar && corpSpaceModel.ddUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.ddUserAvatar)) : defaultCorpLogo"
+            class="corpAvatar"
+          >
           <div class="corpName">
             <div style="margin-bottom: 3px; color: #2a2a2a; font-weight: 500">
               {{ corpSpaceModel.username }}
             </div>
-            <div v-if="!corpSpaceModel.hasCorp" @click="handleJoinCompany" style="cursor: pointer;color: #409eff;"> ＋ 创建 / 加入企业 </div>
-            <div style="font-size: 12px; font-weight: 400; color: #2a2a2a" v-else>
+            <div
+              v-if="!corpSpaceModel.hasCorp"
+              style="cursor: pointer;color: #409eff;"
+              @click="handleJoinCompany"
+            >
+              ＋ 创建 / 加入企业
+            </div>
+            <div
+              v-else
+              style="font-size: 12px; font-weight: 400; color: #2a2a2a"
+            >
               <span style="display: inline-block;overflow: hidden;max-width: 150px;white-space: nowrap;text-overflow: ellipsis;">{{ corpSpaceModel.corpName }}</span>
-              <img style="vertical-align: sub" :src="companyLogo" />
+              <img
+                style="vertical-align: sub"
+                :src="companyLogo"
+              >
             </div>
           </div>
           <div style="margin-top: 8px;width: 231px;height: 30px;background: #ffffff;border-radius: 4px;border: 1px solid rgba(182, 190, 207, 0.5);font-size: 12px;color: #409eff;line-height: 30px;">
             <div style="float: left">
-              <img :src="versionLogo" style="vertical-align: sub; margin-left: 7px" />
+              <img
+                :src="versionLogo"
+                style="vertical-align: sub; margin-left: 7px"
+              >
               <span style="margin-left: 3px">
                 {{ corpSpaceModel.orderIsNull ? "无限制" : corpSpaceModel.isTryOut ? "试用版" : corpSpaceModel.isPersonal ? "个人版" : "企业版" }}
               </span>
@@ -26,28 +52,75 @@
           </div>
         </div>
         <div style="padding-bottom:15px;border-bottom: 1px solid #eee">
-          <div class="corpSpaceContainerMargin" style="margin-top: 10px">
+          <div
+            class="corpSpaceContainerMargin"
+            style="margin-top: 10px"
+          >
             <span style="font-size: 12px; color: #2a2a2a">{{ corpSpaceModel.usedSpace }} / {{ corpSpaceModel.bwForPrivatization ? "无限制" : corpSpaceModel.usableSpace }}
             </span>
             <span style="float: right;font-size: 12px;color: #979797;margin-top: 2px;">{{ corpSpaceModel.usedPercent.toFixed(2) }}%</span>
             <!-- <a class="corpSpaceDetailLink" @click="handleDetail">详情</a> -->
           </div>
-          <div class="corpSpaceContainerMargin" style="height: 6px; margin-top: 8px; border-radius: 10px" :style="{ background: 'linear-gradient(90deg, #6DD400 ' + corpSpaceModel.usedPercent + '%, #ebeef5 0%)', }"></div>
+          <div
+            class="corpSpaceContainerMargin"
+            style="height: 6px; margin-top: 8px; border-radius: 10px"
+            :style="{ background: 'linear-gradient(90deg, #6DD400 ' + corpSpaceModel.usedPercent + '%, #ebeef5 0%)', }"
+          />
           <div style="text-align: center; margin-top: 15px">
-            <el-link v-if="corpSpaceModel.isadministrator" type="primary" :underline="false" style="font-size: 14px" @click="handleDetail">云存储空间</el-link>
-            <el-link v-else type="" :underline="false" style="font-size: 14px">云存储空间</el-link>
+            <el-link
+              v-if="corpSpaceModel.isadministrator"
+              type="primary"
+              :underline="false"
+              style="font-size: 14px"
+              @click="handleDetail"
+            >
+              云存储空间
+            </el-link>
+            <el-link
+              v-else
+              type=""
+              :underline="false"
+              style="font-size: 14px"
+            >
+              云存储空间
+            </el-link>
           </div>
         </div>
-        <div v-if="$store.state.user.user.corpIdbit" style="padding-bottom:15px;border-bottom: 1px solid #eee">
-          <div class="corpSpaceContainerMargin" style="margin-top: 10px">
+        <div
+          v-if="$store.state.user.user.corpIdbit"
+          style="padding-bottom:15px;border-bottom: 1px solid #eee"
+        >
+          <div
+            class="corpSpaceContainerMargin"
+            style="margin-top: 10px"
+          >
             <span style="font-size: 12px; color: #2a2a2a">{{ corpSpaceModel.registedUserCount + "人" }} / {{ corpSpaceModel.orderIsNull ? "无限制" : corpSpaceModel.maxOfPeople + "人" }}</span>
             <span style="float: right;font-size: 12px;color: #979797;margin-top: 2px;">{{ corpSpaceModel.orderIsNull ? "无限制" : corpSpaceModel.personPercent.toFixed(2) + "%" }}</span>
             <!-- <a class="corpSpaceDetailLink" @click="handleDetail">详情</a> -->
           </div>
-          <div class="corpSpaceContainerMargin" style="height: 6px; margin-top: 8px; border-radius: 10px" :style="{ background: 'linear-gradient(90deg, #6DD400 ' + corpSpaceModel.personPercent + '%, #ebeef5 0%)', }"></div>
+          <div
+            class="corpSpaceContainerMargin"
+            style="height: 6px; margin-top: 8px; border-radius: 10px"
+            :style="{ background: 'linear-gradient(90deg, #6DD400 ' + corpSpaceModel.personPercent + '%, #ebeef5 0%)', }"
+          />
           <div style="text-align: center; margin-top: 15px">
-            <el-link v-if="corpSpaceModel.isadministrator" type="primary" :underline="false" style="font-size: 14px" @click="registedUserDetail">企业人员</el-link>
-            <el-link v-else type="primary" :underline="false" style="font-size: 14px">企业人员</el-link>
+            <el-link
+              v-if="corpSpaceModel.isadministrator"
+              type="primary"
+              :underline="false"
+              style="font-size: 14px"
+              @click="registedUserDetail"
+            >
+              企业人员
+            </el-link>
+            <el-link
+              v-else
+              type="primary"
+              :underline="false"
+              style="font-size: 14px"
+            >
+              企业人员
+            </el-link>
           </div>
         </div>
         <!-- <div v-if="!$isOwner" class="corpSpaceContainerUl">
@@ -64,19 +137,33 @@
           <img :src="buyLogo" />
           <div class="corpInfoContainerInline">联系我们</div>
         </div> -->
-        <div class="corpSpaceContainerUl" @click="linkToUserCenter">
-          <img :src="editInfoLogo" />
-          <div class="corpInfoContainerInline" style="position: relative;">
-            <div style="position:absolute;width:8px;height:8px;border-radius:50%;background-color:#FF3300;top:8px;right:-10px" v-if="hasNotDealApply"></div> 账号中心
+        <div
+          class="corpSpaceContainerUl"
+          @click="linkToUserCenter"
+        >
+          <img :src="editInfoLogo">
+          <div
+            class="corpInfoContainerInline"
+            style="position: relative;"
+          >
+            <div
+              v-if="hasNotDealApply"
+              style="position:absolute;width:8px;height:8px;border-radius:50%;background-color:#FF3300;top:8px;right:-10px"
+            /> 账号中心
           </div>
         </div>
         <div class="footBtn">
           <!-- <div @click="goHome">返回首页</div> -->
-          <div @click="exitLogin">退出登录</div>
+          <div @click="exitLogin">
+            退出登录
+          </div>
         </div>
       </div>
     </div>
-    <opeDialog opeType="editUserInfo" :dialogVisible.sync="baseInfoDialogVisible" />
+    <opeDialog
+      ope-type="editUserInfo"
+      :dialog-visible.sync="baseInfoDialogVisible"
+    />
   </div>
 </template>
 <script>
@@ -144,7 +231,7 @@ export default {
       },
       baseInfoOpeType: null,
       baseInfoDialogVisible: true,
-      avatorUrl: process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+      avatorUrl: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
       companyLogo: companyLogo,
       encrypt
     };

@@ -2,76 +2,210 @@
 
 <template>
   <div class="app-container">
-    <el-divider direction='horizontal' content-position="left">菜单权限配置</el-divider>
-    <el-row :gutter="10" style="margin-bottom: 15px;">
+    <el-divider
+      direction="horizontal"
+      content-position="left"
+    >
+      菜单权限配置
+    </el-divider>
+    <el-row
+      :gutter="10"
+      style="margin-bottom: 15px;"
+    >
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">{{ $t('base.button.create')
-        }}</el-button>
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+        >
+          {{ $t('base.button.create')
+          }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-check" size="mini" @click="selectAll(menuData)">{{
-          $t('base.button.allPick') }}</el-button>
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-check"
+          size="mini"
+          @click="selectAll(menuData)"
+        >
+          {{
+            $t('base.button.allPick') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="info" plain icon="el-icon-sort" size="mini" @click="toggleExpandAll">展开/折叠</el-button>
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-sort"
+          size="mini"
+          @click="toggleExpandAll"
+        >
+          展开/折叠
+        </el-button>
       </el-col>
     </el-row>
-    <el-table v-if="refreshTable" :header-cell-style="$thStyle" stripe cell-class-name="cellStyle" v-loading="!loading"
-      :height="'calc(100vh - 220px)'" :data="menuData" row-key="id" :default-expand-all="isExpandAll"
-      :tree-props="{ children: 'children' }">
+    <el-table
+      v-if="refreshTable"
+      v-loading="!loading"
+      :header-cell-style="$thStyle"
+      stripe
+      cell-class-name="cellStyle"
+      :height="'calc(100vh - 220px)'"
+      :data="menuData"
+      row-key="id"
+      :default-expand-all="isExpandAll"
+      :tree-props="{ children: 'children' }"
+    >
       <!-- <el-table-column type="selection" align="center"></el-table-column> -->
       <el-table-column width="100">
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.isselect"></el-checkbox>
+          <el-checkbox v-model="scope.row.isselect" />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="项"></el-table-column>
-      <el-table-column align="center" :label="$t('base.label.type')">
-
-      </el-table-column>
-      <el-table-column prop="id" align="center" label="排序"></el-table-column>
-      <el-table-column prop="code" align="center" label="编码"></el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column
+        prop="name"
+        label="项"
+      />
+      <el-table-column
+        align="center"
+        :label="$t('base.label.type')"
+      />
+      <el-table-column
+        prop="id"
+        align="center"
+        label="排序"
+      />
+      <el-table-column
+        prop="code"
+        align="center"
+        label="编码"
+      />
+      <el-table-column
+        align="center"
+        label="操作"
+      >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="">编辑</el-button>
-          <el-button type="text" size="small" @click="">添加</el-button>
-          <el-button type="text" size="small" @click="deleteMenu(scope.row)">{{ $t('base.button.delete') }}</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click=""
+          >
+            编辑
+          </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click=""
+          >
+            添加
+          </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="deleteMenu(scope.row)"
+          >
+            {{ $t('base.button.delete') }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-button type="primary" style="width: 250px;margin: 15px auto;display: block;" @click="updateMenu">{{
-      $t('base.button.save') }}</el-button>
+    <el-button
+      type="primary"
+      style="width: 250px;margin: 15px auto;display: block;"
+      @click="updateMenu"
+    >
+      {{
+        $t('base.button.save') }}
+    </el-button>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-suffix=":" label-width="100px">
-        <el-form-item label="上级结构" prop="childlevel">
-          <el-cascader style="width:100%" v-model="form.childlevel" :options="menuOptions"
+    <el-dialog
+      :title="title"
+      :visible.sync="open"
+      width="600px"
+      append-to-body
+    >
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-suffix=":"
+        label-width="100px"
+      >
+        <el-form-item
+          label="上级结构"
+          prop="childlevel"
+        >
+          <el-cascader
+            v-model="form.childlevel"
+            style="width:100%"
+            :options="menuOptions"
             :props="{ label: 'name', value: 'childlevel', checkStrictly: 'true', emitPath: false }"
-            @change="handleMenuChange"></el-cascader>
+            @change="handleMenuChange"
+          />
         </el-form-item>
-        <el-form-item label="被控项名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入部门名称" />
+        <el-form-item
+          label="被控项名称"
+          prop="name"
+        >
+          <el-input
+            v-model="form.name"
+            placeholder="请输入部门名称"
+          />
         </el-form-item>
-        <el-form-item label="被控项编码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入部门名称" />
+        <el-form-item
+          label="被控项编码"
+          prop="code"
+        >
+          <el-input
+            v-model="form.code"
+            placeholder="请输入部门名称"
+          />
         </el-form-item>
-        <el-form-item label="显示排序" prop="number">
-          <el-input-number v-model="form.number" controls-position="right" :min="0" />
+        <el-form-item
+          label="显示排序"
+          prop="number"
+        >
+          <el-input-number
+            v-model="form.number"
+            controls-position="right"
+            :min="0"
+          />
         </el-form-item>
-        <el-form-item label="被控项类型" prop="type">
+        <el-form-item
+          label="被控项类型"
+          prop="type"
+        >
           <el-radio-group v-model="form.type">
-            <el-radio :label="1">菜单</el-radio>
-            <el-radio :label="2">功能</el-radio>
-            <el-radio :label="3">按钮</el-radio>
+            <el-radio :label="1">
+              菜单
+            </el-radio>
+            <el-radio :label="2">
+              功能
+            </el-radio>
+            <el-radio :label="3">
+              按钮
+            </el-radio>
           </el-radio-group>
-
         </el-form-item>
-
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">{{ $t('base.button.confirm') }}</el-button>
-        <el-button @click="cancel">{{ $t('base.button.cancel') }}</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >
+          {{ $t('base.button.confirm') }}
+        </el-button>
+        <el-button @click="cancel">
+          {{ $t('base.button.cancel') }}
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -83,7 +217,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import postApi from "@/api/document/indexApi.js";
 
 export default {
-  name: "menu",
+  name: "Menu",
   components: {},
   data() {
     return {
@@ -151,7 +285,7 @@ export default {
   },
   methods: {
     async querCorp() {
-      let res = await postApi.post('/api/Adminsetup/GetCorptop', null, process.env.BASE_API, this.token)
+      let res = await postApi.post('/api/Adminsetup/GetCorptop', null, process.env.VUE_APP_BASE_API, this.token)
       if (res.code == 1) {
         this.corpId = res.data.CorpId
         this.queryData()
@@ -161,7 +295,7 @@ export default {
     async queryData() {
       let form = new FormData()
       form.append('CorpId', this.corpId)
-      let res = await postApi.post('/api/Adminsetup/GetBasemenuData', form, process.env.BASE_API, this.token)
+      let res = await postApi.post('/api/Adminsetup/GetBasemenuData', form, process.env.VUE_APP_BASE_API, this.token)
       if (res.code == 1) {
         this.menuData = res.data
       }
@@ -173,7 +307,7 @@ export default {
       }).then(async () => {
         let form = new FormData()
         form.append('id', row.id)
-        let res = await postApi.post('/api/Basemenu/BasementDel', form, process.env.BASE_API, this.token)
+        let res = await postApi.post('/api/Basemenu/BasementDel', form, process.env.VUE_APP_BASE_API, this.token)
         if (res.code == 1) {
           this.$success(res.msg)
           this.queryData()

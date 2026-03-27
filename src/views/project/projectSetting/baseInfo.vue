@@ -1,68 +1,147 @@
 <!--  -->
-<template><el-form ref="projectForm" :model="projectForm" :rules="createProjectRules" label-suffix=":" label-width="130px"
-  size="small">
-  <div class="flex">
-    <div style="width: 550px">
-      <el-form-item prop="projectName" :label="$t('projects.label.name')">
-        <el-input style="width: 300px" :placeholder="$t('base.button.input')" v-model="projectForm.projectName"></el-input>
-      </el-form-item>
-      <el-form-item prop="projectType" :label="$t('projects.label.type')" style="height: 32px;">
-        <el-select style="width: 300px" v-model="projectForm.projectType" @change="projectTypeChange"
-          :popper-append-to-body="false" :placeholder="$t('base.button.pleaseSelect')">
-          <el-option v-for="item in projectTypeOptions" :key="item.iuid" :label="item.name" :value="item.iuid">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item prop="adminName" :label="$t('projects.label.admin')">
-        <el-select style="width: 300px;" v-model="projectForm.adminName">
-          <el-option v-for="item in memberList" :key="item.iuid" :label="item.userName" :value="item.iuid"></el-option>
-        </el-select>
-      </el-form-item>
+<template>
+  <el-form
+    ref="projectForm"
+    :model="projectForm"
+    :rules="createProjectRules"
+    label-suffix=":"
+    label-width="130px"
+    size="small"
+  >
+    <div class="flex">
+      <div style="width: 550px">
+        <el-form-item
+          prop="projectName"
+          :label="$t('projects.label.name')"
+        >
+          <el-input
+            v-model="projectForm.projectName"
+            style="width: 300px"
+            :placeholder="$t('base.button.input')"
+          />
+        </el-form-item>
+        <el-form-item
+          prop="projectType"
+          :label="$t('projects.label.type')"
+          style="height: 32px;"
+        >
+          <el-select
+            v-model="projectForm.projectType"
+            style="width: 300px"
+            :popper-append-to-body="false"
+            :placeholder="$t('base.button.pleaseSelect')"
+            @change="projectTypeChange"
+          >
+            <el-option
+              v-for="item in projectTypeOptions"
+              :key="item.iuid"
+              :label="item.name"
+              :value="item.iuid"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          prop="adminName"
+          :label="$t('projects.label.admin')"
+        >
+          <el-select
+            v-model="projectForm.adminName"
+            style="width: 300px;"
+          >
+            <el-option
+              v-for="item in memberList"
+              :key="item.iuid"
+              :label="item.userName"
+              :value="item.iuid"
+            />
+          </el-select>
+        </el-form-item>
 
-      <!-- 国外选择洲国，国内选省市县 -->
-      <el-form-item prop="country" :label="$t('projects.label.area')">
-        <el-cascader :options="countries" style="width: 300px;" v-model="projectForm.country" clearable
-                     :props="{ value: 'name', label: 'name' }"></el-cascader>
-      </el-form-item>
+        <!-- 国外选择洲国，国内选省市县 -->
+        <el-form-item
+          prop="country"
+          :label="$t('projects.label.area')"
+        >
+          <el-cascader
+            v-model="projectForm.country"
+            :options="countries"
+            style="width: 300px;"
+            clearable
+            :props="{ value: 'name', label: 'name' }"
+          />
+        </el-form-item>
 
-      <!-- <member-picker :isMultiple="true" dialogTitle="选择负责人" @cancelCheck="cancelCheck" @queryMember="queryMember" :checkList="adminUser" :memberList="memberList" @submit="changeAdmin" :dialogVisible.sync="memberPickerVisible" /> -->
-      <el-form-item :label="$t('projects.label.status')" style="height: 32px;">
-        <el-cascader :options="ProjectDesignPhaseOptions" style="width: 300px;" v-model="projectForm.designPhaseIUID"
-          clearable :props="{ value: 'iuid', label: 'itemText', children: 'child' }"></el-cascader>
-      </el-form-item>
+        <!-- <member-picker :isMultiple="true" dialogTitle="选择负责人" @cancelCheck="cancelCheck" @queryMember="queryMember" :checkList="adminUser" :memberList="memberList" @submit="changeAdmin" :dialogVisible.sync="memberPickerVisible" /> -->
+        <el-form-item
+          :label="$t('projects.label.status')"
+          style="height: 32px;"
+        >
+          <el-cascader
+            v-model="projectForm.designPhaseIUID"
+            :options="ProjectDesignPhaseOptions"
+            style="width: 300px;"
+            clearable
+            :props="{ value: 'iuid', label: 'itemText', children: 'child' }"
+          />
+        </el-form-item>
 
-      <!-- 项目模板模块 -->
-      <!-- <el-form-item label="项目模板：" v-if="projectType2Name !== '桥梁大师项目'">
+        <!-- 项目模板模块 -->
+        <!-- <el-form-item label="项目模板：" v-if="projectType2Name !== '桥梁大师项目'">
           <el-input style="width: 300px" v-model="projectForm.ProjectTemplate" readonly placeholder="请选择项目模板文件">
             <el-button slot="append" icon="el-icon-plus"></el-button>
           </el-input>
           <input class="templatefileBtn" v-show="false" :disabled="type === 'ADD' ? false : true" type="file" name="file" accept=".xls,.xlsx" @change="selectTemplateFile" alt="请选择文件" />
         </el-form-item> -->
 
-      <!-- 全局项目 -->
-      <!-- <el-form-item :label="$t('projects.label.isGlobal')" prop="isitGlobal" v-if="isAdmin == true">
+        <!-- 全局项目 -->
+        <!-- <el-form-item :label="$t('projects.label.isGlobal')" prop="isitGlobal" v-if="isAdmin == true">
           <el-radio-group v-model="projectForm.isitGlobal" size="mini">
             <el-radio label="1">{{ $t('projects.label.yes') }}</el-radio>
             <el-radio label="0">{{ $t('projects.label.no') }}</el-radio>
           </el-radio-group>
         </el-form-item> -->
-      <el-form-item :label="$t('projects.label.image')">
-        <el-upload class="avatar-uploader poster" action="" :show-file-list="false" :on-change="fileListChange"
-          :auto-upload="false" accept="image/*">
-          <img v-if="projectForm.images || projectFormImages"
-            :src="projectFormImages ? projectFormImages : getImgUrl(projectForm.images)" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
-      <el-form-item :label="$t('projects.label.overview')">
-        <el-input type="textarea" style="width: 300px" :rows="5" :placeholder="$t('base.button.input')" v-model="projectForm.overview">
-        </el-input>
-      </el-form-item>
-      <el-button type="primary" @click="onSubmit" :loading="submitLoading" style="width: 88px;float: right;"
-        size="small">{{ type == 'ADD' ? $t('base.button.create') : $t('base.button.save') }}</el-button>
+        <el-form-item :label="$t('projects.label.image')">
+          <el-upload
+            class="avatar-uploader poster"
+            action=""
+            :show-file-list="false"
+            :on-change="fileListChange"
+            :auto-upload="false"
+            accept="image/*"
+          >
+            <img
+              v-if="projectForm.images || projectFormImages"
+              :src="projectFormImages ? projectFormImages : getImgUrl(projectForm.images)"
+              class="avatar"
+            >
+            <i
+              v-else
+              class="el-icon-plus avatar-uploader-icon"
+            />
+          </el-upload>
+        </el-form-item>
+        <el-form-item :label="$t('projects.label.overview')">
+          <el-input
+            v-model="projectForm.overview"
+            type="textarea"
+            style="width: 300px"
+            :rows="5"
+            :placeholder="$t('base.button.input')"
+          />
+        </el-form-item>
+        <el-button
+          type="primary"
+          :loading="submitLoading"
+          style="width: 88px;float: right;"
+          size="small"
+          @click="onSubmit"
+        >
+          {{ type == 'ADD' ? $t('base.button.create') : $t('base.button.save') }}
+        </el-button>
+      </div>
     </div>
-  </div>
-</el-form></template>
+  </el-form>
+</template>
 
 <script>
 import projectAllApi from "@/api/project/all/index";
@@ -74,11 +153,11 @@ import { mapGetters } from "vuex";
 import memberPicker from '@/components/memberPicker/index.vue'
 import i18n from '../../../../static/locales'
 export default {
-  name: "baseInfo",
-  props: ['ProjectIUID', 'type', 'projectTypeOptions', 'ProjectDesignPhaseOptions', 'close', 'loadData'],
+  name: "BaseInfo",
   components: {
     memberPicker
   },
+  props: ['ProjectIUID', 'type', 'projectTypeOptions', 'ProjectDesignPhaseOptions', 'close', 'loadData'],
   data() {
     var validatePass = (rule, value, callback) => {
       if (!value) {
@@ -96,7 +175,7 @@ export default {
 
     return {
       countries,
-      imageOrigin: process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+      imageOrigin: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
       projectForm: {},
       createProjectRules: {
         projectType: [
@@ -171,7 +250,7 @@ export default {
       }
     },
     getImgUrl(url) {
-      return process.env.BASE_API + "/api/home/GetimgFile?fileUrl=" + encodeURIComponent(url)
+      return process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=" + encodeURIComponent(url)
     },
     async queryUpdateData() {
       var res = await projectAllApi.querySingleProjectData(this.ProjectIUID, "", '1');

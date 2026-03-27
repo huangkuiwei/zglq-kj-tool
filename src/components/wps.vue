@@ -1,6 +1,4 @@
-<template>
-    
-</template>
+<template />
 
 <script>
 import axios from "axios";
@@ -24,7 +22,7 @@ export default {
     },
     methods:{
         async getWpsUrl(){
-            axios.defaults.baseURL = process.env.BASE_API;
+            axios.defaults.baseURL = process.env.VUE_APP_BASE_API;
             var res = await axios.post("/api/wps/genarate", {fileId: this.row.iuid});
             this.openWps(res.data.wpsUrl);
         },

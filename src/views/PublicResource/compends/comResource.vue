@@ -1,334 +1,902 @@
 <template>
-  <el-container style="height:100%;margin-left: 1px;" class="commonKu">
+  <el-container
+    style="height:100%;margin-left: 1px;"
+    class="commonKu"
+  >
     <el-main class="buildMain">
       <!-- 检索栏 -->
-      <div class="mainTop" v-if="['resource', 'private'].includes(page)"
+      <div
+        v-if="['resource', 'private'].includes(page)"
+        class="mainTop"
         :style="page == 'private' ? { marginTop: '-12px', paddingLeft: '0' } : {}"
-        style="margin-bottom:1px;box-sizing: content-box;">
-        <div class="flex ai-center" style="width: 100%;">
-          <el-button type="primary" size="small" icon="el-icon-upload2" @click="handleBuild('ADD')">{{
-            $t('base.button.upload') }}</el-button>
-          <el-button type="primary" size="small" v-if="page == 'private'" icon="el-icon-upload2"
-            @click="multipleUpload">批量上传</el-button>
+        style="margin-bottom:1px;box-sizing: content-box;"
+      >
+        <div
+          class="flex ai-center"
+          style="width: 100%;"
+        >
+          <el-button
+            type="primary"
+            size="small"
+            icon="el-icon-upload2"
+            @click="handleBuild('ADD')"
+          >
+            {{
+              $t('base.button.upload') }}
+          </el-button>
+          <el-button
+            v-if="page == 'private'"
+            type="primary"
+            size="small"
+            icon="el-icon-upload2"
+            @click="multipleUpload"
+          >
+            批量上传
+          </el-button>
           <el-form style="display:flex;align-items:center; flex-wrap: wrap;margin-left: auto;">
             <template v-if="page != 'private'">
-              <el-checkbox v-model="searchForm.Collectionbit" v-if="page == 'resource'"
-                style="margin-right:15px">{{ $t('base.label.collected') }}</el-checkbox>
-              <el-form-item label="" style="display:flex;margin-right:15px">
-                <el-select size='small' placeholder="参数化" v-model="searchForm.Parameterization" clearable
-                  style="width:120px">
-                  <el-option :label="item.itemText" :value="item.iuid" v-for="(item, index) in parameterData"
-                    :key="index"></el-option>
+              <el-checkbox
+                v-if="page == 'resource'"
+                v-model="searchForm.Collectionbit"
+                style="margin-right:15px"
+              >
+                {{ $t('base.label.collected') }}
+              </el-checkbox>
+              <el-form-item
+                label=""
+                style="display:flex;margin-right:15px"
+              >
+                <el-select
+                  v-model="searchForm.Parameterization"
+                  size="small"
+                  placeholder="参数化"
+                  clearable
+                  style="width:120px"
+                >
+                  <el-option
+                    v-for="(item, index) in parameterData"
+                    :key="index"
+                    :label="item.itemText"
+                    :value="item.iuid"
+                  />
                 </el-select>
               </el-form-item>
-              <el-form-item label="" style="display:flex;margin-right:15px">
-                <el-select size='small' placeholder="LOD等级" v-model="searchForm.LOD" clearable style="width:120px">
-                  <el-option :label="item.itemText" :value="item.iuid" v-for="item in levelData"
-                    :key="item.itemIndex"></el-option>
+              <el-form-item
+                label=""
+                style="display:flex;margin-right:15px"
+              >
+                <el-select
+                  v-model="searchForm.LOD"
+                  size="small"
+                  placeholder="LOD等级"
+                  clearable
+                  style="width:120px"
+                >
+                  <el-option
+                    v-for="item in levelData"
+                    :key="item.itemIndex"
+                    :label="item.itemText"
+                    :value="item.iuid"
+                  />
                 </el-select>
               </el-form-item>
-              <el-form-item label="" style="display:flex">
-                <el-cascader placeholder="适用平台" value-key="iuid" :emitPath="false" :props="headOptionProps"
-                  :options="platformData" v-model="searchForm.Suitplatform" clearable
-                  style="width: 120px;margin-right:15px" size='small'></el-cascader>
+              <el-form-item
+                label=""
+                style="display:flex"
+              >
+                <el-cascader
+                  v-model="searchForm.Suitplatform"
+                  placeholder="适用平台"
+                  value-key="iuid"
+                  :emit-path="false"
+                  :props="headOptionProps"
+                  :options="platformData"
+                  clearable
+                  style="width: 120px;margin-right:15px"
+                  size="small"
+                />
               </el-form-item>
             </template>
-            <el-input :placeholder="$t('base.label.inputKeywordsToFindComponents')" prefix-icon="el-icon-search" style="width:180px;margin-right:15px"
-              clearable v-model="searchForm.FileName" size="small">
-            </el-input>
-            <div class="topRight mainFlex" v-if="page != 'private'">
-              <el-button v-if="!pictureMode" type="primary" icon="el-icon-menu" size="small" style="margin-right:15px"
-                @click="modeChange(true)" key="picture">{{ $t('base.label.picture') }}</el-button>
-              <el-button v-else icon="el-icon-tickets" size="small" @click="modeChange(false)" key="list"
-                style="margin-right:15px">{{ $t('base.label.list') }}</el-button>
+            <el-input
+              v-model="searchForm.FileName"
+              :placeholder="$t('base.label.inputKeywordsToFindComponents')"
+              prefix-icon="el-icon-search"
+              style="width:180px;margin-right:15px"
+              clearable
+              size="small"
+            />
+            <div
+              v-if="page != 'private'"
+              class="topRight mainFlex"
+            >
+              <el-button
+                v-if="!pictureMode"
+                key="picture"
+                type="primary"
+                icon="el-icon-menu"
+                size="small"
+                style="margin-right:15px"
+                @click="modeChange(true)"
+              >
+                {{ $t('base.label.picture') }}
+              </el-button>
+              <el-button
+                v-else
+                key="list"
+                icon="el-icon-tickets"
+                size="small"
+                style="margin-right:15px"
+                @click="modeChange(false)"
+              >
+                {{ $t('base.label.list') }}
+              </el-button>
             </div>
           </el-form>
         </div>
       </div>
 
       <!-- 列表 -->
-      <el-row :style="{ height: `calc(100vh - ${page == 'private' ? 166 : page == 'resource' ? 153 : 103}px)` }"
-        style="background:#fff" v-if="!pictureMode">
-        <el-table class="t-table" ref="multipleTable" :data="publicData" stripe :header-cell-style="$thStyle"
-          style="font-size: 13px" height="100%">
-          <el-table-column width="100px" type="index" align="center" v-if="page != 'resource'" :label="$t('base.button.index')" />
-          <el-table-column align="center" v-if="page != 'private'" :label="$t('base.button.preview')">
+      <el-row
+        v-if="!pictureMode"
+        :style="{ height: `calc(100vh - ${page == 'private' ? 166 : page == 'resource' ? 153 : 103}px)` }"
+        style="background:#fff"
+      >
+        <el-table
+          ref="multipleTable"
+          class="t-table"
+          :data="publicData"
+          stripe
+          :header-cell-style="$thStyle"
+          style="font-size: 13px"
+          height="100%"
+        >
+          <el-table-column
+            v-if="page != 'resource'"
+            width="100px"
+            type="index"
+            align="center"
+            :label="$t('base.button.index')"
+          />
+          <el-table-column
+            v-if="page != 'private'"
+            align="center"
+            :label="$t('base.button.preview')"
+          >
             <template slot-scope="scope">
-              <img style="width:80px;height:80px;border:none;padding:10px 0;cursor:pointer;object-fit: contain;"
-                :src="baseImageUrl + encodeURIComponent(scope.row.imgfile)" @click="viewInfo(scope.row)">
+              <img
+                style="width:80px;height:80px;border:none;padding:10px 0;cursor:pointer;object-fit: contain;"
+                :src="baseImageUrl + encodeURIComponent(scope.row.imgfile)"
+                @click="viewInfo(scope.row)"
+              >
             </template>
           </el-table-column>
           <el-table-column :label="$t('base.button.name')">
             <template slot-scope="scope">
-              <el-link @click="viewInfo(scope.row)" style="cursor:pointer" :underline="false">
+              <el-link
+                style="cursor:pointer"
+                :underline="false"
+                @click="viewInfo(scope.row)"
+              >
                 {{ scope.row.fileName }}
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column v-if="['myComponents', 'resourceApprove'].includes(page)" prop="type" align="center"
-                           :label="$t('base.button.status')">
+          <el-table-column
+            v-if="['myComponents', 'resourceApprove'].includes(page)"
+            prop="type"
+            align="center"
+            :label="$t('base.button.status')"
+          >
             <template slot-scope="scope">
-              <el-tag :type="scope.row.type == '1' ? '' : scope.row.type == '2' ? 'success' : 'danger'" size="small">
+              <el-tag
+                :type="scope.row.type == '1' ? '' : scope.row.type == '2' ? 'success' : 'danger'"
+                size="small"
+              >
                 {{ scope.row.type | typeName }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column width="120px" prop="parameterization" align="center" :label="$t('base.button.parameterized')" />
-          <el-table-column width="120px" prop="fileSize" v-if="page == 'private'" align="center" :label="$t('base.button.fileSize')" />
-          <el-table-column prop="suitplatformName" align="center" v-if="page != 'private'" :label="$t('base.button.platform')" />
-          <el-table-column prop="lod" align="center" v-if="page != 'private'" :label="$t('base.button.LODLevel')" />
+          <el-table-column
+            width="120px"
+            prop="parameterization"
+            align="center"
+            :label="$t('base.button.parameterized')"
+          />
+          <el-table-column
+            v-if="page == 'private'"
+            width="120px"
+            prop="fileSize"
+            align="center"
+            :label="$t('base.button.fileSize')"
+          />
+          <el-table-column
+            v-if="page != 'private'"
+            prop="suitplatformName"
+            align="center"
+            :label="$t('base.button.platform')"
+          />
+          <el-table-column
+            v-if="page != 'private'"
+            prop="lod"
+            align="center"
+            :label="$t('base.button.LODLevel')"
+          />
 
           <template v-if="['myComponents', 'resourceApprove'].includes(page)">
-            <el-table-column prop="remarks" align="center" :label="$t('base.button.remark')" />
-            <el-table-column prop="idea" align="center" :label="$t('base.button.opinion')" />
+            <el-table-column
+              prop="remarks"
+              align="center"
+              :label="$t('base.button.remark')"
+            />
+            <el-table-column
+              prop="idea"
+              align="center"
+              :label="$t('base.button.opinion')"
+            />
           </template>
 
-          <el-table-column :label="$t('base.formLabel.operation')" align="center" width="240">
+          <el-table-column
+            :label="$t('base.formLabel.operation')"
+            align="center"
+            width="240"
+          >
             <template slot-scope="scope">
               <template v-if="page == 'resource'">
-                <el-button v-if="scope.row.collectbit == 0" type="text" @click="collect(scope.row)">{{ $t('base.button.collect') }}</el-button>
-                <el-button v-if="scope.row.collectbit == 1" type="text"
-                  @click="cancelCollect(scope.row)">{{ $t('base.button.cancelCollection') }}</el-button>
-                <el-button type="text" @click="downLoad(scope.row)">{{ $t('base.button.download') }}</el-button>
-                <el-button v-if="user.iscorpadmin" type="text" @click="handleBuild('EDIT', scope.row)">{{ $t('base.button.edit') }}</el-button>
-                <el-button v-if="user.iscorpadmin" type="text" style="color: #F56C6C;"
-                  @click="deleteBuild(false, scope.row)">{{ $t('base.button.delete') }}</el-button>
+                <el-button
+                  v-if="scope.row.collectbit == 0"
+                  type="text"
+                  @click="collect(scope.row)"
+                >
+                  {{ $t('base.button.collect') }}
+                </el-button>
+                <el-button
+                  v-if="scope.row.collectbit == 1"
+                  type="text"
+                  @click="cancelCollect(scope.row)"
+                >
+                  {{ $t('base.button.cancelCollection') }}
+                </el-button>
+                <el-button
+                  type="text"
+                  @click="downLoad(scope.row)"
+                >
+                  {{ $t('base.button.download') }}
+                </el-button>
+                <el-button
+                  v-if="user.iscorpadmin"
+                  type="text"
+                  @click="handleBuild('EDIT', scope.row)"
+                >
+                  {{ $t('base.button.edit') }}
+                </el-button>
+                <el-button
+                  v-if="user.iscorpadmin"
+                  type="text"
+                  style="color: #F56C6C;"
+                  @click="deleteBuild(false, scope.row)"
+                >
+                  {{ $t('base.button.delete') }}
+                </el-button>
               </template>
               <template v-if="page == 'private'">
-                <el-button v-if="user.iscorpadmin" type="text" @click="handleBuild('EDIT', scope.row)">{{ $t('base.button.edit') }}</el-button>
-                <el-button v-if="user.iscorpadmin" type="text" style="color: #F56C6C;"
-                  @click="deleteBuild(false, scope.row)">{{ $t('base.button.delete') }}</el-button>
+                <el-button
+                  v-if="user.iscorpadmin"
+                  type="text"
+                  @click="handleBuild('EDIT', scope.row)"
+                >
+                  {{ $t('base.button.edit') }}
+                </el-button>
+                <el-button
+                  v-if="user.iscorpadmin"
+                  type="text"
+                  style="color: #F56C6C;"
+                  @click="deleteBuild(false, scope.row)"
+                >
+                  {{ $t('base.button.delete') }}
+                </el-button>
               </template>
               <template v-else-if="page == 'myComponents'">
-                <el-button type="text" @click="handleBuild('EDIT', scope.row)">{{ $t('base.button.edit') }}</el-button>
-                <el-button type="text" :disabled="scope.row.type != '1'"
-                  @click="deleteBuild(false, scope.row)">{{ $t('base.button.withdraw') }}</el-button>
+                <el-button
+                  type="text"
+                  @click="handleBuild('EDIT', scope.row)"
+                >
+                  {{ $t('base.button.edit') }}
+                </el-button>
+                <el-button
+                  type="text"
+                  :disabled="scope.row.type != '1'"
+                  @click="deleteBuild(false, scope.row)"
+                >
+                  {{ $t('base.button.withdraw') }}
+                </el-button>
               </template>
               <template v-else-if="page == 'resourceApprove'">
-                <el-button type="text" @click="handleBuild('EDIT', scope.row)">{{ $t('base.button.edit') }}</el-button>
-                <el-button type="text" :disabled="scope.row.type != '1'" @click="handleAgree(scope.row)">{{ $t('base.button.agree') }}</el-button>
-                <el-button type="text" :disabled="scope.row.type != '1'" style="color: #F56C6C;"
-                  @click="handleReject(scope.row)">{{ $t('base.button.back') }}</el-button>
+                <el-button
+                  type="text"
+                  @click="handleBuild('EDIT', scope.row)"
+                >
+                  {{ $t('base.button.edit') }}
+                </el-button>
+                <el-button
+                  type="text"
+                  :disabled="scope.row.type != '1'"
+                  @click="handleAgree(scope.row)"
+                >
+                  {{ $t('base.button.agree') }}
+                </el-button>
+                <el-button
+                  type="text"
+                  :disabled="scope.row.type != '1'"
+                  style="color: #F56C6C;"
+                  @click="handleReject(scope.row)"
+                >
+                  {{ $t('base.button.back') }}
+                </el-button>
               </template>
             </template>
           </el-table-column>
-          <div slot="empty" class="empty">
-            <img :src="tableEmptyImage" />
+          <div
+            slot="empty"
+            class="empty"
+          >
+            <img :src="tableEmptyImage">
             <span>{{ $t('base.button.noData') }}</span>
           </div>
         </el-table>
       </el-row>
       <!-- 图览 -->
-      <el-row :style="{ height: `calc(100vh - ${page == 'private' ? 166 : page == 'resource' ? 153 : 103}px)` }"
-        style="background:#fff;overflow:auto" v-else>
+      <el-row
+        v-else
+        :style="{ height: `calc(100vh - ${page == 'private' ? 166 : page == 'resource' ? 153 : 103}px)` }"
+        style="background:#fff;overflow:auto"
+      >
         <div class="mainCon">
           <!-- <div> -->
-          <div class="flex wrap" style="padding:0 20px">
-            <div class="mainConLi" @mouseover="mouseover(index)" @mouseleave="mouseleave()"
-              v-for="(item, index) in publicData" :key="index">
+          <div
+            class="flex wrap"
+            style="padding:0 20px"
+          >
+            <div
+              v-for="(item, index) in publicData"
+              :key="index"
+              class="mainConLi"
+              @mouseover="mouseover(index)"
+              @mouseleave="mouseleave()"
+            >
               <div @click="viewInfo(item)">
-                <img :src="baseImageUrl + encodeURIComponent(item.imgfile)" style="object-fit: contain;">
-                <div class="filename">{{ item.fileName }}</div>
+                <img
+                  :src="baseImageUrl + encodeURIComponent(item.imgfile)"
+                  style="object-fit: contain;"
+                >
+                <div class="filename">
+                  {{ item.fileName }}
+                </div>
               </div>
               <template v-if="user.isadministrator">
-                <el-tag size="mini" type="warning" style="position:absolute;top:10px;left:10px;margin:0"
-                  v-if="$modelFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 && item.statusType != 3">转码中</el-tag>
+                <el-tag
+                  v-if="$modelFileSuffix.indexOf(item.fileSuffix.toLowerCase()) > -1 && item.statusType != 3"
+                  size="mini"
+                  type="warning"
+                  style="position:absolute;top:10px;left:10px;margin:0"
+                >
+                  转码中
+                </el-tag>
               </template>
-              <img src="@/assets/csh.svg" style="width:20px;height:20px;position:absolute;top:10px;right:10px;margin:0"
-                v-if="item.parameterization == '参数化'">
-              <div class="mainFlex" v-if="btnVisible && index == current" style="position:absolute;bottom:0;width:100%">
-                <el-button size="mini" type="text" style="font-size: 15px;flex:1;margin:0" class="btn-group"
-                  @click="collect(item)" v-if="!item.collectbit"><i class="iconfont icon-quxiaoshoucang"
-                    style="font-size:15px"></i>{{ $t('base.button.collect') }}</el-button>
-                <el-button size="mini" type="text" style="font-size: 15px;flex:1;margin:0" class="btn-group"
-                  @click="cancelCollect(item)" v-if="item.collectbit"><i class="iconfont icon-shoucang"
-                    style="font-size:15px;color:#FFE039"></i>{{ $t('base.button.cancelCollection') }}</el-button>
-                <el-button size="mini" type="text" style="font-size: 15px;flex:1" class="btn-group"
-                  @click="downLoad(item)"><i class="iconfont icon-download" style="font-size:15px"></i>{{ $t('base.button.download') }}</el-button>
-                <el-button size="mini" type="text" style="font-size: 15px;flex:1" class="btn-group"
-                  @click="viewInfo(item, 'detail')"><i class="el-icon-tickets" style="font-size:15px"></i>{{ $t('base.button.detail') }}</el-button>
+              <img
+                v-if="item.parameterization == '参数化'"
+                src="@/assets/csh.svg"
+                style="width:20px;height:20px;position:absolute;top:10px;right:10px;margin:0"
+              >
+              <div
+                v-if="btnVisible && index == current"
+                class="mainFlex"
+                style="position:absolute;bottom:0;width:100%"
+              >
+                <el-button
+                  v-if="!item.collectbit"
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1;margin:0"
+                  class="btn-group"
+                  @click="collect(item)"
+                >
+                  <i
+                    class="iconfont icon-quxiaoshoucang"
+                    style="font-size:15px"
+                  />{{ $t('base.button.collect') }}
+                </el-button>
+                <el-button
+                  v-if="item.collectbit"
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1;margin:0"
+                  class="btn-group"
+                  @click="cancelCollect(item)"
+                >
+                  <i
+                    class="iconfont icon-shoucang"
+                    style="font-size:15px;color:#FFE039"
+                  />{{ $t('base.button.cancelCollection') }}
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1"
+                  class="btn-group"
+                  @click="downLoad(item)"
+                >
+                  <i
+                    class="iconfont icon-download"
+                    style="font-size:15px"
+                  />{{ $t('base.button.download') }}
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  style="font-size: 15px;flex:1"
+                  class="btn-group"
+                  @click="viewInfo(item, 'detail')"
+                >
+                  <i
+                    class="el-icon-tickets"
+                    style="font-size:15px"
+                  />{{ $t('base.button.detail') }}
+                </el-button>
               </div>
             </div>
-            <div slot="empty" class="phoEmpty" v-if="publicData.length == 0">
+            <div
+              v-if="publicData.length == 0"
+              slot="empty"
+              class="phoEmpty"
+            >
               <span>{{ $t('base.button.noData') }}</span>
             </div>
           </div>
           <!-- </div> -->
         </div>
       </el-row>
-      <el-pagination :pager-count="5" class="t-pagination" @size-change="handleSizeChange"
-        @current-change="paginationCurrentChange" :current-page.sync="searchForm.page" :page-sizes="[10, 20, 40]"
-        :page-size="searchForm.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"
-        background></el-pagination>
+      <el-pagination
+        :pager-count="5"
+        class="t-pagination"
+        :current-page.sync="searchForm.page"
+        :page-sizes="[10, 20, 40]"
+        :page-size="searchForm.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        background
+        @size-change="handleSizeChange"
+        @current-change="paginationCurrentChange"
+      />
       <!-- 查看详情 -->
-      <el-dialog :title="detailsData.fileName" :visible.sync="dialogVisible" width="500px" v-dialogDrag :modal="true">
+      <el-dialog
+        v-dialogDrag
+        :title="detailsData.fileName"
+        :visible.sync="dialogVisible"
+        width="500px"
+        :modal="true"
+      >
         <!-- <div>分类：{{ detailsData.onetype }}</div> -->
-        <el-carousel arrow="always" indicator-position="none" height="250px" :interval="5000">
-          <el-carousel-item v-for="(item, index) in imgData" :key="index">
-            <img :src="baseImageUrl + encodeURIComponent(item.filePath)"
-              style="width:100%;height:100%;object-fit: contain;">
-            <div style="position:absolute;right:15%;bottom:0px">{{ index + 1 }}/{{ imgData.length }}</div>
+        <el-carousel
+          arrow="always"
+          indicator-position="none"
+          height="250px"
+          :interval="5000"
+        >
+          <el-carousel-item
+            v-for="(item, index) in imgData"
+            :key="index"
+          >
+            <img
+              :src="baseImageUrl + encodeURIComponent(item.filePath)"
+              style="width:100%;height:100%;object-fit: contain;"
+            >
+            <div style="position:absolute;right:15%;bottom:0px">
+              {{ index + 1 }}/{{ imgData.length }}
+            </div>
           </el-carousel-item>
         </el-carousel>
-        <div class="mainFlexBetween" style="padding:10px 0">
-          <div class="emphasis" style="cursor:pointer;">
-            <i class="el-icon-warning"></i>
-            <el-button type="text" size="small" @click="showQrcode">这个构件有问题？点这里</el-button>
+        <div
+          class="mainFlexBetween"
+          style="padding:10px 0"
+        >
+          <div
+            class="emphasis"
+            style="cursor:pointer;"
+          >
+            <i class="el-icon-warning" />
+            <el-button
+              type="text"
+              size="small"
+              @click="showQrcode"
+            >
+              这个构件有问题？点这里
+            </el-button>
             <!-- <a href="http://www.ksj.com.cn" target="_blank"></a> -->
           </div>
-          <div style="line-height: 32px;">上传时间：{{ detailsData.createTime }}</div>
+          <div style="line-height: 32px;">
+            上传时间：{{ detailsData.createTime }}
+          </div>
         </div>
-        <div v-if="false" class="sourcesArtifacts mainFlexBetween">
-          <div v-if="false" style="display:flex;align-items:center">构件来源:<img src="@/assets/companyLogo.png"
-              @click="window.open('https://www.ksj.com.cn/')" style="height:20px"></div>
-          <div v-else><!--flex占位用--></div>
-          <div class="mainFlex" style="align-items:center">
+        <div
+          v-if="false"
+          class="sourcesArtifacts mainFlexBetween"
+        >
+          <div
+            v-if="false"
+            style="display:flex;align-items:center"
+          >
+            构件来源:<img
+              src="@/assets/companyLogo.png"
+              style="height:20px"
+              @click="window.open('https://www.ksj.com.cn/')"
+            >
+          </div>
+          <div v-else>
+            <!--flex占位用-->
+          </div>
+          <div
+            class="mainFlex"
+            style="align-items:center"
+          >
             <div style="margin-right:10px">
-              <i class="el-icon-view"></i>
+              <i class="el-icon-view" />
               <span>{{ detailsData.examineCount }}</span>
             </div>
             <div style="margin-right:10px">
-              <i class="iconfont icon-quxiaoshoucang"></i>
+              <i class="iconfont icon-quxiaoshoucang" />
               <span>{{ detailsData.collectionCount }}</span>
             </div>
             <div style="margin-right:10px">
-              <i class="iconfont icon-download"></i>
+              <i class="iconfont icon-download" />
               <span>{{ detailsData.downloadCount }}</span>
             </div>
           </div>
         </div>
-        <div class="sourcesInfo">构件信息</div>
+        <div class="sourcesInfo">
+          构件信息
+        </div>
         <div style="padding:10px 10px;line-height:30px">
           <div class="mainFlex">
-            <div style="flex:0.3;text-align:right">分类-</div>
-            <div style="flex:1">{{ detailsData.onetype }}</div>
+            <div style="flex:0.3;text-align:right">
+              分类-
+            </div>
+            <div style="flex:1">
+              {{ detailsData.onetype }}
+            </div>
           </div>
           <div class="mainFlex">
-            <div style="flex:0.3;text-align:right">适用平台-</div>
-            <div style="flex:1">{{ detailsData.suitplatformName }}</div>
+            <div style="flex:0.3;text-align:right">
+              适用平台-
+            </div>
+            <div style="flex:1">
+              {{ detailsData.suitplatformName }}
+            </div>
           </div>
           <div class="mainFlex">
-            <div style="flex:0.3;text-align:right">LOD等级-</div>
-            <div style="flex:1">{{ detailsData.lod }}</div>
+            <div style="flex:0.3;text-align:right">
+              LOD等级-
+            </div>
+            <div style="flex:1">
+              {{ detailsData.lod }}
+            </div>
           </div>
           <div class="mainFlex">
-            <div style="flex:0.3;text-align:right">参数化-</div>
-            <div style="flex:1">{{ detailsData.parameterization }}</div>
+            <div style="flex:0.3;text-align:right">
+              参数化-
+            </div>
+            <div style="flex:1">
+              {{ detailsData.parameterization }}
+            </div>
           </div>
           <div class="mainFlex">
-            <div style="flex:0.3;text-align:right">备注-</div>
-            <div style="flex:1">{{ detailsData.remarks }}</div>
+            <div style="flex:0.3;text-align:right">
+              备注-
+            </div>
+            <div style="flex:1">
+              {{ detailsData.remarks }}
+            </div>
           </div>
         </div>
-        <div class="mainFlex" style="padding:0 40px">
-          <el-button type="primary" size="small" style="flex:1" v-if="user.iscorpadmin"
-            @click="handleBuild('EDIT', detailsData)">{{ $t('base.button.edit') }}</el-button>
-          <el-button type="primary" size="small" style="flex:1" @click="downLoad(detailsData)">{{ $t('base.button.download') }}</el-button>
-          <el-button type="danger" size="small" style="flex:1" v-if="user.iscorpadmin" @click="deleteBuild(true, '')">{{
-            $t('base.button.delete') }}</el-button>
+        <div
+          class="mainFlex"
+          style="padding:0 40px"
+        >
+          <el-button
+            v-if="user.iscorpadmin"
+            type="primary"
+            size="small"
+            style="flex:1"
+            @click="handleBuild('EDIT', detailsData)"
+          >
+            {{ $t('base.button.edit') }}
+          </el-button>
+          <el-button
+            type="primary"
+            size="small"
+            style="flex:1"
+            @click="downLoad(detailsData)"
+          >
+            {{ $t('base.button.download') }}
+          </el-button>
+          <el-button
+            v-if="user.iscorpadmin"
+            type="danger"
+            size="small"
+            style="flex:1"
+            @click="deleteBuild(true, '')"
+          >
+            {{
+              $t('base.button.delete') }}
+          </el-button>
         </div>
       </el-dialog>
       <!-- 意见 -->
-      <el-dialog title="意见" :visible.sync="replyDialogVisible" width="460px">
-        <el-input v-model="reply" :rows="4" type="textarea" placeholder="请输入意见"></el-input>
+      <el-dialog
+        title="意见"
+        :visible.sync="replyDialogVisible"
+        width="460px"
+      >
+        <el-input
+          v-model="reply"
+          :rows="4"
+          type="textarea"
+          placeholder="请输入意见"
+        />
         <span slot="footer">
-          <el-button size="small" @click="replyDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-          <el-button size="small" type="primary" @click="submitReject">{{ $t('base.button.confirm') }}</el-button>
+          <el-button
+            size="small"
+            @click="replyDialogVisible = false"
+          >{{ $t('base.button.cancel') }}</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="submitReject"
+          >{{ $t('base.button.confirm') }}</el-button>
         </span>
       </el-dialog>
       <!-- 新增编辑构件 -->
-      <el-dialog :title="addOrEdit == 'ADD' ? '新增构件' : '编辑构件'" :visible.sync="addVisible" width="420px" :modal="true"
-        v-dialogDrag :close-on-click-modal="false">
-        <el-form ref="form" :model="AddForm" :rules="rules" label-width="100px" label-suffix="：">
-          <el-form-item :label="$t('base.button.kind')" required>
-            <el-cascader style="width: 100%" size="large" ref="type" clearable :props="typeProps" :emitPath="true"
-              :options="typeArr" v-model="AddForm.oneTypeIuid">
-              <el-button slot="append" icon="el-icon-plus"></el-button>
+      <el-dialog
+        v-dialogDrag
+        :title="addOrEdit == 'ADD' ? '新增构件' : '编辑构件'"
+        :visible.sync="addVisible"
+        width="420px"
+        :modal="true"
+        :close-on-click-modal="false"
+      >
+        <el-form
+          ref="form"
+          :model="AddForm"
+          :rules="rules"
+          label-width="100px"
+          label-suffix="："
+        >
+          <el-form-item
+            :label="$t('base.button.kind')"
+            required
+          >
+            <el-cascader
+              ref="type"
+              v-model="AddForm.oneTypeIuid"
+              style="width: 100%"
+              size="large"
+              clearable
+              :props="typeProps"
+              :emit-path="true"
+              :options="typeArr"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-plus"
+              />
             </el-cascader>
           </el-form-item>
-          <el-form-item label="文件上传" prop="filePath">
-            <el-input v-model="uploadFileName" placeholder="请选择文件" :readonly="true">
-              <el-button slot="append" icon="el-icon-plus">
-                <input class="fileFolderUploadBtn" type="file" name="file" @change="submitFile" alt="请选择文件" />
+          <el-form-item
+            label="文件上传"
+            prop="filePath"
+          >
+            <el-input
+              v-model="uploadFileName"
+              placeholder="请选择文件"
+              :readonly="true"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-plus"
+              >
+                <input
+                  class="fileFolderUploadBtn"
+                  type="file"
+                  name="file"
+                  alt="请选择文件"
+                  @change="submitFile"
+                >
               </el-button>
             </el-input>
-            <el-progress style="margin-top: 5px;" :status="fileProgress >= 100 ? 'success' : null"
-              :percentage="fileProgress" v-if="fileProgress != 0"></el-progress>
+            <el-progress
+              v-if="fileProgress != 0"
+              style="margin-top: 5px;"
+              :status="fileProgress >= 100 ? 'success' : null"
+              :percentage="fileProgress"
+            />
           </el-form-item>
           <el-form-item label="是否参数化">
-            <el-select v-model="AddForm.Parameterization" :placeholder="$t('base.button.pleaseSelect')" clearable style="width:100%">
-              <el-option :label="item.itemText" :value="item.iuid" v-for="(item, index) in parameterData"
-                :key="index"></el-option>
+            <el-select
+              v-model="AddForm.Parameterization"
+              :placeholder="$t('base.button.pleaseSelect')"
+              clearable
+              style="width:100%"
+            >
+              <el-option
+                v-for="(item, index) in parameterData"
+                :key="index"
+                :label="item.itemText"
+                :value="item.iuid"
+              />
             </el-select>
           </el-form-item>
           <template v-if="page != 'private'">
             <el-form-item label="适用平台">
-              <el-cascader style="width: 100%" size="large" ref="refRegion" clearable :emitPath="true"
-                :props="optionProps" :options="platformData" v-model="AddForm.Suitplatform" />
+              <el-cascader
+                ref="refRegion"
+                v-model="AddForm.Suitplatform"
+                style="width: 100%"
+                size="large"
+                clearable
+                :emit-path="true"
+                :props="optionProps"
+                :options="platformData"
+              />
             </el-form-item>
             <el-form-item label="LOD等级">
-              <el-select v-model="AddForm.LOD" :placeholder="$t('base.button.pleaseSelect')" clearable style="width:100%">
-                <el-option :label="item.itemText" :value="item.iuid" v-for="(item, index) in levelData"
-                  :key="index"></el-option>
+              <el-select
+                v-model="AddForm.LOD"
+                :placeholder="$t('base.button.pleaseSelect')"
+                clearable
+                style="width:100%"
+              >
+                <el-option
+                  v-for="(item, index) in levelData"
+                  :key="index"
+                  :label="item.itemText"
+                  :value="item.iuid"
+                />
               </el-select>
             </el-form-item>
-            <el-form-item label="缩略图" prop="imgfile">
+            <el-form-item
+              label="缩略图"
+              prop="imgfile"
+            >
               <div class="thumbnail">
-                <el-upload class="avatar-uploader library" action="batchImportUrl" list-type="picture-card"
-                  :file-list="AddForm.imgfile" multiple :on-change="setImgFile" :on-remove="setImgFile"
-                  :auto-upload="false" accept="image/*">
-                  <i class="el-icon-plus avatar-uploader-icon"></i>
+                <el-upload
+                  class="avatar-uploader library"
+                  action="batchImportUrl"
+                  list-type="picture-card"
+                  :file-list="AddForm.imgfile"
+                  multiple
+                  :on-change="setImgFile"
+                  :on-remove="setImgFile"
+                  :auto-upload="false"
+                  accept="image/*"
+                >
+                  <i class="el-icon-plus avatar-uploader-icon" />
                 </el-upload>
               </div>
             </el-form-item>
             <el-form-item :label="$t('base.button.remark')">
-              <el-input type="text" placeholder="" v-model="AddForm.remarks">
-              </el-input>
+              <el-input
+                v-model="AddForm.remarks"
+                type="text"
+                placeholder=""
+              />
             </el-form-item>
           </template>
-
         </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="sure" :disabled="disabled">{{ $t('base.button.confirm') }}</el-button>
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            :disabled="disabled"
+            @click="sure"
+          >{{ $t('base.button.confirm') }}</el-button>
           <el-button @click="handleClose">{{ $t('base.button.cancel') }}</el-button>
         </span>
       </el-dialog>
       <!-- 批量上传构件 -->
-      <el-dialog title="批量上传构件" :visible.sync="listAddVisible" width="420px" :modal="true" v-dialogDrag
-        :close-on-click-modal="false">
-        <el-form ref="form" :model="AddForm" :rules="rules" label-width="100px" label-suffix="：">
-          <el-form-item :label="$t('base.button.kind')" required>
-            <el-cascader style="width: 100%" size="large" ref="type" clearable :props="typeProps" :emitPath="true"
-              :options="typeArr" v-model="AddForm.oneTypeIuid">
-            </el-cascader>
+      <el-dialog
+        v-dialogDrag
+        title="批量上传构件"
+        :visible.sync="listAddVisible"
+        width="420px"
+        :modal="true"
+        :close-on-click-modal="false"
+      >
+        <el-form
+          ref="form"
+          :model="AddForm"
+          :rules="rules"
+          label-width="100px"
+          label-suffix="："
+        >
+          <el-form-item
+            :label="$t('base.button.kind')"
+            required
+          >
+            <el-cascader
+              ref="type"
+              v-model="AddForm.oneTypeIuid"
+              style="width: 100%"
+              size="large"
+              clearable
+              :props="typeProps"
+              :emit-path="true"
+              :options="typeArr"
+            />
           </el-form-item>
-          <el-form-item label="文件上传" prop="filePath">
-            <el-button icon="el-icon-plus" size="small"
-              :disabled="this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == ''">
+          <el-form-item
+            label="文件上传"
+            prop="filePath"
+          >
+            <el-button
+              icon="el-icon-plus"
+              size="small"
+              :disabled="this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == ''"
+            >
               上传
-              <input class="fileFolderUploadBtn"
-                v-show="!(this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == '')" type="file"
-                name="file" multiple @change="submitFile" alt="请选择bim文件" />
+              <input
+                v-show="!(this.AddForm.oneTypeIuid.length == 0 || this.AddForm.oneTypeIuid[0] == '')"
+                class="fileFolderUploadBtn"
+                type="file"
+                name="file"
+                multiple
+                alt="请选择bim文件"
+                @change="submitFile"
+              >
             </el-button>
-            <div v-if="listUploadTotal > 0">正在上传：
+            <div v-if="listUploadTotal > 0">
+              正在上传：
               {{ listUploadCount }}
-              {{ listPercent > 0 && listPercent < 100 ? ` (${listPercent}%) ` : '' }} / {{ listUploadTotal }} </div>
+              {{ listPercent > 0 && listPercent < 100 ? ` (${listPercent}%) ` : '' }} / {{ listUploadTotal }}
+            </div>
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button :disabled="listUploadCount < listUploadTotal" @click="listAddVisible = false">{{ listUploadCount !=
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            :disabled="listUploadCount < listUploadTotal"
+            @click="listAddVisible = false"
+          >{{ listUploadCount !=
             0 &&
             listUploadCount == listUploadTotal ? '完 成' : '关 闭' }}</el-button>
         </span>
       </el-dialog>
       <!-- 模型浏览 -->
-      <div class="mask" v-if="showMask">
-        <div class="close" @click="closeModel">
-          <i class="el-icon-error" size="30" style="color: #fff;"></i>
+      <div
+        v-if="showMask"
+        class="mask"
+      >
+        <div
+          class="close"
+          @click="closeModel"
+        >
+          <i
+            class="el-icon-error"
+            size="30"
+            style="color: #fff;"
+          />
         </div>
       </div>
-      <iframe v-if="showModel" :src="FileUrl" @load="sendFileData" ref="imodelIframe1" frameborder="0"
-        class="common-lib-iframe"></iframe>
+      <iframe
+        v-if="showModel"
+        ref="imodelIframe1"
+        :src="FileUrl"
+        frameborder="0"
+        class="common-lib-iframe"
+        @load="sendFileData"
+      />
     </el-main>
   </el-container>
 </template>
@@ -348,7 +916,7 @@ const typeMap = {
 import Axios from 'axios'
 import request from '@/utils/request'
 let axios = Axios.create({
-  baseURL: process.env.BASE_API,
+  baseURL: process.env.VUE_APP_BASE_API,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -356,7 +924,7 @@ let axios = Axios.create({
 })
 
 export default {
-  name: 'comResource',
+  name: 'ComResource',
   components: {
   },
 
@@ -436,8 +1004,8 @@ export default {
       listFiles: [],
 
       labelList: [],
-      baseUrl: process.env.BASE_API,
-      baseImageUrl: process.env.BASE_API + '/api/home/GetimgFile?fileUrl=',
+      baseUrl: process.env.VUE_APP_BASE_API,
+      baseImageUrl: process.env.VUE_APP_BASE_API + '/api/home/GetimgFile?fileUrl=',
       typeArr: [],
       detailsData: '',
       pictureMode: true,
@@ -701,7 +1269,7 @@ export default {
           this.showModel = true;
           let filePath = data.turnPath ? data.turnPath : data.filePath;
           this.FileIUID = data.iuid;
-          this.FileUrl = process.env.ViewOrigin + "/?" + this.$turnEncryptParams(filePath);
+          this.FileUrl = process.env.VUE_APP_ViewOrigin + "/?" + this.$turnEncryptParams(filePath);
           this.sendFileData()
           // this.$viewMode(data)
         }

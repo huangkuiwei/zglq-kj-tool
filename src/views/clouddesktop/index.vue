@@ -1,182 +1,439 @@
 <template>
-  <el-container style="height:calc(100vh - 51px)" v-if="user.corpIdbit">
+  <el-container
+    v-if="user.corpIdbit"
+    style="height:calc(100vh - 51px)"
+  >
     <mainSideMenu />
-    <el-aside style="width:calc(100vw - 60px);height:calc(100vh - 51px);padding: 10px;" class="flex">
-      <div class="flex column"
-        style="width:calc(100vw - 425px);min-width: 900px;height:calc(100vh - 71px);margin-right: 10px;">
-        <div class="flex shrink jc-between" style="height: calc(56vh - 80px);margin-bottom: 10px;">
-          <div class="chart-block box-shadow" style="margin-right: 10px;">
-            <div class="progressTitle">{{ $t('desktop.distribution') }}</div>
-            <div class="flex jc-center ai-center" style="width: 100%">
-              <div id="mapCharts" style="height: calc(55vh - 140px)" ref="mapCharts" class="mapCharts"></div>
+    <el-aside
+      style="width:calc(100vw - 60px);height:calc(100vh - 51px);padding: 10px;"
+      class="flex"
+    >
+      <div
+        class="flex column"
+        style="width:calc(100vw - 425px);min-width: 900px;height:calc(100vh - 71px);margin-right: 10px;"
+      >
+        <div
+          class="flex shrink jc-between"
+          style="height: calc(56vh - 80px);margin-bottom: 10px;"
+        >
+          <div
+            class="chart-block box-shadow"
+            style="margin-right: 10px;"
+          >
+            <div class="progressTitle">
+              {{ $t('desktop.distribution') }}
+            </div>
+            <div
+              class="flex jc-center ai-center"
+              style="width: 100%"
+            >
+              <div
+                id="mapCharts"
+                ref="mapCharts"
+                style="height: calc(55vh - 140px)"
+                class="mapCharts"
+              />
             </div>
           </div>
           <div class="chart-block box-shadow">
-            <div class="progressTitle">{{ $t('desktop.type') }}</div>
-            <div style="position: absolute;bottom:30px;left: 5%;text-align: center;color: #333; font-size: 16px"
-              class="flex">
-              <div>{{ $t('desktop.total') }}：</div>
-              <div style="font-weight: bold;">{{ number }}</div>
+            <div class="progressTitle">
+              {{ $t('desktop.type') }}
             </div>
-            <div style="height: calc(55vh - 140px)" ref="categoryChartContainer" id="categoryChartContainer"></div>
+            <div
+              style="position: absolute;bottom:30px;left: 5%;text-align: center;color: #333; font-size: 16px"
+              class="flex"
+            >
+              <div>{{ $t('desktop.total') }}：</div>
+              <div style="font-weight: bold;">
+                {{ number }}
+              </div>
+            </div>
+            <div
+              id="categoryChartContainer"
+              ref="categoryChartContainer"
+              style="height: calc(55vh - 140px)"
+            />
           </div>
         </div>
         <div class="flex grow jc-between">
-          <div class="chart-block box-shadow" style="margin-right: 10px;">
-            <div class="progressTitle">{{ $t('desktop.recently.project') }}</div>
-            <el-table :data="recentlyProjects" :show-header="false" height="calc(44vh - 159px)"
-              :header-cell-style="$thStyle" stripe>
-              <el-table-column :label="$t('projects.label.name')" show-overflow-tooltip>
+          <div
+            class="chart-block box-shadow"
+            style="margin-right: 10px;"
+          >
+            <div class="progressTitle">
+              {{ $t('desktop.recently.project') }}
+            </div>
+            <el-table
+              :data="recentlyProjects"
+              :show-header="false"
+              height="calc(44vh - 159px)"
+              :header-cell-style="$thStyle"
+              stripe
+            >
+              <el-table-column
+                :label="$t('projects.label.name')"
+                show-overflow-tooltip
+              >
                 <template slot-scope="scope">
-                  <div class="flex ai-center" style="cursor: pointer;" @click="linkToFilePage(scope.row)">
-                    <el-image style="height:58px;width: 90px;margin-right: 10px;flex-shrink: 0;" :src="scope.row.images">
-                      <img slot="error" src="../../assets/projectDefaultImg.png"
-                        style="height:58px;margin-right: 10px;" />
+                  <div
+                    class="flex ai-center"
+                    style="cursor: pointer;"
+                    @click="linkToFilePage(scope.row)"
+                  >
+                    <el-image
+                      style="height:58px;width: 90px;margin-right: 10px;flex-shrink: 0;"
+                      :src="scope.row.images"
+                    >
+                      <img
+                        slot="error"
+                        src="../../assets/projectDefaultImg.png"
+                        style="height:58px;margin-right: 10px;"
+                      >
                     </el-image>
                     <div>{{ scope.row.projectName }}（{{ scope.row.projectTypeName }}）</div>
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="最近打开时间" align="center" width="180" prop="browseDate">
-              </el-table-column>
+              <el-table-column
+                label="最近打开时间"
+                align="center"
+                width="180"
+                prop="browseDate"
+              />
             </el-table>
           </div>
           <div class="chart-block box-shadow">
-            <div class="progressTitle">{{ $t('desktop.recently.file') }}</div>
-            <el-table :data="recentlyFiles" :show-header="false" height="calc(44vh - 159px)" stripe>
-              <el-table-column :label="$t('base.button.fileName')" show-overflow-tooltip>
+            <div class="progressTitle">
+              {{ $t('desktop.recently.file') }}
+            </div>
+            <el-table
+              :data="recentlyFiles"
+              :show-header="false"
+              height="calc(44vh - 159px)"
+              stripe
+            >
+              <el-table-column
+                :label="$t('base.button.fileName')"
+                show-overflow-tooltip
+              >
                 <template slot-scope="scope">
-                  <div @click="openInApp(scope.row)" style="cursor:pointer">
-                    <fileIconComponends :visible="false" :row="scope.row" />
+                  <div
+                    style="cursor:pointer"
+                    @click="openInApp(scope.row)"
+                  >
+                    <fileIconComponends
+                      :visible="false"
+                      :row="scope.row"
+                    />
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column align="center" width="44" prop="createTime">
+              <el-table-column
+                align="center"
+                width="44"
+                prop="createTime"
+              >
                 <template slot-scope="scope">
-                  <img @click="openInApp(scope.row)" style="width: 24px;display: block;margin: 2px 0;cursor: pointer;" :src="$appList.find(item => item.type == scope.row.application)?.logo" alt="">
+                  <img
+                    style="width: 24px;display: block;margin: 2px 0;cursor: pointer;"
+                    :src="$appList.find(item => item.type == scope.row.application)?.logo"
+                    alt=""
+                    @click="openInApp(scope.row)"
+                  >
                 </template>
               </el-table-column>
-              <el-table-column label="最近打开时间" align="center" width="160" prop="createTime"></el-table-column>
+              <el-table-column
+                label="最近打开时间"
+                align="center"
+                width="160"
+                prop="createTime"
+              />
             </el-table>
-
           </div>
         </div>
-        <div class="flex ai-center jc-center appBox" v-if="!$isRead">
-          <div v-for="i in $appList" v-if="$hasPermi(`desktop:applist:${i.type}`)" class="flex column ai-center app"
-            @click="openAppPage(i)">
-            <img class="app-icon" :src="i.logo" alt="">
+        <div
+          v-if="!$isRead"
+          class="flex ai-center jc-center appBox"
+        >
+          <div
+            v-for="i in $appList"
+            v-if="$hasPermi(`desktop:applist:${i.type}`)"
+            class="flex column ai-center app"
+            @click="openAppPage(i)"
+          >
+            <img
+              class="app-icon"
+              :src="i.logo"
+              alt=""
+            >
             <!--  v-if="$hasPermi(`desktop:applist:showTitle`)"  -->
-            <div class="app-title" v-if="$showAppTitle" style="font-size: 12px;">
+            <div
+              v-if="$showAppTitle"
+              class="app-title"
+              style="font-size: 12px;"
+            >
               {{ i.title }}
             </div>
           </div>
         </div>
       </div>
-      <div class="flex column" style="width: 340px;flex-shrink: 0;height:calc(100vh - 71px);">
-        <div class="rround-background shrink box-shadow"
-          style="padding:15px;height: 180px;margin-bottom: 10px;border-radius: 12px;">
+      <div
+        class="flex column"
+        style="width: 340px;flex-shrink: 0;height:calc(100vh - 71px);"
+      >
+        <div
+          class="rround-background shrink box-shadow"
+          style="padding:15px;height: 180px;margin-bottom: 10px;border-radius: 12px;"
+        >
           <div style="display: flex;">
-            <img style="margin-top: 9px; width:16px; height:16px" src="../../assets/最新公告.svg" />
+            <img
+              style="margin-top: 9px; width:16px; height:16px"
+              src="../../assets/最新公告.svg"
+            >
             <span style="margin-left: 5px; margin-top: 8px; font-size: 16px; font-weight: 800">{{
               $t('desktop.noticeboard') }}</span>
-            <el-button type="text" size="small" style="margin-left: auto;" @click="noticeListVisible = true">{{
-              $t('base.button.more') }}</el-button>
+            <el-button
+              type="text"
+              size="small"
+              style="margin-left: auto;"
+              @click="noticeListVisible = true"
+            >
+              {{
+                $t('base.button.more') }}
+            </el-button>
           </div>
-          <div v-for="(i, idx) in noticeList" v-if="idx <= 3" class="flex ai-center jc-between noticelist" :key="i.iuid"
-            @click="viewDetail(i)">
+          <div
+            v-for="(i, idx) in noticeList"
+            v-if="idx <= 3"
+            :key="i.iuid"
+            class="flex ai-center jc-between noticelist"
+            @click="viewDetail(i)"
+          >
             <div class="notice-title">
-              <img v-if="i.puttop" src="../../assets/top.png" style="width: 16px;margin-bottom: -3px;" alt="置顶">
-              <span v-if="i.unread" style="font-weight: bold;color: #f56c6c;">[未读]</span>
+              <img
+                v-if="i.puttop"
+                src="../../assets/top.png"
+                style="width: 16px;margin-bottom: -3px;"
+                alt="置顶"
+              >
+              <span
+                v-if="i.unread"
+                style="font-weight: bold;color: #f56c6c;"
+              >[未读]</span>
               <span v-if="!i.unread && !i.puttop">—</span>
               <span>{{ i.title }}</span>
             </div>
             <span>{{ i.createTime.split(' ')[0] }}</span>
           </div>
         </div>
-        <el-dialog :title="$t('base.button.announcementList')" :visible.sync="noticeListVisible" width="600px">
-          <div v-for="(i, idx) in noticeList" class="flex ai-center jc-between noticelist"
-            style="padding:15px 5px;margin: 0;border-bottom: 1px solid #f5f7fa;" :key="i.iuid" @click="viewDetail(i)">
-            <span class="notice-title" style="width: 410px;"> {{ idx + 1 }}.{{ i.title }}</span>
+        <el-dialog
+          :title="$t('base.button.announcementList')"
+          :visible.sync="noticeListVisible"
+          width="600px"
+        >
+          <div
+            v-for="(i, idx) in noticeList"
+            :key="i.iuid"
+            class="flex ai-center jc-between noticelist"
+            style="padding:15px 5px;margin: 0;border-bottom: 1px solid #f5f7fa;"
+            @click="viewDetail(i)"
+          >
+            <span
+              class="notice-title"
+              style="width: 410px;"
+            > {{ idx + 1 }}.{{ i.title }}</span>
             <span>{{ i.createTime }}</span>
           </div>
           <div slot="footer">
-            <el-button size="small" @click="noticeListVisible = false">{{ $t('base.button.close') }}</el-button>
+            <el-button
+              size="small"
+              @click="noticeListVisible = false"
+            >
+              {{ $t('base.button.close') }}
+            </el-button>
           </div>
         </el-dialog>
 
-        <div class="rround-background grow box-shadow" style="padding-bottom: 0;border-radius: 12px;">
-          <div class="flex ai-center" style="padding: 15px;padding-bottom: 5px;">
-            <img style="width:16px; height:16px" src="../../assets/工作日程.svg" />
+        <div
+          class="rround-background grow box-shadow"
+          style="padding-bottom: 0;border-radius: 12px;"
+        >
+          <div
+            class="flex ai-center"
+            style="padding: 15px;padding-bottom: 5px;"
+          >
+            <img
+              style="width:16px; height:16px"
+              src="../../assets/工作日程.svg"
+            >
             <span style="margin-left: 5px;margin-top: 2px;font-size: 16px; font-weight: 800">{{
               $t('desktop.todolist.title') }}</span>
           </div>
-          <div class="hide-scroll" style="overflow-y: auto;height: calc(100vh - 302px);">
+          <div
+            class="hide-scroll"
+            style="overflow-y: auto;height: calc(100vh - 302px);"
+          >
             <div style="margin-top:0px">
-              <workcalendar :date.sync="date" :sdata="scheduleData" @scheduleAdd="scheduleAdd"
-                @getScheduleData="getScheduleData" />
+              <workcalendar
+                :date.sync="date"
+                :sdata="scheduleData"
+                @scheduleAdd="scheduleAdd"
+                @getScheduleData="getScheduleData"
+              />
             </div>
-            <li class="events-item approve" v-if="msgCount > 0">
+            <li
+              v-if="msgCount > 0"
+              class="events-item approve"
+            >
               <div class="events-item-left">
-                <span class="events-name" style="margin-bottom: 0;">{{ msgCount }}{{ $t('desktop.todolist.todoCount')
+                <span
+                  class="events-name"
+                  style="margin-bottom: 0;"
+                >{{ msgCount }}{{ $t('desktop.todolist.todoCount')
                 }}</span>
               </div>
-              <span class="events-tag btn approve" @click="toTeamwork">{{ $t('desktop.todolist.toDeal') }}</span>
+              <span
+                class="events-tag btn approve"
+                @click="toTeamwork"
+              >{{ $t('desktop.todolist.toDeal') }}</span>
             </li>
-            <li class="events-item apply" v-if="applyCount > 0">
+            <li
+              v-if="applyCount > 0"
+              class="events-item apply"
+            >
               <div class="events-item-left">
-                <span class="events-name" style="margin-bottom: 0;">{{ applyCount }}{{
+                <span
+                  class="events-name"
+                  style="margin-bottom: 0;"
+                >{{ applyCount }}{{
                   $t('desktop.todolist.userApplyCount') }}</span>
               </div>
-              <span class="events-tag btn apply" @click="showApplyDialog">{{ $t('desktop.todolist.toDeal') }}</span>
+              <span
+                class="events-tag btn apply"
+                @click="showApplyDialog"
+              >{{ $t('desktop.todolist.toDeal') }}</span>
             </li>
-            <li class="events-item" v-for="(i, idx) in scheduleData" :class="{ 'ago': agoDate(i) }" :key="idx"
-              @mouseenter="showClose(i)" @mouseleave="hideClose(i)">
-              <i v-show="i.hover" @click="scheduleDataDel(i)" class="el-icon-error close-event"></i>
+            <li
+              v-for="(i, idx) in scheduleData"
+              :key="idx"
+              class="events-item"
+              :class="{ 'ago': agoDate(i) }"
+              @mouseenter="showClose(i)"
+              @mouseleave="hideClose(i)"
+            >
+              <i
+                v-show="i.hover"
+                class="el-icon-error close-event"
+                @click="scheduleDataDel(i)"
+              />
               <div class="events-item-left">
                 <span class="events-name">{{ i.eventname }}</span>
                 <span class="events-date">{{ i.datestr }}</span>
               </div>
-              <span class="events-tag" @click="scheduleEdit(i)">{{ $t('base.button.edit') }}</span>
+              <span
+                class="events-tag"
+                @click="scheduleEdit(i)"
+              >{{ $t('base.button.edit') }}</span>
             </li>
           </div>
         </div>
-
       </div>
     </el-aside>
     <!-- 人员申请 -->
-    <person-apply :applyData="applyData" :showApply.sync="showApply"
-      @loadCompanyApplyPerson="loadCompanyApplyPerson"></person-apply>
+    <person-apply
+      :apply-data="applyData"
+      :show-apply.sync="showApply"
+      @loadCompanyApplyPerson="loadCompanyApplyPerson"
+    />
     <!-- 待办事项 -->
-    <el-dialog :title="scheduleActType == 'ADD' ? $t('desktop.todolist.addTitle') : $t('desktop.todolist.editTitle')"
-      :visible.sync="scheduleVisible" width="440px">
-      <el-form :model="scheduleForm" :rules="scheduleFormRules" ref="scheduleForm" label-width="60px" :inline="false"
-        size="normal">
+    <el-dialog
+      :title="scheduleActType == 'ADD' ? $t('desktop.todolist.addTitle') : $t('desktop.todolist.editTitle')"
+      :visible.sync="scheduleVisible"
+      width="440px"
+    >
+      <el-form
+        ref="scheduleForm"
+        :model="scheduleForm"
+        :rules="scheduleFormRules"
+        label-width="60px"
+        :inline="false"
+        size="normal"
+      >
         <el-form-item :label="$t('base.label.time')">
-          <div class="flex ai-center" style="margin-left: 0;">
-            <div style="margin-right: 10px;">{{ scheduleForm.date }}</div>
-            <el-time-picker v-model="scheduleForm.time" :default-value="scheduleForm.date + ' 09:00:00'"
-              value-format="HH:mm:ss" size="normal" :clearable="false" placeholder="请选择时间点" />
+          <div
+            class="flex ai-center"
+            style="margin-left: 0;"
+          >
+            <div style="margin-right: 10px;">
+              {{ scheduleForm.date }}
+            </div>
+            <el-time-picker
+              v-model="scheduleForm.time"
+              :default-value="scheduleForm.date + ' 09:00:00'"
+              value-format="HH:mm:ss"
+              size="normal"
+              :clearable="false"
+              placeholder="请选择时间点"
+            />
           </div>
         </el-form-item>
-        <el-form-item prop="eventname" :label="$t('desktop.todolist.things')">
-          <el-input style="width: 303px;" v-model="scheduleForm.eventname"></el-input>
+        <el-form-item
+          prop="eventname"
+          :label="$t('desktop.todolist.things')"
+        >
+          <el-input
+            v-model="scheduleForm.eventname"
+            style="width: 303px;"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button size="small" @click="scheduleVisible = false">{{ $t('base.button.cancel') }}</el-button>
-        <el-button size="small" type="primary" @click="scheduleDataSubmit">{{ $t('base.button.submit') }}</el-button>
+        <el-button
+          size="small"
+          @click="scheduleVisible = false"
+        >
+          {{ $t('base.button.cancel') }}
+        </el-button>
+        <el-button
+          size="small"
+          type="primary"
+          @click="scheduleDataSubmit"
+        >
+          {{ $t('base.button.submit') }}
+        </el-button>
       </div>
     </el-dialog>
     <!-- 查看公告 -->
-    <el-dialog title="公告详情" append-to-body :visible.sync="detailVisible" width="800px">
-      <el-skeleton v-if="loading" :rows="6" animated />
+    <el-dialog
+      title="公告详情"
+      append-to-body
+      :visible.sync="detailVisible"
+      width="800px"
+    >
+      <el-skeleton
+        v-if="loading"
+        :rows="6"
+        animated
+      />
       <div v-else>
-        <div style="text-align: center;font-size: 18px;font-weight: 500;margin-bottom: 15px;">{{ currentNotice.title }}
+        <div style="text-align: center;font-size: 18px;font-weight: 500;margin-bottom: 15px;">
+          {{ currentNotice.title }}
         </div>
-        <div style="text-align: right;font-size: 14px;color: #999;margin-right: 20px;margin-bottom: 20px;">{{
-          currentNotice.createTime }}</div>
-        <div class="ql-editor" v-if="!currentNotice.isIframe" v-html="currentNotice.contenttext"></div>
-        <iframe v-else style="width: 100%;height: 450px;" :src="currentNotice.contenttext" frameborder="0"></iframe>
+        <div style="text-align: right;font-size: 14px;color: #999;margin-right: 20px;margin-bottom: 20px;">
+          {{
+            currentNotice.createTime }}
+        </div>
+        <div
+          v-if="!currentNotice.isIframe"
+          class="ql-editor"
+          v-html="currentNotice.contenttext"
+        />
+        <iframe
+          v-else
+          style="width: 100%;height: 450px;"
+          :src="currentNotice.contenttext"
+          frameborder="0"
+        />
       </div>
     </el-dialog>
   </el-container>
@@ -223,7 +480,7 @@ export default {
 
       recentlyProjects: [],
       recentlyFiles: [],
-      imageOrigin: process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+      imageOrigin: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
 
 
       number: 0,

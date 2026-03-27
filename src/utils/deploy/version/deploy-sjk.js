@@ -40,7 +40,7 @@ export const appList = [
     appName: "BIM Windows",
     title: "看模王",
     isEdit: false,
-    origin: 'GisIframeOrigin'
+    origin: 'VUE_APP_GisIframeOrigin'
   },
   // {
   //   type: "bimstation",
@@ -61,7 +61,7 @@ export const appList = [
     appName: "BIM-GPT",
     title: "总模王",
     isEdit: true,
-    origin: 'BimGPTOrigin'
+    origin: 'VUE_APP_BimGPTOrigin'
   },
   {
     type: "cscmodeler",
@@ -82,7 +82,7 @@ export const appList = [
     appName: "BIM-Chat",
     title: "模数通",
     isEdit: true,
-    origin: 'BimChatOrigin'
+    origin: 'VUE_APP_BimChatOrigin'
   },
 ];
 appList.forEach((item) => {

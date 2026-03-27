@@ -1,20 +1,30 @@
 <template>
-  <div class="model-iframe-content" v-loading="loading" element-loading-text="正在加载模型文件...">
+  <div
+    v-loading="loading"
+    class="model-iframe-content"
+    element-loading-text="正在加载模型文件..."
+  >
     <iframe
-      @load="sendFileData('imodelIframe1', rowData)"
       ref="imodelIframe1"
       :src="modelLoadUrl"
       frameborder="0"
-    ></iframe>
+      @load="sendFileData('imodelIframe1', rowData)"
+    />
     <div class="menu-btn">
-      <el-button v-show="showMenuBtn" type="primary" @click="clearIsolateSelectedElement">取消突显</el-button>
+      <el-button
+        v-show="showMenuBtn"
+        type="primary"
+        @click="clearIsolateSelectedElement"
+      >
+        取消突显
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "modelFileCheckIframe",
+  name: "ModelFileCheckIframe",
 
   props: {
     isSmallSize: {
@@ -29,10 +39,25 @@ export default {
 
   data() {
     return {
-      baseUrl: process.env.GisIframeOrigin,
+      baseUrl: process.env.VUE_APP_GisIframeOrigin,
       loading: true,
       showMenuBtn: false,
     };
+  },
+
+  computed: {
+    isCollapse() {
+      let flag = false;
+      flag = this.$store.state.app.isCollapse;
+      return !flag;
+    },
+    modelLoadUrl() {
+      let path = this.rowData.turnPath?this.rowData.turnPath:this.rowData.filePath;
+      return (
+        this.baseUrl +
+        "/?" + this.$turnEncryptParams(path, 'forViewBim')
+      );
+    },
   },
 
   created() {
@@ -49,21 +74,6 @@ export default {
         );
       }
     });
-  },
-
-  computed: {
-    isCollapse() {
-      let flag = false;
-      flag = this.$store.state.app.isCollapse;
-      return !flag;
-    },
-    modelLoadUrl() {
-      let path = this.rowData.turnPath?this.rowData.turnPath:this.rowData.filePath;
-      return (
-        this.baseUrl +
-        "/?" + this.$turnEncryptParams(path, 'forViewBim')
-      );
-    },
   },
 
   methods: {

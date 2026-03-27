@@ -3,45 +3,123 @@
   <div class="container">
     <div class="left">
       <div class="top">
-        <el-select remote :remote-method="searchUser" filterable v-model="searchText" placeholder="搜索用户" size="default" @change="createChat" clearable style="width: 100%;">
+        <el-select
+          v-model="searchText"
+          remote
+          :remote-method="searchUser"
+          filterable
+          placeholder="搜索用户"
+          size="default"
+          clearable
+          style="width: 100%;"
+          @change="createChat"
+        >
           <template slot="prefix">
             <span style="padding-left: 5px;">
-              <i class="el-icon-search"></i>
+              <i class="el-icon-search" />
             </span>
           </template>
-          <el-option v-for="user in searchResult" :key="user.iuid" :label="user.userName" :value="user.userID"></el-option>
+          <el-option
+            v-for="user in searchResult"
+            :key="user.iuid"
+            :label="user.userName"
+            :value="user.userID"
+          />
         </el-select>
       </div>
       <div class="people hide-scroll">
-        <div class="person flex ai-center" :class="{ 'active': item.act }" v-for="(item, idx) in userMsgList" :key="item.iuid" @click="showDetail(item)">
-          <img :src="getUserAvatar(item.receiverAvatar)" alt="" />
-          <div class="flex column jc-between" style="width: calc(100% - 50px);">
+        <div
+          v-for="(item, idx) in userMsgList"
+          :key="item.iuid"
+          class="person flex ai-center"
+          :class="{ 'active': item.act }"
+          @click="showDetail(item)"
+        >
+          <img
+            :src="getUserAvatar(item.receiverAvatar)"
+            alt=""
+          >
+          <div
+            class="flex column jc-between"
+            style="width: calc(100% - 50px);"
+          >
             <div>
               <span class="name">{{ item.receiverName }}</span>
               <span class="time">{{ timeFormat(item.latelytime) }}</span>
             </div>
             <span class="preview">{{ item.latelymes ? item.latelymes : '没有消息' }}</span>
           </div>
-          <el-badge :value="item.isreadcount" :max="99" :is-dot="false" v-if="item.isreadcount != 0" class="badge" type="danger"></el-badge>
+          <el-badge
+            v-if="item.isreadcount != 0"
+            :value="item.isreadcount"
+            :max="99"
+            :is-dot="false"
+            class="badge"
+            type="danger"
+          />
         </div>
       </div>
     </div>
     <div class="right">
       <div class="top flex jc-between ai-center">
         <span class="name">{{ current.userName }}</span>
-        <el-button type="text" style="color: #999;font-size: 20px;" icon="el-icon-close" @click="$emit('close')"></el-button>
+        <el-button
+          type="text"
+          style="color: #999;font-size: 20px;"
+          icon="el-icon-close"
+          @click="$emit('close')"
+        />
       </div>
-      <div class="chat active-chat hide-scroll" ref="chatbox">
-        <div style="margin: 20px 0;text-align: center;width: 100%;color: #999;font-size: 14px;" v-if="current.msgList.length == 0">暂无消息</div>
-        <div class="bubble" v-for="item in current.msgList" :key="item.iuid" :class="item.initiator == user.userID ? 'me' : 'you'">
-          <div class="chat-time">{{ timeFormat(item.initiatortime) }}</div>
+      <div
+        ref="chatbox"
+        class="chat active-chat hide-scroll"
+      >
+        <div
+          v-if="current.msgList.length == 0"
+          style="margin: 20px 0;text-align: center;width: 100%;color: #999;font-size: 14px;"
+        >
+          暂无消息
+        </div>
+        <div
+          v-for="item in current.msgList"
+          :key="item.iuid"
+          class="bubble"
+          :class="item.initiator == user.userID ? 'me' : 'you'"
+        >
+          <div class="chat-time">
+            {{ timeFormat(item.initiatortime) }}
+          </div>
           <span style="white-space: pre-wrap;">{{ item.message }}</span>
         </div>
-        <div style="cursor: pointer;margin: 20px 0;text-align: center;width: 100%;color: #409eff;font-size: 14px;" v-if="current.msgList.length != 0 && current.msgList.length < count" @click="getPrevMsg">加载历史消息</div>
+        <div
+          v-if="current.msgList.length != 0 && current.msgList.length < count"
+          style="cursor: pointer;margin: 20px 0;text-align: center;width: 100%;color: #409eff;font-size: 14px;"
+          @click="getPrevMsg"
+        >
+          加载历史消息
+        </div>
       </div>
       <div class="write flex ai-end">
-        <el-input type="textarea" style="height: 100%;" ref="textarea" resize="none" rows="5" v-model="sendText" @keydown.native="keyEnter" :placeholder="current.userID ? '输入消息' : '请选择用户'" size="normal"></el-input>
-        <el-button type="text" v-if="current.userID && sendText != ''" size="default" @click.stop="send" style="margin-right: 15px;color: #409eff;">发送</el-button>
+        <el-input
+          ref="textarea"
+          v-model="sendText"
+          type="textarea"
+          style="height: 100%;"
+          resize="none"
+          rows="5"
+          :placeholder="current.userID ? '输入消息' : '请选择用户'"
+          size="normal"
+          @keydown.native="keyEnter"
+        />
+        <el-button
+          v-if="current.userID && sendText != ''"
+          type="text"
+          size="default"
+          style="margin-right: 15px;color: #409eff;"
+          @click.stop="send"
+        >
+          发送
+        </el-button>
       </div>
     </div>
   </div>
@@ -66,7 +144,7 @@ import {
 } from "vuex";
 
 export default {
-  name: "chatBox",
+  name: "ChatBox",
   props: ['close'],
   data() {
     return {
@@ -137,7 +215,7 @@ export default {
     },
     // 获取头像
     getUserAvatar(avatar) {
-      let avatarImg = avatar ? process.env.BASE_API + '/api/home/GetimgFile?fileUrl=' + encodeURIComponent(encrypt(avatar)) : require('../../assets/robot.svg')
+      let avatarImg = avatar ? process.env.VUE_APP_BASE_API + '/api/home/GetimgFile?fileUrl=' + encodeURIComponent(encrypt(avatar)) : require('../../assets/robot.svg')
       return avatarImg
     },
     // 获取聊天列表

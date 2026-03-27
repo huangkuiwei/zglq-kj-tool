@@ -1,30 +1,69 @@
 <!-- 现在模型文件都进入了bimiframe 本文件不需修改 -->
 <template>
   <div class="kanban">
-    <iframe v-if="$supportWebGL() && showIframe" ref="imodelIframe" :src="src" @load="sendtreeData" id="kanbaniframe" class="kanbaniframe"></iframe>
+    <iframe
+      v-if="$supportWebGL() && showIframe"
+      id="kanbaniframe"
+      ref="imodelIframe"
+      :src="src"
+      class="kanbaniframe"
+      @load="sendtreeData"
+    />
 
     <div v-if="!$supportWebGL()">
       <img :src="notSupportWebGLImg">
     </div>
 
-    <imodelInvokeFunction :rowData="dataModel" :isFullScreen.sync="isFullScreen" @pageClose="hiddenIframe" ref="imodelInvokeContainer" />
+    <imodelInvokeFunction
+      ref="imodelInvokeContainer"
+      :row-data="dataModel"
+      :is-full-screen.sync="isFullScreen"
+      @pageClose="hiddenIframe"
+    />
 
-    <div class="wscn-http404-container" v-if="errorPageVisible">
+    <div
+      v-if="errorPageVisible"
+      class="wscn-http404-container"
+    >
       <div class="wscn-http404">
         <div class="pic-404">
-          <img class="pic-404__parent" src="@/assets/errorImg/404.png" alt="404">
-          <img class="pic-404__child left" src="@/assets/errorImg/404_cloud.png" alt="404">
-          <img class="pic-404__child mid" src="@/assets/errorImg/404_cloud.png" alt="404">
-          <img class="pic-404__child right" src="@/assets/errorImg/404_cloud.png" alt="404">
+          <img
+            class="pic-404__parent"
+            src="@/assets/errorImg/404.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child left"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child mid"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child right"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
         </div>
         <div class="bullshit">
-          <div class="bullshit__headline">当前项目中不包含模型文件。。。</div>
-          <div class="bullshit__info">请重新选择项目，并再次进入本界面。</div>
+          <div class="bullshit__headline">
+            当前项目中不包含模型文件。。。
+          </div>
+          <div class="bullshit__info">
+            请重新选择项目，并再次进入本界面。
+          </div>
         </div>
       </div>
     </div>
 
-    <versionFilesDialog :dialogVisibleProp.sync="versionFilesDialogVisible" :versionFiles="versionFiles" @versionFilesCallBack="versionFilesCallBack" />
+    <versionFilesDialog
+      :dialog-visible-prop.sync="versionFilesDialogVisible"
+      :version-files="versionFiles"
+      @versionFilesCallBack="versionFilesCallBack"
+    />
   </div>
 </template>
 <script>
@@ -150,12 +189,12 @@ export default {
     },
     firstTurnPath() {
       this.showIframe = true
-      this.src = this.dataModel && (process.env.GisIframeOrigin + "/?" + encodeURIComponent(this.dataModel.turnPath))
+      this.src = this.dataModel && (process.env.VUE_APP_GisIframeOrigin + "/?" + encodeURIComponent(this.dataModel.turnPath))
     },
     async sendtreeData() {
       //var obj = {treeData:this.initTreeList,currentProj:this.projectInfo,currentFile:this.dataModel}
 
-      var obj = { treeData: this.list, currentProj: this.projectInfo, currentFile: this.dataModel, fileOriginalUrl: process.env.BASE_API }
+      var obj = { treeData: this.list, currentProj: this.projectInfo, currentFile: this.dataModel, fileOriginalUrl: process.env.VUE_APP_BASE_API }
       this.$iframePostMes(this.$refs.imodelIframe.contentWindow, 'treeData', obj)
     },
     async queryData(iuid) {

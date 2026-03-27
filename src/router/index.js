@@ -202,7 +202,7 @@ router.beforeEach((to, from, next) => {
         command,
         data,
       },
-      process.env.GisIframeOrigin
+      process.env.VUE_APP_GisIframeOrigin
     );
   }
   next();

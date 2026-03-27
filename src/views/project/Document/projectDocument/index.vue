@@ -1,109 +1,252 @@
 <template>
   <div class="app-container background table-box">
-    <el-dialog title="上传文件" :visible.sync="fileDialogVisible" width="30%">
-      <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1" :file-list="fileList" :on-change="fileOnChange" :auto-upload="autoUpload" :before-upload="beforeUpload">
-        <el-button size="small" type="primary">点击上传</el-button>
-        <div slot="tip" class="el-upload__tip">请上传文件</div>
+    <el-dialog
+      title="上传文件"
+      :visible.sync="fileDialogVisible"
+      width="30%"
+    >
+      <el-upload
+        class="upload-demo"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        multiple
+        :limit="1"
+        :file-list="fileList"
+        :on-change="fileOnChange"
+        :auto-upload="autoUpload"
+        :before-upload="beforeUpload"
+      >
+        <el-button
+          size="small"
+          type="primary"
+        >
+          点击上传
+        </el-button>
+        <div
+          slot="tip"
+          class="el-upload__tip"
+        >
+          请上传文件
+        </div>
       </el-upload>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="fileDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-        <el-button type="primary" @click="submitFile">{{ $t('base.button.confirm') }}</el-button>
+        <el-button
+          type="primary"
+          @click="submitFile"
+        >{{ $t('base.button.confirm') }}</el-button>
       </span>
     </el-dialog>
     <!-- 删除/ -->
-    <el-dialog title="删除" :visible.sync="deleteDialogVisible" width="30%">
+    <el-dialog
+      title="删除"
+      :visible.sync="deleteDialogVisible"
+      width="30%"
+    >
       <span>确定删除么</span>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="deleteDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-        <el-button type="primary" @click="deleteFile">{{ $t('base.button.confirm') }}</el-button>
+        <el-button
+          type="primary"
+          @click="deleteFile"
+        >{{ $t('base.button.confirm') }}</el-button>
       </span>
     </el-dialog>
     <!-- //重命名 -->
-    <el-dialog title="重命名" :visible.sync="reloadNameDialogVisible" width="30%">
-      <el-input v-model="inputFileName" :placeholder="oldPlaceholder"></el-input>
-      <span slot="footer" class="dialog-footer">
+    <el-dialog
+      title="重命名"
+      :visible.sync="reloadNameDialogVisible"
+      width="30%"
+    >
+      <el-input
+        v-model="inputFileName"
+        :placeholder="oldPlaceholder"
+      />
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="reloadNameDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-        <el-button type="primary" @click="reloadNameOK">{{ $t('base.button.confirm') }}</el-button>
+        <el-button
+          type="primary"
+          @click="reloadNameOK"
+        >{{ $t('base.button.confirm') }}</el-button>
       </span>
     </el-dialog>
     <!-- //移动复制 -->
-    <el-dialog :title="moveCopyType === 'move' ? '移动到' : '复制到'" :visible.sync="moveCopyDialogVisible" width="30%">
+    <el-dialog
+      :title="moveCopyType === 'move' ? '移动到' : '复制到'"
+      :visible.sync="moveCopyDialogVisible"
+      width="30%"
+    >
       <el-container style="height: 500px; border: 1px solid #eee">
-        <el-aside width="150px" style="background-color: rgb(238, 241, 246);overflow:hidden">
-          <el-menu :default-openeds="['1','2']" style="height:100%">
-            <el-submenu index="1" style="border-bottom:1px solid #eee;">
-              <el-menu-item @click="projectTree(0)" :class="{active:activityindex == 0}">项目空间</el-menu-item>
+        <el-aside
+          width="150px"
+          style="background-color: rgb(238, 241, 246);overflow:hidden"
+        >
+          <el-menu
+            :default-openeds="['1','2']"
+            style="height:100%"
+          >
+            <el-submenu
+              index="1"
+              style="border-bottom:1px solid #eee;"
+            >
+              <el-menu-item
+                :class="{active:activityindex == 0}"
+                @click="projectTree(0)"
+              >
+                项目空间
+              </el-menu-item>
             </el-submenu>
-            <el-submenu index="2" style="border-bottom:1px solid #eee">
-              <el-menu-item @click="myTree(1)" :class="{active:activityindex == 1}">文档资料</el-menu-item>
+            <el-submenu
+              index="2"
+              style="border-bottom:1px solid #eee"
+            >
+              <el-menu-item
+                :class="{active:activityindex == 1}"
+                @click="myTree(1)"
+              >
+                文档资料
+              </el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
         <el-container>
           <el-main>
             <!-- 项目文档树 -->
-            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick">
-              <span class="custom-tree-node" slot-scope="{data}">
+            <el-tree
+              :data="data"
+              :props="defaultProps"
+              @node-click="handleNodeClick"
+            >
+              <span
+                slot-scope="{data}"
+                class="custom-tree-node"
+              >
                 <span>
-                  <i class="iconfont icon-wenjian" style="padding-right:10px"></i>{{data.name}}
+                  <i
+                    class="iconfont icon-wenjian"
+                    style="padding-right:10px"
+                  />{{ data.name }}
                 </span>
               </span>
             </el-tree>
           </el-main>
         </el-container>
       </el-container>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="addFolder(activityindex,'add','treeAdd')" style="float:left;padding:11px 15px">
-          <i class="iconfont icon-xinjianwenjianjia"></i>新建文件夹
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          size="mini"
+          style="float:left;padding:11px 15px"
+          @click="addFolder(activityindex,'add','treeAdd')"
+        >
+          <i class="iconfont icon-xinjianwenjianjia" />新建文件夹
         </el-button>
-        <el-button type="primary" @click="moveCopySure">{{ $t('base.button.confirm') }}</el-button>
+        <el-button
+          type="primary"
+          @click="moveCopySure"
+        >{{ $t('base.button.confirm') }}</el-button>
         <el-button @click="moveCopyDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
       </span>
     </el-dialog>
     <!-- 重名文件 -->
-    <el-dialog :title="moveCopyType === 'move' ? '移动文件' : '复制文件'" :visible.sync="sameFileDialogVisible" width="30%" class="same">
+    <el-dialog
+      :title="moveCopyType === 'move' ? '移动文件' : '复制文件'"
+      :visible.sync="sameFileDialogVisible"
+      width="30%"
+      class="same"
+    >
       <div class="topTitle">
         <span v-if="moveCopyType != 'move'">复制的位置已经包含了同名的文件，请选择你的操作：</span>
         <span v-if="moveCopyType === 'move'">移动的位置已经包含了同名的文件，请选择你的操作：</span>
       </div>
       <div>
-        <div class="flex existingTit" style="">
+        <div
+          class="flex existingTit"
+          style=""
+        >
           <div>已有的文件</div>
           <div>正在<span v-if="moveCopyType != 'move'">复制的</span><span v-if="moveCopyType === 'move'">移动的</span>文件：</div>
         </div>
-        <div class="bottomCon" v-for="(item,index) in sameFileData" :key="index">
-          <div class="flex" style="border-bottom:1px solid #eee;padding: 0 15px 15px 15px;" v-for="(Data,i) in item.data" :key="i">
+        <div
+          v-for="(item,index) in sameFileData"
+          :key="index"
+          class="bottomCon"
+        >
+          <div
+            v-for="(Data,i) in item.data"
+            :key="i"
+            class="flex"
+            style="border-bottom:1px solid #eee;padding: 0 15px 15px 15px;"
+          >
             <div class="existing">
               <div class="flex">
                 <span>
-                  <fileIconComponends :fullPath="getFolderFullPath" :row="Data" @linkToFilePage="linkToFilePage" class="fontStyle" />
+                  <fileIconComponends
+                    :full-path="getFolderFullPath"
+                    :row="Data"
+                    class="fontStyle"
+                    @linkToFilePage="linkToFilePage"
+                  />
                 </span>
               </div>
-              <div class="fileInfo"><span>{{Data.fileSize}}</span><span class="fileInfo">{{Data.createTime}}</span></div>
+              <div class="fileInfo">
+                <span>{{ Data.fileSize }}</span><span class="fileInfo">{{ Data.createTime }}</span>
+              </div>
             </div>
             <div class="existing">
               <div class="flex">
                 <span>
-                  <fileIconComponends :fullPath="getFolderFullPath" :row="Data" @linkToFilePage="linkToFilePage" class="fontStyle" />
+                  <fileIconComponends
+                    :full-path="getFolderFullPath"
+                    :row="Data"
+                    class="fontStyle"
+                    @linkToFilePage="linkToFilePage"
+                  />
                 </span>
               </div>
-              <div class="fileInfo"><span>{{Data.fileSize}}</span><span class="fileInfo">{{Data.createTime}}</span></div>
+              <div class="fileInfo">
+                <span>{{ Data.fileSize }}</span><span class="fileInfo">{{ Data.createTime }}</span>
+              </div>
             </div>
           </div>
           <div style="width:70%;margin:auto;padding:15px 0">
             <el-radio-group v-model="item.rowRadio">
-              <el-radio v-for="opt in danoptions" :key="opt.label" :label="opt.label" @change="radioChanges(item.rowRadio)">{{opt.value}}</el-radio>
+              <el-radio
+                v-for="opt in danoptions"
+                :key="opt.label"
+                :label="opt.label"
+                @change="radioChanges(item.rowRadio)"
+              >
+                {{ opt.value }}
+              </el-radio>
             </el-radio-group>
           </div>
         </div>
       </div>
-      <span slot="footer" class="dialog-footer flex" style="justify-content:space-between">
+      <span
+        slot="footer"
+        class="dialog-footer flex"
+        style="justify-content:space-between"
+      >
         <!-- <el-button type="primary"
                    @click="replaceSure">替换文件</el-button>
         <el-button type="primary"
                    @click="additionalSure">保留两个文件</el-button> -->
         <div style="margin:auto 0">
-          <el-radio-group @change="allRadioChanges" v-model="allRadio">
+          <el-radio-group
+            v-model="allRadio"
+            @change="allRadioChanges"
+          >
             <el-radio label="1">跳过本组</el-radio>
             <el-radio label="2">生成副本</el-radio>
             <el-radio label="3">覆盖文件</el-radio>
@@ -111,64 +254,162 @@
         </div>
         <div>
           <el-button @click="sameFileDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-          <el-button type="primary" @click="replaceSure">{{ $t('base.button.confirm') }}</el-button>
+          <el-button
+            type="primary"
+            @click="replaceSure"
+          >{{ $t('base.button.confirm') }}</el-button>
         </div>
       </span>
     </el-dialog>
     <el-row>
-      <el-col :span="4" class="btn-group">
-        <el-button size="mini" @click="copyTo('move')" v-if="multipleSelection.length>=1">
-          <i class="iconfont icon-download"></i>移动到
+      <el-col
+        :span="4"
+        class="btn-group"
+      >
+        <el-button
+          v-if="multipleSelection.length>=1"
+          size="mini"
+          @click="copyTo('move')"
+        >
+          <i class="iconfont icon-download" />移动到
         </el-button>
-        <el-button size="mini" @click="copyTo('copy')" v-if="multipleSelection.length>=1">
-          <i class="iconfont icon-download"></i>复制到
+        <el-button
+          v-if="multipleSelection.length>=1"
+          size="mini"
+          @click="copyTo('copy')"
+        >
+          <i class="iconfont icon-download" />复制到
         </el-button>
       </el-col>
-      <el-col :span="multipleSelection.length>=1?18:22" :offset="2" class="flex right">
-        <el-input :placeholder="$t('base.button.inputFilename')" prefix-icon="el-icon-search" style="width: 240px" clearable v-model="inputValue" @change="queryData" size="mini">
-        </el-input>
+      <el-col
+        :span="multipleSelection.length>=1?18:22"
+        :offset="2"
+        class="flex right"
+      >
+        <el-input
+          v-model="inputValue"
+          :placeholder="$t('base.button.inputFilename')"
+          prefix-icon="el-icon-search"
+          style="width: 240px"
+          clearable
+          size="mini"
+          @change="queryData"
+        />
       </el-col>
     </el-row>
-    <el-row style="margin-top: 20px" v-if="breadcrumb.length > 0">
+    <el-row
+      v-if="breadcrumb.length > 0"
+      style="margin-top: 20px"
+    >
       <el-breadcrumb separator="/">
         <el-breadcrumb-item><a @click="queryAll">文件夹</a></el-breadcrumb-item>
-        <el-breadcrumb-item @click="querySelect(item, index)" v-for="(item, index) in breadcrumb" :key="index">
+        <el-breadcrumb-item
+          v-for="(item, index) in breadcrumb"
+          :key="index"
+          @click="querySelect(item, index)"
+        >
           <a @click="querySelect(item, index)">{{ item.fileName }}</a>
         </el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
     <el-row class="table">
-      <el-table :data="tableData" class="t-table" :header-cell-style="$thStyle" style="margin-top: 20px; font-size: 13px" height="100%" stripe @selection-change="handleSelectionChange" @sort-change="sortChange" :default-sort="{ prop: 'createTime', order: 'descending' }"> > <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="fileName" :label="$t('base.button.fileName')" show-overflow-tooltip>
+      <el-table
+        :data="tableData"
+        class="t-table"
+        :header-cell-style="$thStyle"
+        style="margin-top: 20px; font-size: 13px"
+        height="100%"
+        stripe
+        :default-sort="{ prop: 'createTime', order: 'descending' }"
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
+      >
+        > <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column
+          prop="fileName"
+          :label="$t('base.button.fileName')"
+          show-overflow-tooltip
+        >
           <template slot-scope="scope">
-            <fileIconComponends :fullPath="getFolderFullPath" :row="scope.row" @linkToFilePage="linkToFilePage" />
+            <fileIconComponends
+              :full-path="getFolderFullPath"
+              :row="scope.row"
+              @linkToFilePage="linkToFilePage"
+            />
           </template>
         </el-table-column>
-        <el-table-column prop="projectText" label="文件来源" show-overflow-tooltip width="200">
-        </el-table-column>
-        <el-table-column prop="fileSize" :label="$t('base.button.fileSize')" width="120">
-        </el-table-column>
-        <el-table-column prop="createTime" label="上传时间" width="200" sortable="custom">
-        </el-table-column>
-        <el-table-column prop="userName" label="上传人" width="120"> </el-table-column>
-        <el-table-column prop="statusType" :label="$t('base.button.fileStatus')" width="120">
-          <template slot-scope="scope" v-if="scope.row.fileSuffix.toLowerCase() != ''">
+        <el-table-column
+          prop="projectText"
+          label="文件来源"
+          show-overflow-tooltip
+          width="200"
+        />
+        <el-table-column
+          prop="fileSize"
+          :label="$t('base.button.fileSize')"
+          width="120"
+        />
+        <el-table-column
+          prop="createTime"
+          label="上传时间"
+          width="200"
+          sortable="custom"
+        />
+        <el-table-column
+          prop="userName"
+          label="上传人"
+          width="120"
+        />
+        <el-table-column
+          prop="statusType"
+          :label="$t('base.button.fileStatus')"
+          width="120"
+        >
+          <template
+            v-if="scope.row.fileSuffix.toLowerCase() != ''"
+            slot-scope="scope"
+          >
             <fileStatusComponends :scope="scope" />
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('base.formLabel.operation')" width="150">
+        <el-table-column
+          fixed="right"
+          :label="$t('base.formLabel.operation')"
+          width="150"
+        >
           <template slot-scope="scope">
-            <operateColCom :row="scope.row" class="tableOpeColMargin"/>
+            <operateColCom
+              :row="scope.row"
+              class="tableOpeColMargin"
+            />
             <!-- 更多 -->
             <el-dropdown>
-              <i class="iconfont icon-more" style="color: #8f9ab4"></i>
+              <i
+                class="iconfont icon-more"
+                style="color: #8f9ab4"
+              />
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item @click.native="moveCopy('move', scope.row)">移动到</el-dropdown-item>
-                <el-dropdown-item @click.native="moveCopy('copy', scope.row)">{{ $t('projects.operation.copyTo') }}</el-dropdown-item>
-                <el-dropdown-item @click.native="versionClick(scope.row)" style="text-align:center" v-if="scope.row.fileSuffix.toLowerCase()!=''">版本</el-dropdown-item>
+                <el-dropdown-item @click.native="moveCopy('move', scope.row)">
+                  移动到
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="moveCopy('copy', scope.row)">
+                  {{ $t('projects.operation.copyTo') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  v-if="scope.row.fileSuffix.toLowerCase()!=''"
+                  style="text-align:center"
+                  @click.native="versionClick(scope.row)"
+                >
+                  版本
+                </el-dropdown-item>
                 <!-- <el-dropdown-item @click.native="reloadClick('reset', scope.row)">{{ $t('projects.operation.rename') }}</el-dropdown-item> -->
                 <template v-if="scope.row.fileSuffix && scope.row.fileSuffix.toLowerCase() === '.json'">
-                  <el-dropdown-item @click.native="copyLink(scope.row)">复制链接</el-dropdown-item>
+                  <el-dropdown-item @click.native="copyLink(scope.row)">
+                    复制链接
+                  </el-dropdown-item>
                 </template>
               </el-dropdown-menu>
             </el-dropdown>
@@ -176,8 +417,18 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <pagination :pageTotal="Total" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange"></pagination>
-    <versionViewComponeds :centerDialogVisible.sync="versionDialogVisible" :rowData="versionData" :selectedData="selectArray" @queryADDVersion="queryADDVersionPost" @sureVersion="sureVersionPost"></versionViewComponeds>
+    <pagination
+      :page-total="Total"
+      @handleCurrentChange="paginationCurrentChange"
+      @handleSizeChange="handleSizeChange"
+    />
+    <versionViewComponeds
+      :center-dialog-visible.sync="versionDialogVisible"
+      :row-data="versionData"
+      :selected-data="selectArray"
+      @queryADDVersion="queryADDVersionPost"
+      @sureVersion="sureVersionPost"
+    />
   </div>
 </template>
 <script>
@@ -668,7 +919,7 @@
         this.queryVersionData()
       },
       copyLink(row) {
-        let downloadUrl = process.env.BASE_API + '/' + row.filePath
+        let downloadUrl = process.env.VUE_APP_BASE_API + '/' + row.filePath
         let input = document.createElement('input')
         input.value = downloadUrl
         document.body.appendChild(input)

@@ -1,24 +1,62 @@
 <!-- // 项目页: 项目文件树及文件列表 -->
-<template><el-container>
+<template>
+  <el-container>
     <div class="flex">
       <mainSideMenu />
-      <el-aside class="menu-list1" :class="{ collapse: isCollapse }" :width="isCollapse ? '220px' : '0'">
-        <el-menu :default-active="currentIuid" class="file-menu" @select="handleSelect">
+      <el-aside
+        class="menu-list1"
+        :class="{ collapse: isCollapse }"
+        :width="isCollapse ? '220px' : '0'"
+      >
+        <el-menu
+          :default-active="currentIuid"
+          class="file-menu"
+          @select="handleSelect"
+        >
           <!--显示项目标题-->
-          <div class="menu-title flex ai-center jc-between" style="height: 59px">
-            <el-tooltip placement="bottom-start" effect="light" :content="projectName">
-              <div class="project-title" style="margin-left: 15px">
+          <div
+            class="menu-title flex ai-center jc-between"
+            style="height: 59px"
+          >
+            <el-tooltip
+              placement="bottom-start"
+              effect="light"
+              :content="projectName"
+            >
+              <div
+                class="project-title"
+                style="margin-left: 15px"
+              >
                 {{ projectName }}
               </div>
             </el-tooltip>
-            <div style="flex-shrink: 0" v-if="!$isRead">
-              <el-button type="text" v-if="filePermissionCon.setupbit" circle style="margin-right: 15px; height: 32px; padding: 0" @click="addGrouping('add')" icon="el-icon-plus"></el-button>
+            <div
+              v-if="!$isRead"
+              style="flex-shrink: 0"
+            >
+              <el-button
+                v-if="filePermissionCon.setupbit"
+                type="text"
+                circle
+                style="margin-right: 15px; height: 32px; padding: 0"
+                icon="el-icon-plus"
+                @click="addGrouping('add')"
+              />
             </div>
           </div>
           <!--目录路径-->
-          <el-row style="border-top: 1px solid rgb(220, 223, 230); height: 0px"></el-row>
+          <el-row style="border-top: 1px solid rgb(220, 223, 230); height: 0px" />
           <!--显示文件树-->
-          <folder-tree v-if="loadID" ref="folderTree" :projectId="projectId" @handleLinkEdit="handleLinkEdit" @handleOpeDelete="handleOpeDelete" @loadSidebarMenuList="loadSidebarMenuList" :parentExpand="parentExpand" :currentIuid="currentIuid" :folderLists="folderLists" :filePermissionCon="filePermissionCon" :sidebarMenuList.sync="sidebarMenuList" :treeEmpty="treeEmpty" @saveTreeOpenNodes="saveTreeOpenNodes" @removeTreeOpenNodes="removeTreeOpenNodes" :treeOpenNodes="treeOpenNodes" @openMenu="openMenu" @openChildren="openChildren" @handleDeleteFile="handleDeleteFile" @getFolderFullPath="getFolderFullPath" @linkToFilePage="linkToFilePage"></folder-tree>
+          <folder-tree
+            v-if="loadID"
+            ref="folderTree"
+            :project-id="projectId"
+            :parent-expand="parentExpand"
+            :current-iuid="currentIuid"
+            :folder-lists="folderLists"
+            @handleLinkEdit="handleLinkEdit"
+:file-permission-con="filePermissionCon" :sidebar-menu-list.sync="sidebarMenuList" :tree-empty="treeEmpty" :tree-open-nodes="treeOpenNodes" @handleOpeDelete="handleOpeDelete" @loadSidebarMenuList="loadSidebarMenuList" @saveTreeOpenNodes="saveTreeOpenNodes" @removeTreeOpenNodes="removeTreeOpenNodes" @openMenu="openMenu" @openChildren="openChildren" @handleDeleteFile="handleDeleteFile" @getFolderFullPath="getFolderFullPath" @linkToFilePage="linkToFilePage"
+          />
           <!--文档资料时的我的收藏和我的分享-->
           <!--<div v-if="isMyDocument" class="myShareBox">-->
           <!--  <el-menu-item v-for="(route, index) in documentRouteMap" :key="index" :index="'_' + index" style="margin: 5px 0px; padding-left: 25px">-->
@@ -28,8 +66,15 @@
           <!--    </div>-->
           <!--  </el-menu-item>-->
           <!--</div>-->
-          <div v-if="isCollapse && $sideBarLogo" class="asideLogo flex ai-center jc-center">
-            <img draggable="false" :src="$sideBarLogo" alt="" />
+          <div
+            v-if="isCollapse && $sideBarLogo"
+            class="asideLogo flex ai-center jc-center"
+          >
+            <img
+              draggable="false"
+              :src="$sideBarLogo"
+              alt=""
+            >
           </div>
         </el-menu>
       </el-aside>
@@ -37,18 +82,37 @@
     <!--右侧项目文件列表区域-->
     <el-container v-if="myDocumentKind == -1">
       <el-main style="background-color: #dcdfe6; overflow-y: hidden">
-        <div class="app-container background" style="margin-left: 1px; padding: 0; height: calc(100vh - 51px)">
-          <div class="table-box flex" style="margin-bottom: 0">
-            <div style="height: 60px; border-bottom: 1px solid #e5ebf6; padding-right: 20px" class="flex jc-between shrink ai-center">
-              <div class="flex ai-center grow" style="padding: 0 20px">
-                <el-breadcrumb separator="/" style="display: flex; font-size: 14px; flex-shrink: 0">
+        <div
+          class="app-container background"
+          style="margin-left: 1px; padding: 0; height: calc(100vh - 51px)"
+        >
+          <div
+            class="table-box flex"
+            style="margin-bottom: 0"
+          >
+            <div
+              style="height: 60px; border-bottom: 1px solid #e5ebf6; padding-right: 20px"
+              class="flex jc-between shrink ai-center"
+            >
+              <div
+                class="flex ai-center grow"
+                style="padding: 0 20px"
+              >
+                <el-breadcrumb
+                  separator="/"
+                  style="display: flex; font-size: 14px; flex-shrink: 0"
+                >
                   <el-breadcrumb-item>
                     <a @click="goBack">{{ $t("leftNavs.projects") }}</a>
                   </el-breadcrumb-item>
                   <el-breadcrumb-item>
                     <a @click="initData">
                       <template v-if="projectName.length > 4">
-                        <el-tooltip :content="projectName" placement="bottom" effect="dark">
+                        <el-tooltip
+                          :content="projectName"
+                          placement="bottom"
+                          effect="dark"
+                        >
                           <span>{{ projectName.slice(0, 4) + "…" }}</span>
                         </el-tooltip>
                       </template>
@@ -61,81 +125,206 @@
                   <el-breadcrumb-item v-if="folderLists.length >= 3">
                     <span>...</span>
                   </el-breadcrumb-item>
-                  <el-breadcrumb-item v-for="(i, index) in folderLists" v-if="index > folderLists.length - 3" :key="index">
+                  <el-breadcrumb-item
+                    v-for="(i, index) in folderLists"
+                    v-if="index > folderLists.length - 3"
+                    :key="index"
+                  >
                     <a @click="folderMenuClick(i, index)">{{ i.name }}</a>
                   </el-breadcrumb-item>
                 </el-breadcrumb>
               </div>
 
-              <div class="flex wrap ai-center jc-between" style="margin-left: auto">
-                <div class="btn-group flex ai-center" style="flex-shrink: 0">
+              <div
+                class="flex wrap ai-center jc-between"
+                style="margin-left: auto"
+              >
+                <div
+                  class="btn-group flex ai-center"
+                  style="flex-shrink: 0"
+                >
                   <!-- 搜索 -->
-                  <el-input class="top-search" style="width: 183px; border: none" size="small" :placeholder="$t('projects.search')" v-model="searchRules.fileName" @change="loadData('clearSelect', false)"></el-input>
+                  <el-input
+                    v-model="searchRules.fileName"
+                    class="top-search"
+                    style="width: 183px; border: none"
+                    size="small"
+                    :placeholder="$t('projects.search')"
+                    @change="loadData('clearSelect', false)"
+                  />
 
-                  <div class="btn_box flex jc-around" style="padding-left: 10px" v-if="!$isRead">
+                  <div
+                    v-if="!$isRead"
+                    class="btn_box flex jc-around"
+                    style="padding-left: 10px"
+                  >
                     <!-- 新建 -->
-                    <el-popover v-if="filePermissionCon.setupbit == true" v-model="addFilePopVisible" placement="bottom-start" transition="el-zoom-in-top" width="120" trigger="click">
-                      <div @click="showfolderDialog('addFile')" class="fileFolderUploadHref">
+                    <el-popover
+                      v-if="filePermissionCon.setupbit == true"
+                      v-model="addFilePopVisible"
+                      placement="bottom-start"
+                      transition="el-zoom-in-top"
+                      width="120"
+                      trigger="click"
+                    >
+                      <div
+                        class="fileFolderUploadHref"
+                        @click="showfolderDialog('addFile')"
+                      >
                         新建文件
                       </div>
-                      <div @click="showfolderDialog('add')" class="fileFolderUploadHref">
+                      <div
+                        class="fileFolderUploadHref"
+                        @click="showfolderDialog('add')"
+                      >
                         {{ $t("base.button.newFolder") }}
                       </div>
-                      <el-button slot="reference" plain type="primary" size="small" icon="el-icon-plus">{{
-                        $t("base.button.new") }}</el-button>
+                      <el-button
+                        slot="reference"
+                        plain
+                        type="primary"
+                        size="small"
+                        icon="el-icon-plus"
+                      >
+                        {{
+                          $t("base.button.new") }}
+                      </el-button>
                     </el-popover>
                     <!-- 上传 -->
-                    <el-popover v-if="filePermissionCon.setupbit == true" v-model="uploadFilePopVisible" placement="bottom" transition="el-zoom-in-top" width="120" trigger="click">
-                      <div class="fileFolderUploadHref" @click="uploadFilePopVisible = false">
+                    <el-popover
+                      v-if="filePermissionCon.setupbit == true"
+                      v-model="uploadFilePopVisible"
+                      placement="bottom"
+                      transition="el-zoom-in-top"
+                      width="120"
+                      trigger="click"
+                    >
+                      <div
+                        class="fileFolderUploadHref"
+                        @click="uploadFilePopVisible = false"
+                      >
                         上传文件
-                        <input ref="fileUploader" class="fileFolderUploadBtn" type="file" name="file" multiple @change="submitFile($event)" alt="请选择文件" />
+                        <input
+                          ref="fileUploader"
+                          class="fileFolderUploadBtn"
+                          type="file"
+                          name="file"
+                          multiple
+                          alt="请选择文件"
+                          @change="submitFile($event)"
+                        >
                       </div>
-                      <div class="fileFolderUploadHref" @click="uploadFilePopVisible = false">
+                      <div
+                        class="fileFolderUploadHref"
+                        @click="uploadFilePopVisible = false"
+                      >
                         上传文件夹
-                        <input class="fileFolderUploadBtn" type="file" name="file" @change="fileFolderUpload($event)" webkitdirectory alt="请选择文件夹" />
+                        <input
+                          class="fileFolderUploadBtn"
+                          type="file"
+                          name="file"
+                          webkitdirectory
+                          alt="请选择文件夹"
+                          @change="fileFolderUpload($event)"
+                        >
                       </div>
-                      <el-button slot="reference" size="small" icon="el-icon-upload2">{{
-                        $t("base.button.upload")
-                        }}</el-button>
+                      <el-button
+                        slot="reference"
+                        size="small"
+                        icon="el-icon-upload2"
+                      >
+                        {{
+                          $t("base.button.upload")
+                        }}
+                      </el-button>
                     </el-popover>
                     <!-- 桥梁大师项目设置 -->
-                    <template v-if="projectInfo &&
-                      projectInfo.projectTypeName === '桥梁大师项目' &&
-                      currentName === '桥梁' &&
-                      user.userID === projectInfo.creatorID
-                    ">
-                      <el-dropdown trigger="click" placement="bottom-start">
-                        <el-button size="small" icon="el-icon-s-operation">设置</el-button>
+                    <template
+                      v-if="projectInfo &&
+                        projectInfo.projectTypeName === '桥梁大师项目' &&
+                        currentName === '桥梁' &&
+                        user.userID === projectInfo.creatorID
+                      "
+                    >
+                      <el-dropdown
+                        trigger="click"
+                        placement="bottom-start"
+                      >
+                        <el-button
+                          size="small"
+                          icon="el-icon-s-operation"
+                        >
+                          设置
+                        </el-button>
                         <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item @click.native="projectSetting">工程设置</el-dropdown-item>
+                          <el-dropdown-item @click.native="projectSetting">
+                            工程设置
+                          </el-dropdown-item>
                           <!-- <el-dropdown-item @click.native="bridgeTable">桥梁表</el-dropdown-item> -->
-                          <el-dropdown-item @click.native="taskAllocation">任务分配</el-dropdown-item>
-                          <el-dropdown-item @click.native="
-                            rightClickItem.iuid = bridgeMasterFolders[0].iuid;
-                          permissionSet('', rightClickItem);
-                          ">权限设置</el-dropdown-item>
+                          <el-dropdown-item @click.native="taskAllocation">
+                            任务分配
+                          </el-dropdown-item>
+                          <el-dropdown-item
+                            @click.native="
+                              rightClickItem.iuid = bridgeMasterFolders[0].iuid;
+                              permissionSet('', rightClickItem);
+                            "
+                          >
+                            权限设置
+                          </el-dropdown-item>
                         </el-dropdown-menu>
                       </el-dropdown>
                     </template>
 
                     <!-- 下载 -->
                     <template v-if="filePermissionCon.downloadbit">
-                      <el-button size="small" v-if="tableSelection.length >= 1" @click="singleDownLoadFun1">
-                        <i class="iconfont icon-download" style="font-size: 12px"></i>{{ $t('base.button.download') }}
+                      <el-button
+                        v-if="tableSelection.length >= 1"
+                        size="small"
+                        @click="singleDownLoadFun1"
+                      >
+                        <i
+                          class="iconfont icon-download"
+                          style="font-size: 12px"
+                        />{{ $t('base.button.download') }}
                       </el-button>
                     </template>
                     <!-- 标段 -->
                     <!-- <el-button size="mini" v-if="!isMyDocument && tableSelection.length >= 0" @click="handleSetMainfile" icon="el-icon-setting">标段</el-button> -->
                     <!-- 审批 -->
-                    <el-button size="small" :disabled="!canApprove" style="margin-left: 0; height: 32px" @click="handleApplyWorkflow" icon="el-icon-startworkflow">{{ $t("base.button.approve")
-                      }}</el-button>
+                    <el-button
+                      size="small"
+                      :disabled="!canApprove"
+                      style="margin-left: 0; height: 32px"
+                      icon="el-icon-startworkflow"
+                      @click="handleApplyWorkflow"
+                    >
+                      {{ $t("base.button.approve")
+                      }}
+                    </el-button>
                     <!-- 分享 -->
                     <template v-if="filePermissionCon.downloadbit">
-                      <shareMutiple :projectId="projectId" v-if="tableSelection.length >= 1 && $shareMultipleVisible(tableSelection)" :size="'mini'" :rows="tableSelection" @loadWorkflow="loadWorkflow"  @loadData="loadData(...$event)"/>
+                      <shareMutiple
+                        v-if="tableSelection.length >= 1 && $shareMultipleVisible(tableSelection)"
+                        :project-id="projectId"
+                        :size="'mini'"
+                        :rows="tableSelection"
+                        @loadWorkflow="loadWorkflow"
+                        @loadData="loadData(...$event)"
+                      />
                     </template>
                     <!-- 删除 -->
                     <template v-if="filePermissionCon.deletebit">
-                      <el-button size="small" style="margin-left: 0; height: 32px" type="danger" @click="handleDelete" :disabled="!deleteAble" icon="el-icon-delete">{{ $t("base.button.delete") }}</el-button>
+                      <el-button
+                        size="small"
+                        style="margin-left: 0; height: 32px"
+                        type="danger"
+                        :disabled="!deleteAble"
+                        icon="el-icon-delete"
+                        @click="handleDelete"
+                      >
+                        {{ $t("base.button.delete") }}
+                      </el-button>
                     </template>
 
                     <!-- 20220930修改：只要勾选了多个就不展示这5个按钮 -->
@@ -146,28 +335,79 @@
                     </el-button> -->
                     <template v-if="projectInfo.projectTypeName === '桥梁大师项目'">
                       <!-- 路线数据 -->
-                      <el-button size="mini" style="margin-left: 0; padding: 0" v-if="folderLists[0] && folderLists[0].name === '路线资料'">
-                        <label style="display: inline-block; padding: 9px 15px" for="uploadlxsj">
-                          <i class="el-icon el-icon-upload2"></i>
+                      <el-button
+                        v-if="folderLists[0] && folderLists[0].name === '路线资料'"
+                        size="mini"
+                        style="margin-left: 0; padding: 0"
+                      >
+                        <label
+                          style="display: inline-block; padding: 9px 15px"
+                          for="uploadlxsj"
+                        >
+                          <i class="el-icon el-icon-upload2" />
                           导入
                         </label>
-                        <input style="display: none" id="uploadlxsj" class="fileFolderUploadBtn" type="file" accept=".dl,.pmx,.zdm,.hdm,.dmg,.dmx" name="file" multiple @change="submitFile($event)" alt="导入路线数据" />
+                        <input
+                          id="uploadlxsj"
+                          style="display: none"
+                          class="fileFolderUploadBtn"
+                          type="file"
+                          accept=".dl,.pmx,.zdm,.hdm,.dmg,.dmx"
+                          name="file"
+                          multiple
+                          alt="导入路线数据"
+                          @change="submitFile($event)"
+                        >
                       </el-button>
                       <!-- 上部标准图 -->
-                      <el-button size="mini" style="margin-left: 0; padding: 0" v-if="folderLists[0] && folderLists[0].name === '上部标准图'">
-                        <label style="display: inline-block; padding: 9px 15px" for="uploadsbbzt">
-                          <i class="el-icon el-icon-upload2"></i>
+                      <el-button
+                        v-if="folderLists[0] && folderLists[0].name === '上部标准图'"
+                        size="mini"
+                        style="margin-left: 0; padding: 0"
+                      >
+                        <label
+                          style="display: inline-block; padding: 9px 15px"
+                          for="uploadsbbzt"
+                        >
+                          <i class="el-icon el-icon-upload2" />
                           导入
                         </label>
-                        <input accept=".dwg" style="display: none" id="uploadsbbzt" class="fileFolderUploadBtn" type="file" name="file" multiple @change="submitFile($event)" alt="导入路线数据" />
+                        <input
+                          id="uploadsbbzt"
+                          accept=".dwg"
+                          style="display: none"
+                          class="fileFolderUploadBtn"
+                          type="file"
+                          name="file"
+                          multiple
+                          alt="导入路线数据"
+                          @change="submitFile($event)"
+                        >
                       </el-button>
                       <!-- 下部标准图 -->
-                      <el-button size="mini" style="margin-left: 0; padding: 0" v-if="folderLists[0] && folderLists[0].name === '下部标准图'">
-                        <label style="display: inline-block; padding: 9px 15px" for="uploadxbbzt">
-                          <i class="el-icon el-icon-upload2"></i>
+                      <el-button
+                        v-if="folderLists[0] && folderLists[0].name === '下部标准图'"
+                        size="mini"
+                        style="margin-left: 0; padding: 0"
+                      >
+                        <label
+                          style="display: inline-block; padding: 9px 15px"
+                          for="uploadxbbzt"
+                        >
+                          <i class="el-icon el-icon-upload2" />
                           导入
                         </label>
-                        <input accept=".dwg" style="display: none" id="uploadxbbzt" class="fileFolderUploadBtn" type="file" name="file" multiple @change="submitFile($event)" alt="导入路线数据" />
+                        <input
+                          id="uploadxbbzt"
+                          accept=".dwg"
+                          style="display: none"
+                          class="fileFolderUploadBtn"
+                          type="file"
+                          name="file"
+                          multiple
+                          alt="导入路线数据"
+                          @change="submitFile($event)"
+                        >
                       </el-button>
                     </template>
                   </div>
@@ -182,29 +422,109 @@
                   <!-- 刷新 -->
                   <!-- <el-button circle icon="el-icon-refresh-right" size="small" style="margin-left: 5px" @click="searchRules.fileName = ''; loadData('clearSelect', false)"></el-button> -->
                   <!-- 图览 -->
-                  <el-button v-if="!pictureMode" icon="el-icon-menu" size="small" style="margin-left: 5px" @click="modeChange(true)" key="picture">{{ $t('base.label.picture') }}</el-button>
+                  <el-button
+                    v-if="!pictureMode"
+                    key="picture"
+                    icon="el-icon-menu"
+                    size="small"
+                    style="margin-left: 5px"
+                    @click="modeChange(true)"
+                  >
+                    {{ $t('base.label.picture') }}
+                  </el-button>
                   <!-- 列表 -->
-                  <el-button v-else icon="el-icon-s-fold" size="small" style="margin-left: 5px" @click="modeChange(false)" key="list">{{ $t('base.label.list') }}</el-button>
+                  <el-button
+                    v-else
+                    key="list"
+                    icon="el-icon-s-fold"
+                    size="small"
+                    style="margin-left: 5px"
+                    @click="modeChange(false)"
+                  >
+                    {{ $t('base.label.list') }}
+                  </el-button>
                 </div>
               </div>
             </div>
-            <div style="overflow: auto; flex-shrink: 0" :style="{ height: isBimWorks ? undefined : `calc(100vh - 163px)`, }">
+            <div
+              style="overflow: auto; flex-shrink: 0"
+              :style="{ height: isBimWorks ? undefined : `calc(100vh - 163px)`, }"
+            >
               <!--显示文件列表-->
-              <el-row class="table" style="width: calc(100% - 40px); margin-left: 20px; margin-top: 12px" v-if="!pictureMode">
-                <el-table class="t-table" row-key="iuid" :header-cell-style="$thStyle" ref="multipleTable" :data="tableData" :height="`calc(100vh - 220px)`" style="width: 100%; overflow-y: scorll; font-size: 14px" @selection-change="handleSelectionChange" @filter-change="filterChange" @sort-change="sortChange" @clickRow="tableRowClick">
-                  <el-table-column :reserve-selection="true" type="selection" align="center" width="55" />
-                  <el-table-column prop="fileName" :label="$t('base.button.fileName')" min-width="200" show-overflow-tooltip sortable>
+              <el-row
+                v-if="!pictureMode"
+                class="table"
+                style="width: calc(100% - 40px); margin-left: 20px; margin-top: 12px"
+              >
+                <el-table
+                  ref="multipleTable"
+                  class="t-table"
+                  row-key="iuid"
+                  :header-cell-style="$thStyle"
+                  :data="tableData"
+                  :height="`calc(100vh - 220px)`"
+                  style="width: 100%; overflow-y: scorll; font-size: 14px"
+                  @selection-change="handleSelectionChange"
+                  @filter-change="filterChange"
+                  @sort-change="sortChange"
+@clickRow="tableRowClick"
+                >
+                  <el-table-column
+                    :reserve-selection="true"
+                    type="selection"
+                    align="center"
+                    width="55"
+                  />
+                  <el-table-column
+                    prop="fileName"
+                    :label="$t('base.button.fileName')"
+                    min-width="200"
+                    show-overflow-tooltip
+                    sortable
+                  >
                     <template slot-scope="scope">
-                      <div class="flex ai-center" style="font-size: 14px">
-                        <fileIconComponends :fullPath="getFolderFullPath" :row="scope.row" :isBimWorks="isBimWorks" :isInTable="true" @linkToFilePage="linkToFilePage" />
-                        <el-tooltip class="item" effect="light" :content="`该文件被${scope.row.checkUserName}签出`" placement="top-start">
-                          <img src="@/assets/button/suo.svg" alt="" :title="scope.row.checkUserName" style="width: 12px; height: 12px; margin-left: 8px" v-if="scope.row.checkStatus === '1'" />
+                      <div
+                        class="flex ai-center"
+                        style="font-size: 14px"
+                      >
+                        <fileIconComponends
+                          :full-path="getFolderFullPath"
+                          :row="scope.row"
+                          :is-bim-works="isBimWorks"
+                          :is-in-table="true"
+                          @linkToFilePage="linkToFilePage"
+                        />
+                        <el-tooltip
+                          class="item"
+                          effect="light"
+                          :content="`该文件被${scope.row.checkUserName}签出`"
+                          placement="top-start"
+                        >
+                          <img
+                            v-if="scope.row.checkStatus === '1'"
+                            src="@/assets/button/suo.svg"
+                            alt=""
+                            :title="scope.row.checkUserName"
+                            style="width: 12px; height: 12px; margin-left: 8px"
+                          >
                         </el-tooltip>
-                        <el-tag type="edit" size="mini" effect="light" style="margin-left: 8px" v-if="scope.row.bidSectionNumber">{{ scope.row.bidSectionNumber }}</el-tag>
+                        <el-tag
+                          v-if="scope.row.bidSectionNumber"
+                          type="edit"
+                          size="mini"
+                          effect="light"
+                          style="margin-left: 8px"
+                        >
+                          {{ scope.row.bidSectionNumber }}
+                        </el-tag>
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('base.formLabel.operation')" width="230" align="center">
+                  <el-table-column
+                    :label="$t('base.formLabel.operation')"
+                    width="230"
+                    align="center"
+                  >
                     <template slot-scope="scope">
                       <div class="flex ai-center jc-center">
                         <!-- TODO 桥梁大师项目测试 -->
@@ -214,109 +534,270 @@
                          </el-tooltip>
                         </template> -->
                         <!-- 浏览和编辑 -->
-                        <el-tooltip v-if="filePermissionCon.bimlookbit" class="tableOpeColMargin" effect="light" popper-class="tip-class" content="模型查看" placement="top" style="padding-left: 5px">
-                          <i class="el-icon-view shrink" :style="{ color: isIModelFile(scope.row) ? '#8f9ab4' : '#CCC', }" style=" cursor: pointer; font-size: 20px; margin-top: 3px; display: block; " @click=" isIModelFile(scope.row) && showTransferView($appList.find((item) => item.type == 'bimwindows'), scope.row)" />
+                        <el-tooltip
+                          v-if="filePermissionCon.bimlookbit"
+                          class="tableOpeColMargin"
+                          effect="light"
+                          popper-class="tip-class"
+                          content="模型查看"
+                          placement="top"
+                          style="padding-left: 5px"
+                        >
+                          <i
+                            class="el-icon-view shrink"
+                            :style="{ color: isIModelFile(scope.row) ? '#8f9ab4' : '#CCC', }"
+                            style=" cursor: pointer; font-size: 20px; margin-top: 3px; display: block; "
+                            @click=" isIModelFile(scope.row) && showTransferView($appList.find((item) => item.type == 'bimwindows'), scope.row)"
+                          />
                         </el-tooltip>
-                        <i class="el-icon-view shrink tableOpeColMargin" v-else style=" color: #ccc; cursor: not-allowed; font-size: 20px; margin-top: 3px; display: block; " />
+                        <i
+                          v-else
+                          class="el-icon-view shrink tableOpeColMargin"
+                          style=" color: #ccc; cursor: not-allowed; font-size: 20px; margin-top: 3px; display: block; "
+                        />
 
                         <!-- 云编辑 -->
                         <template v-if="filePermissionCon.bimeditbit">
-                          <el-tooltip v-if="hasEditableButton(scope.row)
-                          " popper-class="tip-class" class="tableOpeColMargin" effect="light" content="模型编辑" placement="top">
-                            <el-dropdown trigger="click" placement="bottom-start">
-                              <i class="el-icon-model-edit shrink" style="cursor: pointer" />
+                          <el-tooltip
+                            v-if="hasEditableButton(scope.row)
+                            "
+                            popper-class="tip-class"
+                            class="tableOpeColMargin"
+                            effect="light"
+                            content="模型编辑"
+                            placement="top"
+                          >
+                            <el-dropdown
+                              trigger="click"
+                              placement="bottom-start"
+                            >
+                              <i
+                                class="el-icon-model-edit shrink"
+                                style="cursor: pointer"
+                              />
                               <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-for="i in $appList.filter(
-                                  (item) => item.isEdit == true
-                                )" v-if="$hasPermi(`projects:editing:${i.type}`)" :key="i.appName" @click.native="
-                                  isIModelFile(scope.row) &&
-                                  showTransferView(i, scope.row)
-                                  ">
+                                <el-dropdown-item
+                                  v-for="i in $appList.filter(
+                                    (item) => item.isEdit == true
+                                  )"
+                                  v-if="$hasPermi(`projects:editing:${i.type}`)"
+                                  :key="i.appName"
+                                  @click.native="
+                                    isIModelFile(scope.row) &&
+                                      showTransferView(i, scope.row)
+                                  "
+                                >
                                   <div class="flex ai-center jc-between">
                                     <div class="flex ai-center">
-                                      <img style="width: 22px" :src="i.logo" alt="" />
+                                      <img
+                                        style="width: 22px"
+                                        :src="i.logo"
+                                        alt=""
+                                      >
                                       <span style="margin: 0 15px 0 5px">{{
                                         i.appName
-                                        }}</span>
+                                      }}</span>
                                     </div>
                                   </div>
                                 </el-dropdown-item>
                               </el-dropdown-menu>
                             </el-dropdown>
                           </el-tooltip>
-                          <el-tooltip v-else disabled class="tableOpeColMargin">
-                            <i class="el-icon-model-edit shrink" style="opacity: 0.4; cursor: not-allowed" />
+                          <el-tooltip
+                            v-else
+                            disabled
+                            class="tableOpeColMargin"
+                          >
+                            <i
+                              class="el-icon-model-edit shrink"
+                              style="opacity: 0.4; cursor: not-allowed"
+                            />
                           </el-tooltip>
                         </template>
 
-                        <el-tooltip v-if="$shareMultipleVisible([scope.row])" content="分享" class="tableOpeColMargin" popper-class="tip-class" effect="light" placement="top">
-                          <shareMutiple :projectId="projectId" type="list" :rows="[scope.row]" @loadWorkflow="loadWorkflow"  @loadData="loadData(...$event)" />
+                        <el-tooltip
+                          v-if="$shareMultipleVisible([scope.row])"
+                          content="分享"
+                          class="tableOpeColMargin"
+                          popper-class="tip-class"
+                          effect="light"
+                          placement="top"
+                        >
+                          <shareMutiple
+                            :project-id="projectId"
+                            type="list"
+                            :rows="[scope.row]"
+                            @loadWorkflow="loadWorkflow"
+                            @loadData="loadData(...$event)"
+                          />
                         </el-tooltip>
-                        <i v-else class="iconfont icon-share shrink tableOpeColMargin" style="opacity: 0.4; font-size: 18px; cursor: not-allowed" />
+                        <i
+                          v-else
+                          class="iconfont icon-share shrink tableOpeColMargin"
+                          style="opacity: 0.4; font-size: 18px; cursor: not-allowed"
+                        />
                         <!-- 导出 -->
 
                         <template v-if="!$isRead">
                           <template v-if="$hasPermi('projects:filefunction:derive')">
-                            <el-dropdown v-if="isIModelFile(scope.row) && scope.row.actionType === '2'" @command="handleExport(...arguments, scope.row)" trigger="click" placement="bottom" size="small" style="padding-top: 2px" class="tableOpeColMargin flex">
-                              <el-tooltip popper-class="tip-class" effect="light" content="导出" placement="top">
-                                <img src="../../../assets/fileExport.svg" class="el-icon-tickets shrink" style="width: 18px; cursor: pointer" />
+                            <el-dropdown
+                              v-if="isIModelFile(scope.row) && scope.row.actionType === '2'"
+                              trigger="click"
+                              placement="bottom"
+                              size="small"
+                              style="padding-top: 2px"
+                              class="tableOpeColMargin flex"
+                              @command="handleExport(...arguments, scope.row)"
+                            >
+                              <el-tooltip
+                                popper-class="tip-class"
+                                effect="light"
+                                content="导出"
+                                placement="top"
+                              >
+                                <img
+                                  src="../../../assets/fileExport.svg"
+                                  class="el-icon-tickets shrink"
+                                  style="width: 18px; cursor: pointer"
+                                >
                               </el-tooltip>
                               <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="dgn">dgn</el-dropdown-item>
+                                <el-dropdown-item command="dgn">
+                                  dgn
+                                </el-dropdown-item>
                                 <template v-if="!$isSpace">
-                                  <el-dropdown-item command="obj">obj</el-dropdown-item>
-                                  <el-dropdown-item command="gltf">gltf</el-dropdown-item>
-                                  <el-dropdown-item command="ifc">ifc</el-dropdown-item>
-                                  <el-dropdown-item command="datasmith">datasmith</el-dropdown-item>
+                                  <el-dropdown-item command="obj">
+                                    obj
+                                  </el-dropdown-item>
+                                  <el-dropdown-item command="gltf">
+                                    gltf
+                                  </el-dropdown-item>
+                                  <el-dropdown-item command="ifc">
+                                    ifc
+                                  </el-dropdown-item>
+                                  <el-dropdown-item command="datasmith">
+                                    datasmith
+                                  </el-dropdown-item>
                                 </template>
 
                                 <template v-if="$webTitle === '数据资源协同平台'">
-                                  <el-dropdown-item command="obj">obj</el-dropdown-item>
-                                  <el-dropdown-item command="ifc">ifc</el-dropdown-item>
+                                  <el-dropdown-item command="obj">
+                                    obj
+                                  </el-dropdown-item>
+                                  <el-dropdown-item command="ifc">
+                                    ifc
+                                  </el-dropdown-item>
                                 </template>
                               </el-dropdown-menu>
                             </el-dropdown>
-                            <el-tooltip v-else disabled class="tableOpeColMargin">
-                              <img src="../../../assets/fileExport.svg" class="el-icon-tickets shrink" style="width: 18px; cursor: pointer; opacity: 0.4" />
+                            <el-tooltip
+                              v-else
+                              disabled
+                              class="tableOpeColMargin"
+                            >
+                              <img
+                                src="../../../assets/fileExport.svg"
+                                class="el-icon-tickets shrink"
+                                style="width: 18px; cursor: pointer; opacity: 0.4"
+                              >
                             </el-tooltip>
                           </template>
                           <!-- 收藏 -->
                           <!-- <operateColCom :filePermissionCon="filePermissionCon" :row="scope.row" class="tableOpeColMargin" /> -->
                           <!-- 签入签出 -->
                           <template v-if="!isMyDocument">
-                            <template v-if="$hasPermi('projects:filefunction:checknot') &&
-                            isIModelFile(scope.row)
-                          ">
-                              <el-tooltip v-if="scope.row.checkStatus === '1' &&
-                              scope.row.checkUser === user.userID
-                            " popper-class="tip-class" class="tableOpeColMargin" effect="light" content="签入" placement="top">
-                                <i class="el-icon-unlock shrink" style="color: #8f9ab4; cursor: pointer; font-size: 20px" @click="showLockView(scope.row, '0')"></i>
+                            <template
+                              v-if="$hasPermi('projects:filefunction:checknot') &&
+                                isIModelFile(scope.row)
+                              "
+                            >
+                              <el-tooltip
+                                v-if="scope.row.checkStatus === '1' &&
+                                  scope.row.checkUser === user.userID
+                                "
+                                popper-class="tip-class"
+                                class="tableOpeColMargin"
+                                effect="light"
+                                content="签入"
+                                placement="top"
+                              >
+                                <i
+                                  class="el-icon-unlock shrink"
+                                  style="color: #8f9ab4; cursor: pointer; font-size: 20px"
+                                  @click="showLockView(scope.row, '0')"
+                                />
                               </el-tooltip>
-                              <el-tooltip disabled v-else-if="scope.row.checkStatus === '1' &&
-                              scope.row.checkUser !== user.userID
-                            " class="tableOpeColMargin" effect="light" placement="top">
-                                <i class="el-icon-unlock shrink" style="font-size: 20px; opacity: 0.4; cursor: not-allowed"></i>
+                              <el-tooltip
+                                v-else-if="scope.row.checkStatus === '1' &&
+                                  scope.row.checkUser !== user.userID
+                                "
+                                disabled
+                                class="tableOpeColMargin"
+                                effect="light"
+                                placement="top"
+                              >
+                                <i
+                                  class="el-icon-unlock shrink"
+                                  style="font-size: 20px; opacity: 0.4; cursor: not-allowed"
+                                />
                               </el-tooltip>
-                              <el-tooltip v-if="scope.row.checkStatus === '0' ||
-                              scope.row.checkStatus === null
-                            " popper-class="tip-class" class="tableOpeColMargin" effect="light" content="签出" placement="top">
-                                <i class="el-icon-lock shrink" style="color: #8f9ab4; cursor: pointer; font-size: 20px" @click="showLockView(scope.row, '1')"></i>
+                              <el-tooltip
+                                v-if="scope.row.checkStatus === '0' ||
+                                  scope.row.checkStatus === null
+                                "
+                                popper-class="tip-class"
+                                class="tableOpeColMargin"
+                                effect="light"
+                                content="签出"
+                                placement="top"
+                              >
+                                <i
+                                  class="el-icon-lock shrink"
+                                  style="color: #8f9ab4; cursor: pointer; font-size: 20px"
+                                  @click="showLockView(scope.row, '1')"
+                                />
                               </el-tooltip>
                             </template>
-                            <el-tooltip v-else disabled class="tableOpeColMargin" effect="light">
-                              <i class="el-icon-lock shrink" style="font-size: 20px; opacity: 0.4; cursor: not-allowed"></i>
+                            <el-tooltip
+                              v-else
+                              disabled
+                              class="tableOpeColMargin"
+                              effect="light"
+                            >
+                              <i
+                                class="el-icon-lock shrink"
+                                style="font-size: 20px; opacity: 0.4; cursor: not-allowed"
+                              />
                             </el-tooltip>
                           </template>
 
                           <!-- 版本管理 -->
-                          <el-tooltip v-if="filePermissionCon.setupbit == true &&
-                          scope.row.fileSuffix.toLowerCase() != '' &&
-                          scope.row.filePath != ''
-                        " popper-class="tip-class" class="tableOpeColMargin" effect="light" content="版本管理" placement="top">
-                            <i class="el-icon-version shrink" style="cursor: pointer" @click="versionClick(scope.row)" />
+                          <el-tooltip
+                            v-if="filePermissionCon.setupbit == true &&
+                              scope.row.fileSuffix.toLowerCase() != '' &&
+                              scope.row.filePath != ''
+                            "
+                            popper-class="tip-class"
+                            class="tableOpeColMargin"
+                            effect="light"
+                            content="版本管理"
+                            placement="top"
+                          >
+                            <i
+                              class="el-icon-version shrink"
+                              style="cursor: pointer"
+                              @click="versionClick(scope.row)"
+                            />
                           </el-tooltip>
-                          <el-tooltip v-else disabled class="tableOpeColMargin">
-                            <i class="el-icon-version shrink" style="opacity: 0.4; cursor: not-allowed" />
+                          <el-tooltip
+                            v-else
+                            disabled
+                            class="tableOpeColMargin"
+                          >
+                            <i
+                              class="el-icon-version shrink"
+                              style="opacity: 0.4; cursor: not-allowed"
+                            />
                           </el-tooltip>
 
                           <!-- 下载 -->
@@ -325,93 +806,210 @@
                             <!--<el-tooltip v-if="scope.row.fileSuffix.toLowerCase() == '.bim'" popper-class="tip-class" class="tableOpeColMargin" effect="light" content="下载" placement="top">-->
                             <!--  <i class="el-icon-download" @click="downLoadBim(scope.row, true)" style="color: #8f9ab4;font-size: 18px;vertical-align: middle;cursor: pointer; "></i>-->
                             <!--</el-tooltip>-->
-                            <el-tooltip v-if="scope.row.fileSuffix.toLowerCase() == ''" popper-class="tip-class" class="tableOpeColMargin" effect="light" content="打包下载" placement="top">
-                              <i class="el-icon-download" @click="downLoadFun(scope.row)" v-if="!scope.row.downLoading" style="color: #8f9ab4;font-size: 18px;vertical-align: middle;cursor: pointer; "></i>
-                              <i class="el-icon-loading" v-else style="color: #8f9ab4;font-size: 18px;vertical-align: middle;cursor: pointer; "></i>
+                            <el-tooltip
+                              v-if="scope.row.fileSuffix.toLowerCase() == ''"
+                              popper-class="tip-class"
+                              class="tableOpeColMargin"
+                              effect="light"
+                              content="打包下载"
+                              placement="top"
+                            >
+                              <i
+                                v-if="!scope.row.downLoading"
+                                class="el-icon-download"
+                                style="color: #8f9ab4;font-size: 18px;vertical-align: middle;cursor: pointer; "
+                                @click="downLoadFun(scope.row)"
+                              />
+                              <i
+                                v-else
+                                class="el-icon-loading"
+                                style="color: #8f9ab4;font-size: 18px;vertical-align: middle;cursor: pointer; "
+                              />
                             </el-tooltip>
-                            <el-dropdown v-else trigger="click" @visible-change="getExportList(...arguments, scope.row)" @command="handleDropDownload" placement="bottom-start">
-                              <el-tooltip content="文件下载" placement="top" effect="light" popper-class="tip-class" class="tableOpeColMargin">
-                                <i class="el-icon-download" style="color: #8f9ab4; font-size: 18px; vertical-align: middle; cursor: pointer"></i>
+                            <el-dropdown
+                              v-else
+                              trigger="click"
+                              placement="bottom-start"
+                              @visible-change="getExportList(...arguments, scope.row)"
+                              @command="handleDropDownload"
+                            >
+                              <el-tooltip
+                                content="文件下载"
+                                placement="top"
+                                effect="light"
+                                popper-class="tip-class"
+                                class="tableOpeColMargin"
+                              >
+                                <i
+                                  class="el-icon-download"
+                                  style="color: #8f9ab4; font-size: 18px; vertical-align: middle; cursor: pointer"
+                                />
                               </el-tooltip>
                               <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item @click.native="singleDownLoadFun(scope.row)">下载源文件</el-dropdown-item>
-                                <el-dropdown-item @click.native="downLoadBim(scope.row)" v-if="$modelFileSuffix.includes(scope.row.fileSuffix.toLowerCase())">下载bim文件</el-dropdown-item>
+                                <el-dropdown-item @click.native="singleDownLoadFun(scope.row)">
+                                  下载源文件
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$modelFileSuffix.includes(scope.row.fileSuffix.toLowerCase())"
+                                  @click.native="downLoadBim(scope.row)"
+                                >
+                                  下载bim文件
+                                </el-dropdown-item>
                                 <template v-for="el in fileExportList">
-                                  <el-dropdown-item :command="el">{{ el.name }}</el-dropdown-item>
+                                  <el-dropdown-item :command="el">
+                                    {{ el.name }}
+                                  </el-dropdown-item>
                                 </template>
                               </el-dropdown-menu>
                             </el-dropdown>
                           </template>
-                          <i v-else class="el-icon-download downLoadBtn1"></i>
+                          <i
+                            v-else
+                            class="el-icon-download downLoadBtn1"
+                          />
 
-                          <el-dropdown trigger="click" placement="bottom-start">
-                            <i class="el-icon-more" style="
+                          <el-dropdown
+                            trigger="click"
+                            placement="bottom-start"
+                          >
+                            <i
+                              class="el-icon-more"
+                              style="
                               color: #8f9ab4;
                               font-size: 18px;
                               vertical-align: middle;
                               cursor: pointer;
-                            "></i>
+                            "
+                            />
                             <el-dropdown-menu slot="dropdown">
-
                               <!-- 压缩文件解压 -->
 
-                              <el-dropdown-item @click.native="decompression(scope.row)" v-if="filePermissionCon.editbit == true && ['.rar', '.zip'].includes(scope.row.fileSuffix.toLowerCase())">解压</el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true && ['.rar', '.zip'].includes(scope.row.fileSuffix.toLowerCase())"
+                                @click.native="decompression(scope.row)"
+                              >
+                                解压
+                              </el-dropdown-item>
 
-                              <el-dropdown-item @click.native="copyTo('move', scope.row)" v-if="filePermissionCon.editbit == true">{{ $t("projects.operation.move")
-                                }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="copyToCurrentFolder(scope.row)" v-if="filePermissionCon.editbit == true">{{
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="copyTo('move', scope.row)"
+                              >
+                                {{ $t("projects.operation.move")
+                                }}
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="copyToCurrentFolder(scope.row)"
+                              >
+                                {{
                                   $t("projects.operation.copy")
-                                }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="copyTo('copy', scope.row)" v-if="filePermissionCon.editbit == true">{{
+                                }}
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="copyTo('copy', scope.row)"
+                              >
+                                {{
                                   $t("projects.operation.copyTo")
-                                }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="showfolderDialog('reset', scope.row)" v-if="filePermissionCon.editbit == true">{{ $t("projects.operation.rename")
-                                }}</el-dropdown-item>
+                                }}
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="showfolderDialog('reset', scope.row)"
+                              >
+                                {{ $t("projects.operation.rename")
+                                }}
+                              </el-dropdown-item>
                               <!-- <el-dropdown-item @click.native="permissionSet('', scope.row)" v-if="scope.row.fileSuffix == '' && scope.row.authorizebit == true">权限设置</el-dropdown-item> -->
                               <template v-if="isIModelFile(scope.row)">
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:display')" @click.native="viewBigScreen(scope.row)">{{
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:display')"
+                                  @click.native="viewBigScreen(scope.row)"
+                                >
+                                  {{
                                     $t("projects.operation.bigScreen")
-                                  }}</el-dropdown-item>
-                                <el-dropdown-item @click.native="viewBigScreenAndTable(scope.row)"> 大屏展示(图表) </el-dropdown-item>
-                                <el-dropdown-item divided v-if="$hasPermi('projects:filefunction:quality')" @click.native="showQuality(scope.row)">{{ $t("projects.operation.quality")
-                                  }}</el-dropdown-item>
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item @click.native="viewBigScreenAndTable(scope.row)">
+                                  大屏展示(图表)
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:quality')"
+                                  divided
+                                  @click.native="showQuality(scope.row)"
+                                >
+                                  {{ $t("projects.operation.quality")
+                                  }}
+                                </el-dropdown-item>
                               </template>
-                              <el-dropdown-item divided @click.native="copyAddress(scope.row)" v-if="$hasPermi('projects:filefunction:copypath') &&
-                              $modelFileSuffix3.concat(['.json']).indexOf(
-                                scope.row.fileSuffix.toLowerCase()
-                              ) != -1
-                            ">复制实景地址</el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="$hasPermi('projects:filefunction:copypath') &&
+                                  $modelFileSuffix3.concat(['.json']).indexOf(
+                                    scope.row.fileSuffix.toLowerCase()
+                                  ) != -1
+                                "
+                                divided
+                                @click.native="copyAddress(scope.row)"
+                              >
+                                复制实景地址
+                              </el-dropdown-item>
                               <template v-if="isIModelFile(scope.row)">
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:copypath') &&
-                                isIModelFile(scope.row) &&
-                                user.isadministrator
-                              " @click.native="copyPath(scope.row)">{{ $t("projects.operation.copyPath")
-                                  }}</el-dropdown-item>
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:associated')" @click.native="linkModel(scope.row)">{{
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:copypath') &&
+                                    isIModelFile(scope.row) &&
+                                    user.isadministrator
+                                  "
+                                  @click.native="copyPath(scope.row)"
+                                >
+                                  {{ $t("projects.operation.copyPath")
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:associated')"
+                                  @click.native="linkModel(scope.row)"
+                                >
+                                  {{
                                     $t("projects.operation.linkDrawing")
-                                  }}</el-dropdown-item>
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:viewdrawings')" @click.native="viewLinkModel(scope.row)">{{
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:viewdrawings')"
+                                  @click.native="viewLinkModel(scope.row)"
+                                >
+                                  {{
                                     $t("projects.operation.viewDrawing")
-                                  }}</el-dropdown-item>
+                                  }}
+                                </el-dropdown-item>
                               </template>
                               <!-- <el-dropdown-item v-if="filePermissionCon.deletebit == true && (scope.row.checkStatus === '0' || scope.row.checkStatus === null)" @click.native="handleDeleteFile(scope.row)">{{ $t('base.button.delete') }}</el-dropdown-item> -->
                               <!-- ------------------------ -->
                               <template v-if="filePermissionCon.editbit">
-                                <template v-if="$modelFileSuffix3
-                                .concat($modelFileSuffix)
-                                .indexOf(scope.row.fileSuffix.toLowerCase()) != -1
-                              ">
-                                  <el-dropdown-item divided @click.native="
-                                  reTranscoding(scope.row.iuid, undefined, scope.row)
-                                  ">{{
+                                <template
+                                  v-if="$modelFileSuffix3
+                                    .concat($modelFileSuffix)
+                                    .indexOf(scope.row.fileSuffix.toLowerCase()) != -1
+                                  "
+                                >
+                                  <el-dropdown-item
+                                    divided
+                                    @click.native="
+                                      reTranscoding(scope.row.iuid, undefined, scope.row)
+                                    "
+                                  >
+                                    {{
                                       $t("projects.transcoding.transcoding")
-                                    }}</el-dropdown-item>
+                                    }}
+                                  </el-dropdown-item>
                                 </template>
                               </template>
 
-                              <el-dropdown-item divided @click.native="
+                              <el-dropdown-item
+                                divided
+                                @click.native="
                                   uploadJsonFile(scope.row)
-                                  ">
+                                "
+                              >
                                 上传视图文件
                               </el-dropdown-item>
                             </el-dropdown-menu>
@@ -420,44 +1018,88 @@
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('base.button.fileSize')" align="center" width="110">
+                  <el-table-column
+                    :label="$t('base.button.fileSize')"
+                    align="center"
+                    width="110"
+                  >
                     <template slot-scope="{ row }">
                       <div style="padding-left: 6px">
                         {{ row.fileSize }}
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('base.button.createTime')" prop="createTime" sortable timeRangeBoxable align="center" width="180">
+                  <el-table-column
+                    :label="$t('base.button.createTime')"
+                    prop="createTime"
+                    sortable
+                    time-range-boxable
+                    align="center"
+                    width="180"
+                  >
                     <template slot-scope="{ row }">
                       <div style="padding-left: 6px">
                         {{ row.createTime }}
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$t('base.button.createPeople')" align="center" width="110">
+                  <el-table-column
+                    :label="$t('base.button.createPeople')"
+                    align="center"
+                    width="110"
+                  >
                     <template slot-scope="{ row }">
                       <div style="padding-left: 6px">
                         {{ row.userName }}
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" :filterCheckBoxData="$fileStatus" :label="$t('base.button.fileStatus')" width="150">
-                    <template slot-scope="scope" v-if="scope.row.fileSuffix.toLowerCase() != ''">
+                  <el-table-column
+                    align="center"
+                    :filter-check-box-data="$fileStatus"
+                    :label="$t('base.button.fileStatus')"
+                    width="150"
+                  >
+                    <template
+                      v-if="scope.row.fileSuffix.toLowerCase() != ''"
+                      slot-scope="scope"
+                    >
                       <div class="flex jc-center">
-                        <fileStatusComponends style="margin-right: 5px" :scope="scope" />
+                        <fileStatusComponends
+                          style="margin-right: 5px"
+                          :scope="scope"
+                        />
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" v-if="!isMyDocument" :filterCheckBoxData="$fileStatus" :label="$t('base.button.approvalProcess')" width="120">
+                  <el-table-column
+                    v-if="!isMyDocument"
+                    align="center"
+                    :filter-check-box-data="$fileStatus"
+                    :label="$t('base.button.approvalProcess')"
+                    width="120"
+                  >
                     <template slot-scope="scope">
                       <div class="flex jc-center">
-                        <workflowStatusComponends v-if="inWorkflow(scope.row)" :scope="scope" :workflows="workflowData" :projectId="projectId" />
-                        <el-tag type="success" size="small" effect="plain" v-else-if="scope.row.fileSuffix == '' && scope.row.ischeck == true
-                        ">审批中</el-tag>
+                        <workflowStatusComponends
+                          v-if="inWorkflow(scope.row)"
+                          :scope="scope"
+                          :workflows="workflowData"
+                          :project-id="projectId"
+                        />
+                        <el-tag
+                          v-else-if="scope.row.fileSuffix == '' && scope.row.ischeck == true
+                          "
+                          type="success"
+                          size="small"
+                          effect="plain"
+                        >
+                          审批中
+                        </el-tag>
                       </div>
                     </template>
                   </el-table-column>
-                  <!-- <el-table-column prop="fileCheck" align="center" :filterCheckBoxData="$fileStatus" label="模型质量" width="120">
+                <!-- <el-table-column prop="fileCheck" align="center" :filterCheckBoxData="$fileStatus" label="模型质量" width="120">
                     <template slot-scope="scope">
                       <div class="flex jc-center">
                         <el-button type="primary" size="mini" @click="showQuality(scope.row)">{{ $t('base.button.view') }}</el-button>
@@ -467,23 +1109,51 @@
                 </el-table>
               </el-row>
               <!--图览显示-->
-              <el-row class="scrollContainer hide-scroll" style="margin-top: 10px" v-if="pictureMode">
-                <div class="thumb-box" v-for="item in tableData" :key="item.iuid">
-                  <fileStatusComponends class="thumb-tabs" :scope="{ row: item }" />
-                  <div style="
+              <el-row
+                v-if="pictureMode"
+                class="scrollContainer hide-scroll"
+                style="margin-top: 10px"
+              >
+                <div
+                  v-for="item in tableData"
+                  :key="item.iuid"
+                  class="thumb-box"
+                >
+                  <fileStatusComponends
+                    class="thumb-tabs"
+                    :scope="{ row: item }"
+                  />
+                  <div
+                    style="
                       width: 100%;
                       height: 100%;
                       border-radius: 8px;
                       border: 1px solid #ebeef5;
-                    ">
+                    "
+                  >
                     <!--  @contextmenu.prevent="openMenuImage($event, item)" -->
-                    <div style="width: 100%; height: 100%; margin-bottom: 5px" class="flex ai-center jc-center">
-                      <el-image :class="{
-                        'bim-image': isBimImage(item),
-                        'thumb-image': !isBimImage(item),
-                      }" :src="item.thumbnailPath" fit="contain" @click="linkToFilePage(item)">
-                        <div slot="error" class="image-slot">
-                          <img style="width: 100%; height: 100%; border-radius: 8px" :src="defaultProjectImage" @click="linkToFilePage(item)" />
+                    <div
+                      style="width: 100%; height: 100%; margin-bottom: 5px"
+                      class="flex ai-center jc-center"
+                    >
+                      <el-image
+                        :class="{
+                          'bim-image': isBimImage(item),
+                          'thumb-image': !isBimImage(item),
+                        }"
+                        :src="item.thumbnailPath"
+                        fit="contain"
+                        @click="linkToFilePage(item)"
+                      >
+                        <div
+                          slot="error"
+                          class="image-slot"
+                        >
+                          <img
+                            style="width: 100%; height: 100%; border-radius: 8px"
+                            :src="defaultProjectImage"
+                            @click="linkToFilePage(item)"
+                          >
                         </div>
                       </el-image>
                     </div>
@@ -493,74 +1163,153 @@
                         <span style="overflow: hidden">
                           {{ item.fileName }}
                         </span>
-                        <el-tooltip class="item" effect="light" :content="`该文件被${item.checkUserName}签出`" placement="top-start">
-                          <img src="@/assets/button/suo.svg" alt="" style="margin-left: 1px; width: 12px; height: 12px" v-if="item.checkStatus === '1'" />
+                        <el-tooltip
+                          class="item"
+                          effect="light"
+                          :content="`该文件被${item.checkUserName}签出`"
+                          placement="top-start"
+                        >
+                          <img
+                            v-if="item.checkStatus === '1'"
+                            src="@/assets/button/suo.svg"
+                            alt=""
+                            style="margin-left: 1px; width: 12px; height: 12px"
+                          >
                         </el-tooltip>
                       </div>
                       <div class="vertical-button">
                         <!-- 浏览和编辑 -->
 
-                        <el-tooltip v-if="filePermissionCon.bimlookbit" effect="light" popper-class="tip-class" content="模型查看" placement="top">
+                        <el-tooltip
+                          v-if="filePermissionCon.bimlookbit"
+                          effect="light"
+                          popper-class="tip-class"
+                          content="模型查看"
+                          placement="top"
+                        >
                           <div class="one-button">
-                            <i class="el-icon-view shrink" :style="{ color: isIModelFile(item) ? '#8f9ab4' : '#CCC', }" style=" cursor: pointer; font-size: 20px; margin-top: 3px; display: block; " @click=" isIModelFile(item) && showTransferView(appList.find((item) => item.type == 'bimwindows'), item)" />
+                            <i
+                              class="el-icon-view shrink"
+                              :style="{ color: isIModelFile(item) ? '#8f9ab4' : '#CCC', }"
+                              style=" cursor: pointer; font-size: 20px; margin-top: 3px; display: block; "
+                              @click=" isIModelFile(item) && showTransferView(appList.find((item) => item.type == 'bimwindows'), item)"
+                            />
                           </div>
                         </el-tooltip>
-                        <i class="el-icon-view shrink" v-else style="
+                        <i
+                          v-else
+                          class="el-icon-view shrink"
+                          style="
                             color: #ccc;
                             cursor: not-allowed;
                             font-size: 20px;
                             margin-top: 3px;
                             display: block;
-                          " />
+                          "
+                        />
 
                         <!-- 云编辑 -->
                         <template v-if="filePermissionCon.bimeditbit">
-                          <el-tooltip v-if="hasEditableButton(item)" popper-class="tip-class" effect="light" content="模型编辑" placement="top">
-                            <el-dropdown trigger="click" placement="bottom-start">
+                          <el-tooltip
+                            v-if="hasEditableButton(item)"
+                            popper-class="tip-class"
+                            effect="light"
+                            content="模型编辑"
+                            placement="top"
+                          >
+                            <el-dropdown
+                              trigger="click"
+                              placement="bottom-start"
+                            >
                               <div class="one-button">
-                                <i class="el-icon-model-edit shrink" style="cursor: pointer" />
+                                <i
+                                  class="el-icon-model-edit shrink"
+                                  style="cursor: pointer"
+                                />
                               </div>
                               <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item v-for="i in $appList.filter(
-                                  (item) => item.isEdit == true
-                                )" v-if="$hasPermi(`projects:editing:${i.type}`)" :key="i.appName" @click.native="
-                                  isIModelFile(item) && showTransferView(i, item)
-                                  ">
+                                <el-dropdown-item
+                                  v-for="i in $appList.filter(
+                                    (item) => item.isEdit == true
+                                  )"
+                                  v-if="$hasPermi(`projects:editing:${i.type}`)"
+                                  :key="i.appName"
+                                  @click.native="
+                                    isIModelFile(item) && showTransferView(i, item)
+                                  "
+                                >
                                   <div class="flex ai-center jc-between">
                                     <div class="flex ai-center">
-                                      <img style="width: 22px" :src="i.logo" alt="" />
+                                      <img
+                                        style="width: 22px"
+                                        :src="i.logo"
+                                        alt=""
+                                      >
                                       <span style="margin: 0 15px 0 5px">{{
                                         i.appName
-                                        }}</span>
+                                      }}</span>
                                     </div>
-                                    <!-- <div>{{ i.title }}</div> -->
+                                  <!-- <div>{{ i.title }}</div> -->
                                   </div>
                                 </el-dropdown-item>
                               </el-dropdown-menu>
                             </el-dropdown>
                           </el-tooltip>
-                          <el-tooltip v-else disabled>
+                          <el-tooltip
+                            v-else
+                            disabled
+                          >
                             <div class="one-button">
-                              <i class="el-icon-model-edit shrink" style="opacity: 0.4; cursor: not-allowed" />
+                              <i
+                                class="el-icon-model-edit shrink"
+                                style="opacity: 0.4; cursor: not-allowed"
+                              />
                             </div>
                           </el-tooltip>
                         </template>
                         <!-- 导出 -->
-                        <div class="one-button" v-if="$hasPermi('projects:filefunction:derive') &&
-                          isIModelFile(item) &&
-                          item.actionType === '2'
-                        ">
-                          <el-dropdown @command="handleExport(...arguments, item)" trigger="click" placement="bottom" size="small">
-                            <el-tooltip popper-class="tip-class" effect="light" content="导出" placement="top">
-                              <img src="../../../assets/fileExport.svg" class="el-icon-tickets shrink" style="width: 20px; cursor: pointer; margin: 4px 0 0 2px" />
+                        <div
+                          v-if="$hasPermi('projects:filefunction:derive') &&
+                            isIModelFile(item) &&
+                            item.actionType === '2'
+                          "
+                          class="one-button"
+                        >
+                          <el-dropdown
+                            trigger="click"
+                            placement="bottom"
+                            size="small"
+                            @command="handleExport(...arguments, item)"
+                          >
+                            <el-tooltip
+                              popper-class="tip-class"
+                              effect="light"
+                              content="导出"
+                              placement="top"
+                            >
+                              <img
+                                src="../../../assets/fileExport.svg"
+                                class="el-icon-tickets shrink"
+                                style="width: 20px; cursor: pointer; margin: 4px 0 0 2px"
+                              >
                             </el-tooltip>
                             <el-dropdown-menu slot="dropdown">
-                              <el-dropdown-item command="dgn">dgn</el-dropdown-item>
+                              <el-dropdown-item command="dgn">
+                                dgn
+                              </el-dropdown-item>
                               <template v-if="!$isSpace">
-                                <el-dropdown-item command="obj">obj</el-dropdown-item>
-                                <el-dropdown-item command="gltf">gltf</el-dropdown-item>
-                                <el-dropdown-item command="ifc">ifc</el-dropdown-item>
-                                <el-dropdown-item command="datasmith">datasmith</el-dropdown-item>
+                                <el-dropdown-item command="obj">
+                                  obj
+                                </el-dropdown-item>
+                                <el-dropdown-item command="gltf">
+                                  gltf
+                                </el-dropdown-item>
+                                <el-dropdown-item command="ifc">
+                                  ifc
+                                </el-dropdown-item>
+                                <el-dropdown-item command="datasmith">
+                                  datasmith
+                                </el-dropdown-item>
                               </template>
                             </el-dropdown-menu>
                           </el-dropdown>
@@ -568,183 +1317,391 @@
                         <!-- <div class="one-button">
                           <operateColCom :filePermissionCon="filePermissionCon" :row="item" />
                         </div> -->
-                        <div class="one-button" v-show="!isMyDocument && isIModelFile(item)">
+                        <div
+                          v-show="!isMyDocument && isIModelFile(item)"
+                          class="one-button"
+                        >
                           <template v-if="$hasPermi('projects:filefunction:checknot')">
-                            <el-tooltip v-if="item.checkStatus === '1' && item.checkUser === user.userID
-                            " popper-class="tip-class" effect="light" content="签入" placement="top">
-                              <i class="el-icon-unlock" style="
+                            <el-tooltip
+                              v-if="item.checkStatus === '1' && item.checkUser === user.userID
+                              "
+                              popper-class="tip-class"
+                              effect="light"
+                              content="签入"
+                              placement="top"
+                            >
+                              <i
+                                class="el-icon-unlock"
+                                style="
                                   cursor: pointer;
                                   color: #dedede;
                                   font-size: 20px;
                                   opacity: 0.8;
-                                " @click="showLockView(item, '0')"></i>
+                                "
+                                @click="showLockView(item, '0')"
+                              />
                             </el-tooltip>
-                            <el-tooltip disabled v-else-if="item.checkStatus === '1' && item.checkUser !== user.userID
-                            " popper-class="tip-class" effect="light" placement="top">
-                              <i class="el-icon-unlock" style="font-size: 20px; color: #dedede; opacity: 0.4"></i>
+                            <el-tooltip
+                              v-else-if="item.checkStatus === '1' && item.checkUser !== user.userID
+                              "
+                              disabled
+                              popper-class="tip-class"
+                              effect="light"
+                              placement="top"
+                            >
+                              <i
+                                class="el-icon-unlock"
+                                style="font-size: 20px; color: #dedede; opacity: 0.4"
+                              />
                             </el-tooltip>
-                            <el-tooltip v-if="item.checkStatus === '0' || item.checkStatus === null" popper-class="tip-class" effect="light" content="签出" placement="top">
-                              <i class="el-icon-lock" style="
+                            <el-tooltip
+                              v-if="item.checkStatus === '0' || item.checkStatus === null"
+                              popper-class="tip-class"
+                              effect="light"
+                              content="签出"
+                              placement="top"
+                            >
+                              <i
+                                class="el-icon-lock"
+                                style="
                                   cursor: pointer;
                                   color: #dedede;
                                   font-size: 20px;
                                   opacity: 0.8;
-                                " @click="showLockView(item, '1')"></i>
+                                "
+                                @click="showLockView(item, '1')"
+                              />
                             </el-tooltip>
                           </template>
                         </div>
 
-                        <div class="one-button" v-show="item.fileSuffix.toLowerCase() != '' &&
-                          filePermissionCon.setupbit == true &&
-                          item.filePath != ''
-                          ">
-                          <el-tooltip effect="light" content="版本管理" placement="top" popper-class="tip-class">
-                            <i class="el-icon-version" style="cursor: pointer" @click="versionClick(item)" />
+                        <div
+                          v-show="item.fileSuffix.toLowerCase() != '' &&
+                            filePermissionCon.setupbit == true &&
+                            item.filePath != ''
+                          "
+                          class="one-button"
+                        >
+                          <el-tooltip
+                            effect="light"
+                            content="版本管理"
+                            placement="top"
+                            popper-class="tip-class"
+                          >
+                            <i
+                              class="el-icon-version"
+                              style="cursor: pointer"
+                              @click="versionClick(item)"
+                            />
                           </el-tooltip>
                         </div>
                         <div class="one-button">
-                          <el-dropdown trigger="click" placement="bottom-start">
-                            <i class="el-icon-more" style="font-size: 18px; vertical-align: middle"></i>
-                            <el-dropdown-menu slot="dropdown" v-if="item.filePath != ''">
-                              <el-dropdown-item @click.native="copyTo('move', item)" v-if="filePermissionCon.editbit == true">{{
-                                $t("projects.operation.move")
-                                }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="singleDownLoadFun(item)" v-if="item.fileSuffix.toLowerCase() != '' &&
-                                filePermissionCon.downloadbit == true
-                              ">下载源文件</el-dropdown-item>
-                              <el-dropdown-item @click.native="copyToCurrentFolder(item)" v-if="filePermissionCon.editbit == true">{{
-                                $t("projects.operation.copy")
-                                }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="copyTo('copy', item)" v-if="filePermissionCon.editbit == true">{{
-                                $t("projects.operation.copyTo")
-                                }}</el-dropdown-item>
-                              <el-dropdown-item @click.native="showfolderDialog('reset', item)" v-if="filePermissionCon.editbit == true">{{ $t("projects.operation.rename")
-                                }}</el-dropdown-item>
+                          <el-dropdown
+                            trigger="click"
+                            placement="bottom-start"
+                          >
+                            <i
+                              class="el-icon-more"
+                              style="font-size: 18px; vertical-align: middle"
+                            />
+                            <el-dropdown-menu
+                              v-if="item.filePath != ''"
+                              slot="dropdown"
+                            >
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="copyTo('move', item)"
+                              >
+                                {{
+                                  $t("projects.operation.move")
+                                }}
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="item.fileSuffix.toLowerCase() != '' &&
+                                  filePermissionCon.downloadbit == true
+                                "
+                                @click.native="singleDownLoadFun(item)"
+                              >
+                                下载源文件
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="copyToCurrentFolder(item)"
+                              >
+                                {{
+                                  $t("projects.operation.copy")
+                                }}
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="copyTo('copy', item)"
+                              >
+                                {{
+                                  $t("projects.operation.copyTo")
+                                }}
+                              </el-dropdown-item>
+                              <el-dropdown-item
+                                v-if="filePermissionCon.editbit == true"
+                                @click.native="showfolderDialog('reset', item)"
+                              >
+                                {{ $t("projects.operation.rename")
+                                }}
+                              </el-dropdown-item>
                               <!-- <el-dropdown-item @click.native="permissionSet('', item)" v-if="item.fileSuffix.toLowerCase() == '' && item.authorizebit == true">权限设置</el-dropdown-item> -->
                               <template v-if="isIModelFile(item)">
-                                <el-dropdown-item divided v-if="$hasPermi('projects:filefunction:display')" @click.native="viewBigScreen(item)">{{
-                                  $t("projects.operation.bigScreen")
-                                  }}</el-dropdown-item>
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:quality')" @click.native="showQuality(item)">{{
-                                  $t("projects.operation.quality")
-                                  }}</el-dropdown-item>
-                                <el-dropdown-item @click.native="copyAddress(item)" v-if="$hasPermi('projects:filefunction:copypath') &&
-                                  $modelFileSuffix3.concat(['.json']).indexOf(
-                                    item.fileSuffix.toLowerCase()
-                                  ) != -1
-                                ">复制实景地址</el-dropdown-item>
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:copypath') &&
-                                  isIModelFile(item) &&
-                                  user.isadministrator
-                                " @click.native="copyPath(item)">{{
-                                  $t("projects.operation.copyPath")
-                                }}</el-dropdown-item>
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:associated')" @click.native="linkModel(item)">{{
-                                  $t("projects.operation.linkDrawing")
-                                  }}</el-dropdown-item>
-                                <el-dropdown-item v-if="$hasPermi('projects:filefunction:viewdrawings')" @click.native="viewLinkModel(item)">{{
-                                  $t("projects.operation.viewDrawing")
-                                  }}</el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:display')"
+                                  divided
+                                  @click.native="viewBigScreen(item)"
+                                >
+                                  {{
+                                    $t("projects.operation.bigScreen")
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:quality')"
+                                  @click.native="showQuality(item)"
+                                >
+                                  {{
+                                    $t("projects.operation.quality")
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:copypath') &&
+                                    $modelFileSuffix3.concat(['.json']).indexOf(
+                                      item.fileSuffix.toLowerCase()
+                                    ) != -1
+                                  "
+                                  @click.native="copyAddress(item)"
+                                >
+                                  复制实景地址
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:copypath') &&
+                                    isIModelFile(item) &&
+                                    user.isadministrator
+                                  "
+                                  @click.native="copyPath(item)"
+                                >
+                                  {{
+                                    $t("projects.operation.copyPath")
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:associated')"
+                                  @click.native="linkModel(item)"
+                                >
+                                  {{
+                                    $t("projects.operation.linkDrawing")
+                                  }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                  v-if="$hasPermi('projects:filefunction:viewdrawings')"
+                                  @click.native="viewLinkModel(item)"
+                                >
+                                  {{
+                                    $t("projects.operation.viewDrawing")
+                                  }}
+                                </el-dropdown-item>
                               </template>
                               <!-- <el-dropdown-item v-if="filePermissionCon.deletebit == true && (item.checkStatus === '0' || item.checkStatus === null)" @click.native="handleDeleteFile(item)">{{ $t('base.button.delete') }}</el-dropdown-item> -->
                               <!-- ------------------------ -->
                               <template v-if="filePermissionCon.editbit">
-                                <template v-if="$modelFileSuffix3
-                                  .concat($modelFileSuffix)
-                                  .indexOf(item.fileSuffix.toLowerCase()) != -1
-                                ">
-                                  <el-dropdown-item divided @click.native="
-                                    reTranscoding(item.iuid, undefined, item)
-                                    ">{{
+                                <template
+                                  v-if="$modelFileSuffix3
+                                    .concat($modelFileSuffix)
+                                    .indexOf(item.fileSuffix.toLowerCase()) != -1
+                                  "
+                                >
+                                  <el-dropdown-item
+                                    divided
+                                    @click.native="
+                                      reTranscoding(item.iuid, undefined, item)
+                                    "
+                                  >
+                                    {{
                                       $t("projects.transcoding.transcoding")
-                                    }}</el-dropdown-item>
+                                    }}
+                                  </el-dropdown-item>
                                 </template>
                               </template>
                             </el-dropdown-menu>
-                            <el-dropdown-menu slot="dropdown" v-if="item.filePath == ''">
-                              <el-dropdown-item @click.native="downLoadOssFun(item)" v-if="item.fileSuffix.toLowerCase() != '' &&
-                                filePermissionCon.downloadbit == true
-                              ">下载文件</el-dropdown-item>
+                            <el-dropdown-menu
+                              v-if="item.filePath == ''"
+                              slot="dropdown"
+                            >
+                              <el-dropdown-item
+                                v-if="item.fileSuffix.toLowerCase() != '' &&
+                                  filePermissionCon.downloadbit == true
+                                "
+                                @click.native="downLoadOssFun(item)"
+                              >
+                                下载文件
+                              </el-dropdown-item>
                             </el-dropdown-menu>
                           </el-dropdown>
                         </div>
                       </div>
-                      <!--el-tag type="edit" size="mini" effect="light" style="margin-top: 12px" v-if="data.bidSectionNumber">{{data.bidSectionNumber}}</el-tag-->
+                    <!--el-tag type="edit" size="mini" effect="light" style="margin-top: 12px" v-if="data.bidSectionNumber">{{data.bidSectionNumber}}</el-tag-->
                     </div>
                   </div>
                 </div>
               </el-row>
             </div>
 
-            <div style="
+            <div
+              style="
                 flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
-              ">
-              <div style="flex-grow: 1; overflow: auto" v-show="isBimWorks">
-                <el-table class="bridge-table" border style="width: calc(100% - 40px); margin: 20px" :data="copyTaskList">
-                  <el-table-column show-overflow-tooltip type="index" align="center" :label="$t('base.button.index')" width="70px"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="name" align="center" :label="$t('projects.label.name')"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="briName" align="center" label="桥梁名称"></el-table-column>
-                  <el-table-column show-overflow-tooltip prop="spanExpr" align="center" label="跨径"></el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="中心桩号">
+              "
+            >
+              <div
+                v-show="isBimWorks"
+                style="flex-grow: 1; overflow: auto"
+              >
+                <el-table
+                  class="bridge-table"
+                  border
+                  style="width: calc(100% - 40px); margin: 20px"
+                  :data="copyTaskList"
+                >
+                  <el-table-column
+                    show-overflow-tooltip
+                    type="index"
+                    align="center"
+                    :label="$t('base.button.index')"
+                    width="70px"
+                  />
+                  <el-table-column
+                    show-overflow-tooltip
+                    prop="name"
+                    align="center"
+                    :label="$t('projects.label.name')"
+                  />
+                  <el-table-column
+                    show-overflow-tooltip
+                    prop="briName"
+                    align="center"
+                    label="桥梁名称"
+                  />
+                  <el-table-column
+                    show-overflow-tooltip
+                    prop="spanExpr"
+                    align="center"
+                    label="跨径"
+                  />
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="中心桩号"
+                  >
                     <template #default="{ row }">
                       <span>{{ stationHandler(row.middleStation) }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column show-overflow-tooltip prop="angle" align="center" label="斜交角度"></el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="桥台类型">
+                  <el-table-column
+                    show-overflow-tooltip
+                    prop="angle"
+                    align="center"
+                    label="斜交角度"
+                  />
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="桥台类型"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.jsondata && row.jsondata.abutType }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="主梁类型">
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="主梁类型"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.jsondata && row.jsondata.beamType }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="基础类型">
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="基础类型"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.jsondata && row.jsondata.footType }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="材料类型">
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="材料类型"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.jsondata && row.jsondata.materialType }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="桥墩类型">
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="桥墩类型"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.jsondata && row.jsondata.pierType }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column show-overflow-tooltip align="center" label="结构类型">
+                  <el-table-column
+                    show-overflow-tooltip
+                    align="center"
+                    label="结构类型"
+                  >
                     <template #default="{ row }">
                       <span>{{ row.jsondata && row.jsondata.structType }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" label="指派给">
+                  <el-table-column
+                    align="center"
+                    label="指派给"
+                  >
                     <template slot-scope="{ row }">
                       <span>{{
                         peopleList.find((item) => item.userID === row.userID) &&
-                        peopleList.find((item) => item.userID === row.userID).userName
-                        }}</span>
+                          peopleList.find((item) => item.userID === row.userID).userName
+                      }}</span>
                     </template>
                   </el-table-column>
                 </el-table>
-                <div style="
+                <div
+                  style="
                     height: 320px;
                     display: flex;
                     align-items: center;
                     flex-shrink: 0;
                     padding: 0 20px;
-                  ">
-                  <canvas class="canvas" @dblclick="onDoubleClick" @mousemove="onMouseMove" @mouseleave="onMouseLeave" @mousedown="onMouseDown" @mouseup="onMouseUp" @wheel="onWheel" style="width: 100%; height: 100%"></canvas>
+                  "
+                >
+                  <canvas
+                    class="canvas"
+                    style="width: 100%; height: 100%"
+                    @dblclick="onDoubleClick"
+                    @mousemove="onMouseMove"
+                    @mouseleave="onMouseLeave"
+                    @mousedown="onMouseDown"
+                    @mouseup="onMouseUp"
+                    @wheel="onWheel"
+                  />
                 </div>
               </div>
 
-              <pagination style="flex-shrink: 0" :pageTotal="total" :pageIndex="pageIndex" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange" />
+              <pagination
+                style="flex-shrink: 0"
+                :page-total="total"
+                :page-index="pageIndex"
+                @handleCurrentChange="paginationCurrentChange"
+                @handleSizeChange="handleSizeChange"
+              />
             </div>
           </div>
         </div>
@@ -756,227 +1713,545 @@
     <el-container v-if="myDocumentKind == 1">
       <myShare style="width: 100%" />
     </el-container>
-    <ul v-show="clickMenuvisibleImage" :style="{ left: left + 'px', top: top + 'px', position: 'fixed' }" class="contextmenu">
+    <ul
+      v-show="clickMenuvisibleImage"
+      :style="{ left: left + 'px', top: top + 'px', position: 'fixed' }"
+      class="contextmenu"
+    >
       <!-- 浏览和编辑 -->
-      <li style="color: #8f9ab4" class="el-icon-view" v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 ||
-        $ibimFileSuffix.indexOf(rightClickItem.fileSuffix) != -1
-      " @click="
-        showTransferView(
-          $appList.find((item) => item.type == 'bimwindows'),
-          rightClickItem
-        )
-        "></li>
-      <li style="color: #8f9ab4" class="iconfont icon-zhongmingming" v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 ||
-        $ibimFileSuffix.indexOf(rightClickItem.fileSuffix) != -1
-      " @click="
-        showTransferView(
-          $appList.find((item) => item.type == 'cscmodeler'),
-          rightClickItem
-        )
-        "></li>
+      <li
+        v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 ||
+          $ibimFileSuffix.indexOf(rightClickItem.fileSuffix) != -1
+        "
+        style="color: #8f9ab4"
+        class="el-icon-view"
+        @click="
+          showTransferView(
+            $appList.find((item) => item.type == 'bimwindows'),
+            rightClickItem
+          )
+        "
+      />
+      <li
+        v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 ||
+          $ibimFileSuffix.indexOf(rightClickItem.fileSuffix) != -1
+        "
+        style="color: #8f9ab4"
+        class="iconfont icon-zhongmingming"
+        @click="
+          showTransferView(
+            $appList.find((item) => item.type == 'cscmodeler'),
+            rightClickItem
+          )
+        "
+      />
       <!-- 分享和收藏 -->
       <li>
-        <operateColCom class="tableOpeColMargin" :row="rightClickItem" />
+        <operateColCom
+          class="tableOpeColMargin"
+          :row="rightClickItem"
+        />
       </li>
       <!-- 压缩文件解压 -->
-      <li style="color: #8f9ab4" class="el-icon-folder-opened" v-if="rightClickItem.fileSuffix === '.zip' || rightClickItem.fileSuffix === '.rar'
-      " @click="decompression(rightClickItem)"></li>
+      <li
+        v-if="rightClickItem.fileSuffix === '.zip' || rightClickItem.fileSuffix === '.rar'
+        "
+        style="color: #8f9ab4"
+        class="el-icon-folder-opened"
+        @click="decompression(rightClickItem)"
+      />
       <!-- 重新转码 -->
-      <li style="color: #8f9ab4" class="el-icon-convert" v-if="((rightClickItem.statusType === '3' || rightClickItem.statusType === '4') &&
-        $modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 &&
-        rightClickItem.actionType === '2') ||
-        ($reTransCodeVideo.indexOf(rightClickItem.fileSuffix) !== -1 &&
-          rightClickItem.statusType !== '3')
-      " @click="reTranscoding(rightClickItem.iuid, undefined, rightClickItem)"></li>
+      <li
+        v-if="((rightClickItem.statusType === '3' || rightClickItem.statusType === '4') &&
+          $modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 &&
+          rightClickItem.actionType === '2') ||
+          ($reTransCodeVideo.indexOf(rightClickItem.fileSuffix) !== -1 &&
+            rightClickItem.statusType !== '3')
+        "
+        style="color: #8f9ab4"
+        class="el-icon-convert"
+        @click="reTranscoding(rightClickItem.iuid, undefined, rightClickItem)"
+      />
       <!-- 更多 -->
       <li>
         <el-dropdown>
-          <i class="iconfont icon-more" style="color: #8f9ab4"></i>
+          <i
+            class="iconfont icon-more"
+            style="color: #8f9ab4"
+          />
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="moveCopy('move', rightClickItem)" v-if="filePermissionCon.editbit == true">移动到</el-dropdown-item>
-            <el-dropdown-item @click.native="moveCopy('copy', rightClickItem)" v-if="filePermissionCon.editbit == true">{{
-              $t("projects.operation.copyTo") }}</el-dropdown-item>
-            <el-dropdown-item @click.native="showfolderDialog('reset', rightClickItem)" v-if="filePermissionCon.editbit == true">{{ $t("projects.operation.rename")
-              }}</el-dropdown-item>
-            <el-dropdown-item @click.native="versionClick(rightClickItem)" style="text-align: center" v-if="rightClickItem.fileSuffix != '' && filePermissionCon.setupbit == true">版本</el-dropdown-item>
+            <el-dropdown-item
+              v-if="filePermissionCon.editbit == true"
+              @click.native="moveCopy('move', rightClickItem)"
+            >
+              移动到
+            </el-dropdown-item>
+            <el-dropdown-item
+              v-if="filePermissionCon.editbit == true"
+              @click.native="moveCopy('copy', rightClickItem)"
+            >
+              {{
+                $t("projects.operation.copyTo") }}
+            </el-dropdown-item>
+            <el-dropdown-item
+              v-if="filePermissionCon.editbit == true"
+              @click.native="showfolderDialog('reset', rightClickItem)"
+            >
+              {{ $t("projects.operation.rename")
+              }}
+            </el-dropdown-item>
+            <el-dropdown-item
+              v-if="rightClickItem.fileSuffix != '' && filePermissionCon.setupbit == true"
+              style="text-align: center"
+              @click.native="versionClick(rightClickItem)"
+            >
+              版本
+            </el-dropdown-item>
             <!-- <el-dropdown-item @click.native="permissionSet('', rightClickItem)" v-if="rightClickItem.fileSuffix == '' && rightClickItem.authorizebit == true">权限设置</el-dropdown-item> -->
-            <template v-if="rightClickItem.fileSuffix &&
-              rightClickItem.fileSuffix.toLowerCase() === '.json'
-            ">
-              <el-dropdown-item @click.native="copyLink(rightClickItem)">复制链接</el-dropdown-item>
+            <template
+              v-if="rightClickItem.fileSuffix &&
+                rightClickItem.fileSuffix.toLowerCase() === '.json'
+              "
+            >
+              <el-dropdown-item @click.native="copyLink(rightClickItem)">
+                复制链接
+              </el-dropdown-item>
             </template>
           </el-dropdown-menu>
         </el-dropdown>
       </li>
       <!-- 转码工具 -->
-      <li v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 &&
-        rightClickItem.actionType === '2' &&
-        rightClickItem.fileSuffix == '.dgn'
-      ">
+      <li
+        v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 &&
+          rightClickItem.actionType === '2' &&
+          rightClickItem.fileSuffix == '.dgn'
+        "
+      >
         <el-dropdown @command="handleCommand($event, rightClickItem)">
-          <i class="el-icon-convert" style="color: #8f9ab4"></i>
-          <el-dropdown-menu slot="dropdown" v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 &&
-            rightClickItem.actionType === '2' &&
-            rightClickItem.fileSuffix == '.dgn'
-          ">
-            <el-dropdown-item v-for="(item, index) in Conversion" :key="index" :command="item.code + '/' + rightClickItem.iuid">{{ item.name }}</el-dropdown-item>
+          <i
+            class="el-icon-convert"
+            style="color: #8f9ab4"
+          />
+          <el-dropdown-menu
+            v-if="$modelFileSuffix.indexOf(rightClickItem.fileSuffix) != -1 &&
+              rightClickItem.actionType === '2' &&
+              rightClickItem.fileSuffix == '.dgn'
+            "
+            slot="dropdown"
+          >
+            <el-dropdown-item
+              v-for="(item, index) in Conversion"
+              :key="index"
+              :command="item.code + '/' + rightClickItem.iuid"
+            >
+              {{ item.name }}
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </li>
       <!-- 文件签入签出 -->
-      <li style="color: #8f9ab4" class="el-icon-unlock" v-if="rightClickItem.checkStatus === '1' &&
-        rightClickItem.checkUser === (user && user.userID)
-      " @click="showLockView(rightClickItem, '0')"></li>
-      <li style="color: #8f9ab4" class="el-icon-lock" v-if="rightClickItem.checkStatus === '0' || rightClickItem.checkStatus === null" @click="showLockView(rightClickItem, '1')"></li>
+      <li
+        v-if="rightClickItem.checkStatus === '1' &&
+          rightClickItem.checkUser === (user && user.userID)
+        "
+        style="color: #8f9ab4"
+        class="el-icon-unlock"
+        @click="showLockView(rightClickItem, '0')"
+      />
+      <li
+        v-if="rightClickItem.checkStatus === '0' || rightClickItem.checkStatus === null"
+        style="color: #8f9ab4"
+        class="el-icon-lock"
+        @click="showLockView(rightClickItem, '1')"
+      />
     </ul>
-    <ul v-show="clickMenuvisible" :style="{ left: left + 'px', top: top + 'px', position: 'fixed' }" class="contextmenu">
-      <li v-if="filePermissionCon.editbit" @click="handleLinkEdit(rightClickItem)">
+    <ul
+      v-show="clickMenuvisible"
+      :style="{ left: left + 'px', top: top + 'px', position: 'fixed' }"
+      class="contextmenu"
+    >
+      <li
+        v-if="filePermissionCon.editbit"
+        @click="handleLinkEdit(rightClickItem)"
+      >
         {{ $t("base.button.edit") }}
       </li>
-      <li v-if="filePermissionCon.deletebit" @click="handleOpeDelete(rightClickItem)">
+      <li
+        v-if="filePermissionCon.deletebit"
+        @click="handleOpeDelete(rightClickItem)"
+      >
         {{ $t("base.button.delete") }}
       </li>
-      <li v-if="filePermissionCon.editbit" @click="handleMoveUpDown('Above', rightClickItem)">
+      <li
+        v-if="filePermissionCon.editbit"
+        @click="handleMoveUpDown('Above', rightClickItem)"
+      >
         上移
       </li>
-      <li v-if="filePermissionCon.editbit" @click="handleMoveUpDown('Below', rightClickItem)">
+      <li
+        v-if="filePermissionCon.editbit"
+        @click="handleMoveUpDown('Below', rightClickItem)"
+      >
         下移
       </li>
-      <!-- <li v-if="rightClickItem.authorizebit" @click="permissionSet('leftFile', rightClickItem)">权限设置</li> -->
+    <!-- <li v-if="rightClickItem.authorizebit" @click="permissionSet('leftFile', rightClickItem)">权限设置</li> -->
     </ul>
-    <chunkUploader ref="chunkUploader" @reloadData="loadData('clearSelect')" :folderIuid="folderIuid" :projectLeftMenuActiveIuid="currentIuid" isProject />
+    <chunkUploader
+      ref="chunkUploader"
+      :folder-iuid="folderIuid"
+      :project-left-menu-active-iuid="currentIuid"
+      is-project
+      @reloadData="loadData('clearSelect')"
+    />
     <!-- 左侧文件夹删除 -->
-    <el-dialog v-dialogDrag :close-on-click-modal="false" :modal="true" :visible.sync="folderDeleteDialogVisble" width="400px" style="text-align: center">
-      <div slot="title" class="dialog-title">
-        <i class="el-icon-warning" style="color: #ff9900"></i>
+    <el-dialog
+      v-dialogDrag
+      :close-on-click-modal="false"
+      :modal="true"
+      :visible.sync="folderDeleteDialogVisble"
+      width="400px"
+      style="text-align: center"
+    >
+      <div
+        slot="title"
+        class="dialog-title"
+      >
+        <i
+          class="el-icon-warning"
+          style="color: #ff9900"
+        />
         <span class="title-text">警告</span>
       </div>
       <div>你确定要删除此目录及其下的所有文件嘛?</div>
       <div>(此操作不可恢复)</div>
-      <div slot="footer" class="dialog-footer" style="padding-top: 22px">
-        <el-button @click="folderDeleteDialogVisble = false" style="width: 80px; margin-left: 5px">{{
-          $t("base.button.cancel") }}</el-button>
-        <el-button type="primary" @click="sureDeleteFolder" style="width: 88px">确认</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+        style="padding-top: 22px"
+      >
+        <el-button
+          style="width: 80px; margin-left: 5px"
+          @click="folderDeleteDialogVisble = false"
+        >
+          {{
+            $t("base.button.cancel") }}
+        </el-button>
+        <el-button
+          type="primary"
+          style="width: 88px"
+          @click="sureDeleteFolder"
+        >
+          确认
+        </el-button>
       </div>
     </el-dialog>
     <!-- 左侧文件夹新建/编辑 -->
-    <el-dialog v-dialogDrag :close-on-click-modal="false" :modal="true" :title="addEditType === 'add' ? '新建分组' : '编辑分组'" :visible.sync="addEditDialogVisble" width="400px">
-      <el-form ref="form" :model="fileForm" label-width="80px">
+    <el-dialog
+      v-dialogDrag
+      :close-on-click-modal="false"
+      :modal="true"
+      :title="addEditType === 'add' ? '新建分组' : '编辑分组'"
+      :visible.sync="addEditDialogVisble"
+      width="400px"
+    >
+      <el-form
+        ref="form"
+        :model="fileForm"
+        label-width="80px"
+      >
         <el-form-item class="left">
-          <el-input placeholder="请输入分组名称" v-model="fileForm.name"></el-input>
+          <el-input
+            v-model="fileForm.name"
+            placeholder="请输入分组名称"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer" style="margin-top: -10px">
-        <el-button size="small" @click="addEditDialogVisble = false" style="width: 80px; margin-left: 5px">{{
-          $t("base.button.cancel") }}</el-button>
-        <el-button size="small" type="primary" @click="sureAddEditFolder" style="width: 88px">确认</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+        style="margin-top: -10px"
+      >
+        <el-button
+          size="small"
+          style="width: 80px; margin-left: 5px"
+          @click="addEditDialogVisble = false"
+        >
+          {{
+            $t("base.button.cancel") }}
+        </el-button>
+        <el-button
+          size="small"
+          type="primary"
+          style="width: 88px"
+          @click="sureAddEditFolder"
+        >
+          确认
+        </el-button>
       </div>
     </el-dialog>
-    <el-dialog v-dialogDrag :close-on-click-modal="false" :modal="true" :title="folderDialogOpeType === 'reset'
-      ? '重命名'
-      : folderDialogOpeType === 'add'
-        ? '新建文件夹'
-        : '新建文件'
-      " :visible.sync="folderDialogVisble" width="400px">
-      <el-form ref="form" :model="folderForm" label-width="80px" @submit.native.prevent>
+    <el-dialog
+      v-dialogDrag
+      :close-on-click-modal="false"
+      :modal="true"
+      :title="folderDialogOpeType === 'reset'
+        ? '重命名'
+        : folderDialogOpeType === 'add'
+          ? '新建文件夹'
+          : '新建文件'
+      "
+      :visible.sync="folderDialogVisble"
+      width="400px"
+    >
+      <el-form
+        ref="form"
+        :model="folderForm"
+        label-width="80px"
+        @submit.native.prevent
+      >
         <el-form-item label="名称：">
-          <el-input ref="folderNameInput" v-model="folderForm.name" @keyup.enter.native="onSubmitFolderInfo"></el-input>
+          <el-input
+            ref="folderNameInput"
+            v-model="folderForm.name"
+            @keyup.enter.native="onSubmitFolderInfo"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onSubmitFolderInfo" style="width: 88px">确认</el-button>
-        <el-button @click="folderDialogVisble = false" style="width: 80px; margin-left: 5px">{{ $t("base.button.cancel")
-          }}</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          style="width: 88px"
+          @click="onSubmitFolderInfo"
+        >
+          确认
+        </el-button>
+        <el-button
+          style="width: 80px; margin-left: 5px"
+          @click="folderDialogVisble = false"
+        >
+          {{ $t("base.button.cancel")
+          }}
+        </el-button>
       </div>
     </el-dialog>
-    <versionViewComponeds :centerDialogVisible.sync="versionDialogVisible" :rowData="versionData" :selectedData="selectArray" @queryADDVersion="queryADDVersionPost" @sureVersion="loadData">
-    </versionViewComponeds>
-    <bidSectionViewComponeds :bidDialogVisible.sync="bidSectionDialogVisible" :rowData="bidSectionData" @sureBidSection="loadData('', false)" @handleSetMainfile="handleSetMainfile">
-    </bidSectionViewComponeds>
-    <applyWorkflowViewComponeds :dialogVisible.sync="applyWorkflowDialogVisible" :rowData="tableSelection" :currentProject="projectId" @refresh="loadData('clearSelect', false)" @reload="loadWorkflow">
-    </applyWorkflowViewComponeds>
-    <perssionComponends @onFolderSelectChange="onFolderSelectChange" :bridgeMasterFolders="bridgeMasterFolders" :isBridgeMaster="projectInfo.projectTypeName === '桥梁大师项目'" :permissionDialogVisble.sync="setDialogVisible" :fileData.sync="perrsionData" :fileIUID="viewFileIuID" @choseItem="filterData" @surePermission="surePermissionPost" :operationType="fileOperationType" :inheritbit.sync="inheritbit">
-    </perssionComponends>
+    <versionViewComponeds
+      :center-dialog-visible.sync="versionDialogVisible"
+      :row-data="versionData"
+      :selected-data="selectArray"
+      @queryADDVersion="queryADDVersionPost"
+      @sureVersion="loadData"
+    />
+    <bidSectionViewComponeds
+      :bid-dialog-visible.sync="bidSectionDialogVisible"
+      :row-data="bidSectionData"
+      @sureBidSection="loadData('', false)"
+      @handleSetMainfile="handleSetMainfile"
+    />
+    <applyWorkflowViewComponeds
+      :dialog-visible.sync="applyWorkflowDialogVisible"
+      :row-data="tableSelection"
+      :current-project="projectId"
+      @refresh="loadData('clearSelect', false)"
+      @reload="loadWorkflow"
+    />
+    <perssionComponends
+      :bridge-master-folders="bridgeMasterFolders"
+      :is-bridge-master="projectInfo.projectTypeName === '桥梁大师项目'"
+      :permission-dialog-visble.sync="setDialogVisible"
+      :file-data.sync="perrsionData"
+      :file-i-u-i-d="viewFileIuID"
+      :operation-type="fileOperationType"
+      :inheritbit.sync="inheritbit"
+      @onFolderSelectChange="onFolderSelectChange"
+      @choseItem="filterData"
+@surePermission="surePermissionPost"
+    />
     <!-- 移动复制 -->
-    <moveCopyComponends :moveCopyDialogVisble.sync="moveCopyDialogVisible" :moveCopyType="moveCopyType" :rowData="rowData" @shiftData="shiftData" :isResources="zskBoolean"></moveCopyComponends>
-    <partOfDeleteSuccess :containerVisible.sync="pdsVisible" :deleteFilelist="deleteFilelist" :successcount="successcount" :failurecount="failurecount" />
-    <delelteVersionFilesRemindDialog :dialogVisibleProp.sync="deleteVersionFilesDialogVisible" :versionFiles="deleteVersionFiles" @versionFilesCallBack="deleteVersionFilesCallBack" />
+    <moveCopyComponends
+      :move-copy-dialog-visble.sync="moveCopyDialogVisible"
+      :move-copy-type="moveCopyType"
+      :row-data="rowData"
+      :is-resources="zskBoolean"
+      @shiftData="shiftData"
+    />
+    <partOfDeleteSuccess
+      :container-visible.sync="pdsVisible"
+      :delete-filelist="deleteFilelist"
+      :successcount="successcount"
+      :failurecount="failurecount"
+    />
+    <delelteVersionFilesRemindDialog
+      :dialog-visible-prop.sync="deleteVersionFilesDialogVisible"
+      :version-files="deleteVersionFiles"
+      @versionFilesCallBack="deleteVersionFilesCallBack"
+    />
 
     <!-- 文件检查 -->
     <modelFileCheckDialog ref="modelFileCheckRef" />
 
-    <el-dialog :close-on-click-modal="false" title="工程设置" :visible.sync="projectSettingDialog" width="500px">
+    <el-dialog
+      :close-on-click-modal="false"
+      title="工程设置"
+      :visible.sync="projectSettingDialog"
+      width="500px"
+    >
       <el-form label-width="120px">
         <el-form-item label="起点桩号：">
-          <el-input type="number" placeholder="请输入起点桩号" v-model="projectSettingModel.starting" />
+          <el-input
+            v-model="projectSettingModel.starting"
+            type="number"
+            placeholder="请输入起点桩号"
+          />
         </el-form-item>
 
         <el-form-item label="终点桩号：">
-          <el-input type="number" placeholder="请输入终点桩号" v-model="projectSettingModel.destination" />
+          <el-input
+            v-model="projectSettingModel.destination"
+            type="number"
+            placeholder="请输入终点桩号"
+          />
         </el-form-item>
 
         <el-form-item label="桩号前缀：">
-          <el-input placeholder="请输入桩号前缀" v-model="projectSettingModel.prefix" />
+          <el-input
+            v-model="projectSettingModel.prefix"
+            placeholder="请输入桩号前缀"
+          />
         </el-form-item>
 
         <el-form-item label="荷载等级：">
-          <el-select placeholder="请选择荷载等级" v-model="projectSettingModel.grade" style="width: 100%">
-            <el-option value="公路-Ⅰ级">公路-Ⅰ级</el-option>
-            <el-option value="公路-Ⅱ级">公路-Ⅱ级</el-option>
+          <el-select
+            v-model="projectSettingModel.grade"
+            placeholder="请选择荷载等级"
+            style="width: 100%"
+          >
+            <el-option value="公路-Ⅰ级">
+              公路-Ⅰ级
+            </el-option>
+            <el-option value="公路-Ⅱ级">
+              公路-Ⅱ级
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="公路技术等级：">
-          <el-select placeholder="请选择公路技术等级" v-model="projectSettingModel.technologygrade" style="width: 100%">
-            <el-option value="高速公路120km/h">高速公路120km/h</el-option>
-            <el-option value="高速公路100km/h">高速公路100km/h</el-option>
-            <el-option value="高速公路80km/h">高速公路80km/h</el-option>
-            <el-option value="一级公路100km/h">一级公路100km/h</el-option>
-            <el-option value="一级公路80km/h">一级公路80km/h</el-option>
-            <el-option value="一级公路60km/h">一级公路60km/h</el-option>
-            <el-option value="二级公路80km/h">二级公路80km/h</el-option>
-            <el-option value="二级公路60km/h">二级公路60km/h</el-option>
-            <el-option value="三级公路40km/h">三级公路40km/h</el-option>
-            <el-option value="三级公路30km/h">三级公路30km/h</el-option>
-            <el-option value="四级公路30km/h">四级公路30km/h</el-option>
-            <el-option value="四级公路20km/h">四级公路20km/h</el-option>
+          <el-select
+            v-model="projectSettingModel.technologygrade"
+            placeholder="请选择公路技术等级"
+            style="width: 100%"
+          >
+            <el-option value="高速公路120km/h">
+              高速公路120km/h
+            </el-option>
+            <el-option value="高速公路100km/h">
+              高速公路100km/h
+            </el-option>
+            <el-option value="高速公路80km/h">
+              高速公路80km/h
+            </el-option>
+            <el-option value="一级公路100km/h">
+              一级公路100km/h
+            </el-option>
+            <el-option value="一级公路80km/h">
+              一级公路80km/h
+            </el-option>
+            <el-option value="一级公路60km/h">
+              一级公路60km/h
+            </el-option>
+            <el-option value="二级公路80km/h">
+              二级公路80km/h
+            </el-option>
+            <el-option value="二级公路60km/h">
+              二级公路60km/h
+            </el-option>
+            <el-option value="三级公路40km/h">
+              三级公路40km/h
+            </el-option>
+            <el-option value="三级公路30km/h">
+              三级公路30km/h
+            </el-option>
+            <el-option value="四级公路30km/h">
+              四级公路30km/h
+            </el-option>
+            <el-option value="四级公路20km/h">
+              四级公路20km/h
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="车道数：">
-          <el-select placeholder="请选择车道数" v-model="projectSettingModel.laneamount" style="width: 100%">
-            <el-option :value="1">1</el-option>
-            <el-option :value="2">2</el-option>
-            <el-option :value="3">3</el-option>
-            <el-option :value="4">4</el-option>
-            <el-option :value="5">5</el-option>
-            <el-option :value="6">6</el-option>
+          <el-select
+            v-model="projectSettingModel.laneamount"
+            placeholder="请选择车道数"
+            style="width: 100%"
+          >
+            <el-option :value="1">
+              1
+            </el-option>
+            <el-option :value="2">
+              2
+            </el-option>
+            <el-option :value="3">
+              3
+            </el-option>
+            <el-option :value="4">
+              4
+            </el-option>
+            <el-option :value="5">
+              5
+            </el-option>
+            <el-option :value="6">
+              6
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="项目净宽：">
-          <el-input type="number" placeholder="请输入项目净宽" v-model="projectSettingModel.wide" />
+          <el-input
+            v-model="projectSettingModel.wide"
+            type="number"
+            placeholder="请输入项目净宽"
+          />
         </el-form-item>
 
         <el-form-item>
           <el-radio-group v-model="projectSettingModel.issingle">
-            <el-radio :label="0">单幅</el-radio>
-            <el-radio :label="1">双幅</el-radio>
+            <el-radio :label="0">
+              单幅
+            </el-radio>
+            <el-radio :label="1">
+              双幅
+            </el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
 
       <div style="display: flex; justify-content: flex-end">
-        <el-button @click="projectSettingDialog = false">{{
-          $t("base.button.cancel")
-          }}</el-button>
-        <el-button type="primary" @click="projectSettingSubmit">{{
-          $t("base.button.confirm")
-          }}</el-button>
+        <el-button @click="projectSettingDialog = false">
+          {{
+            $t("base.button.cancel")
+          }}
+        </el-button>
+        <el-button
+          type="primary"
+          @click="projectSettingSubmit"
+        >
+          {{
+            $t("base.button.confirm")
+          }}
+        </el-button>
       </div>
     </el-dialog>
 
-    <el-dialog class="task-assignment-dialog" :close-on-click-modal="false" title="任务分配" :visible.sync="taskAllocationDialog" width="1450px">
+    <el-dialog
+      class="task-assignment-dialog"
+      :close-on-click-modal="false"
+      title="任务分配"
+      :visible.sync="taskAllocationDialog"
+      width="1450px"
+    >
       <div class="content">
         <!--<div class="principal" style="display: flex; align-items: center">-->
         <!--  <span>项目负责人：</span>-->
@@ -984,68 +2259,146 @@
         <!--</div>-->
 
         <el-table :data="taskList">
-          <el-table-column type="index" :label="$t('base.button.index')"></el-table-column>
-          <el-table-column prop="name" align="center" :label="$t('projects.label.name')"></el-table-column>
-          <el-table-column prop="briName" align="center" label="桥梁名称"></el-table-column>
-          <el-table-column prop="spanExpr" align="center" label="跨径"></el-table-column>
-          <el-table-column align="center" label="中心桩号">
+          <el-table-column
+            type="index"
+            :label="$t('base.button.index')"
+          />
+          <el-table-column
+            prop="name"
+            align="center"
+            :label="$t('projects.label.name')"
+          />
+          <el-table-column
+            prop="briName"
+            align="center"
+            label="桥梁名称"
+          />
+          <el-table-column
+            prop="spanExpr"
+            align="center"
+            label="跨径"
+          />
+          <el-table-column
+            align="center"
+            label="中心桩号"
+          >
             <template #default="{ row }">
               <span>{{ stationHandler(row.middleStation) }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="angle" align="center" label="斜交角度"></el-table-column>
-          <el-table-column align="center" label="桥台类型">
+          <el-table-column
+            prop="angle"
+            align="center"
+            label="斜交角度"
+          />
+          <el-table-column
+            align="center"
+            label="桥台类型"
+          >
             <template #default="{ row }">
               <span>{{ row.jsondata && row.jsondata.abutType }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="主梁类型">
+          <el-table-column
+            align="center"
+            label="主梁类型"
+          >
             <template #default="{ row }">
               <span>{{ row.jsondata && row.jsondata.beamType }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="基础类型">
+          <el-table-column
+            align="center"
+            label="基础类型"
+          >
             <template #default="{ row }">
               <span>{{ row.jsondata && row.jsondata.footType }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="材料类型">
+          <el-table-column
+            align="center"
+            label="材料类型"
+          >
             <template #default="{ row }">
               <span>{{ row.jsondata && row.jsondata.materialType }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="桥墩类型">
+          <el-table-column
+            align="center"
+            label="桥墩类型"
+          >
             <template #default="{ row }">
               <span>{{ row.jsondata && row.jsondata.pierType }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="结构类型">
+          <el-table-column
+            align="center"
+            label="结构类型"
+          >
             <template #default="{ row }">
               <span>{{ row.jsondata && row.jsondata.structType }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="指派给">
+          <el-table-column
+            align="center"
+            label="指派给"
+          >
             <template slot-scope="{ row }">
               <el-select v-model="row.userID">
-                <el-option v-for="item of peopleList" :value="item.userID" :key="item.userID" :label="item.userName"></el-option>
+                <el-option
+                  v-for="item of peopleList"
+                  :key="item.userID"
+                  :value="item.userID"
+                  :label="item.userName"
+                />
               </el-select>
             </template>
           </el-table-column>
         </el-table>
 
-        <!--<canvas class="canvas" style="width: 100%"></canvas>-->
+      <!--<canvas class="canvas" style="width: 100%"></canvas>-->
       </div>
 
       <div style="display: flex; justify-content: flex-end; margin-top: 15px">
-        <el-button @click="taskAllocationDialog = false">{{ $t("base.button.cancel") }}</el-button>
-        <el-button type="primary" @click="taskAllocationSubmit">{{ $t("base.button.confirm") }}</el-button>
+        <el-button @click="taskAllocationDialog = false">
+          {{ $t("base.button.cancel") }}
+        </el-button>
+        <el-button
+          type="primary"
+          @click="taskAllocationSubmit"
+        >
+          {{ $t("base.button.confirm") }}
+        </el-button>
       </div>
     </el-dialog>
-    <downloadBtn :rows="rowData" style="display: none" ref="download" :fullPath="getFolderFullPath" @clearSelect="clearSelect" @clearLoading='clearLoading' :downloadDialogVisble="downloadDialogVisble" />
+    <downloadBtn
+      ref="download"
+      :rows="rowData"
+      style="display: none"
+      :full-path="getFolderFullPath"
+      :download-dialog-visble="downloadDialogVisble"
+      @clearSelect="clearSelect"
+      @clearLoading="clearLoading"
+    />
 
-    <linkModelDialog v-if="linkModelDialog" :visible.sync="linkModelDialog" :tableSelection="rowData" :projectId="projectId" :parentExpand="parentExpand" :currentIuid="currentIuid" :folderLists="folderLists" :filePermissionCon="filePermissionCon" :sidebarMenuList.sync="sidebarMenuList" :treeEmpty="treeEmpty" :treeOpenNodes="treeOpenNodes" />
+    <linkModelDialog
+      v-if="linkModelDialog"
+      :visible.sync="linkModelDialog"
+      :table-selection="rowData"
+      :project-id="projectId"
+      :parent-expand="parentExpand"
+      :current-iuid="currentIuid"
+      :folder-lists="folderLists"
+      :file-permission-con="filePermissionCon"
+      :sidebar-menu-list.sync="sidebarMenuList"
+      :tree-empty="treeEmpty"
+:tree-open-nodes="treeOpenNodes"
+    />
 
-    <div v-if="showLinkModel" class="link-model-dialog" style="
+    <div
+      v-if="showLinkModel"
+      class="link-model-dialog"
+      style="
         position: fixed;
         display: flex;
         align-items: center;
@@ -1054,27 +2407,41 @@
         left: 281px;
         width: calc(100vw - 281px);
         height: calc(100vh - 49px);
-      ">
-      <iframe style="width: 50%; height: 100%" :src="modelUrl(sourceFileRow)" @load="sendFileData('imodelIframe1', sourceFileRow)" ref="imodelIframe1" frameborder="0"></iframe>
-      <iframe style="width: 50%; height: 100%" :src="modelUrl(dwgFileRow)" @load="sendFileData('imodelIframe2', dwgFileRow)" ref="imodelIframe2" frameborder="0"></iframe>
+      "
+    >
+      <iframe
+        ref="imodelIframe1"
+        style="width: 50%; height: 100%"
+        :src="modelUrl(sourceFileRow)"
+        frameborder="0"
+        @load="sendFileData('imodelIframe1', sourceFileRow)"
+      />
+      <iframe
+        ref="imodelIframe2"
+        style="width: 50%; height: 100%"
+        :src="modelUrl(dwgFileRow)"
+        frameborder="0"
+        @load="sendFileData('imodelIframe2', dwgFileRow)"
+      />
     </div>
 
-  <applyWorkflowShare
+    <applyWorkflowShare
       v-if="applyWorkflowDialogVisible1"
-      :dialogVisible.sync="applyWorkflowDialogVisible1"
-      :rowData="currentRow"
+      :dialog-visible.sync="applyWorkflowDialogVisible1"
+      :row-data="currentRow"
       :isdownload="isdownload"
-      :currentProject="projectId"
-  />
+      :current-project="projectId"
+    />
 
-  <applyWorkflowShare2
+    <applyWorkflowShare2
       v-if="applyWorkflowDialogVisible2"
-      :dialogVisible.sync="applyWorkflowDialogVisible2"
-      :rowData="tableSelection"
+      :dialog-visible.sync="applyWorkflowDialogVisible2"
+      :row-data="tableSelection"
       :isdownload="isdownload"
-      :currentProject="projectId"
-  />
-  </el-container></template>
+      :current-project="projectId"
+    />
+  </el-container>
+</template>
 <script>
 import projectAllApi from "@/api/project/all/index";
 import { mapGetters } from "vuex";
@@ -1212,7 +2579,7 @@ export default {
 
     modelUrl() {
       return (row) =>
-        process.env.GisIframeOrigin +
+        process.env.VUE_APP_GisIframeOrigin +
         "/?" +
         encodeURIComponent(row.turnPath || row.filePath) +
         "?forViewBim";
@@ -1362,7 +2729,7 @@ export default {
       total: 0,
       pageIndex: 1,
       pageSize: 15,
-      uploadUrl: process.env.BASE_API + "/api/ProjectManagement/FileuploadAdd",
+      uploadUrl: process.env.VUE_APP_BASE_API + "/api/ProjectManagement/FileuploadAdd",
       uploadLoading: false,
       folderDialogVisble: false,
       folderForm: {
@@ -1437,7 +2804,7 @@ export default {
       retryCount: 0,
       lastRetryTime: Date.now(),
       hoverBtn: undefined,
-      baseUrl: process.env.BASE_API,
+      baseUrl: process.env.VUE_APP_BASE_API,
       CheckStatusIuid: null,
       CheckStatus: null,
       documentRouteMap: [
@@ -3385,7 +4752,7 @@ export default {
       let routeUrl = this.$router.resolve({
         path: "/bigScreen",
         query: {
-          filePath: process.env.ViewOrigin + "/?" + query,
+          filePath: process.env.VUE_APP_ViewOrigin + "/?" + query,
         },
       });
       window.open(routeUrl.href, "_blank");
@@ -4163,7 +5530,7 @@ export default {
                 tableSelection[0].imodelDataClose.slice(0, -11)
               );
               await closemodel(
-                process.env.GisIframeOrigin + "/?" + filePath + "?closemodel",
+                process.env.VUE_APP_GisIframeOrigin + "/?" + filePath + "?closemodel",
                 closemodelCallback
               );
             } else if (res.code === -2) {
@@ -4312,7 +5679,7 @@ export default {
       this.inheritbit = res.twodata;
     },
     copyLink(row) {
-      let downloadUrl = process.env.BASE_API + "/" + row.filePath;
+      let downloadUrl = process.env.VUE_APP_BASE_API + "/" + row.filePath;
       let input = document.createElement("input");
       input.value = downloadUrl;
       document.body.appendChild(input);

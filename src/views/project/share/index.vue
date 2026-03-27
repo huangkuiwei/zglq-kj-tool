@@ -1,29 +1,64 @@
 <template>
   <el-container>
-    <el-container style="position: static" v-if="shareDataContainerVisible && !errorContainerVisible">
-      <el-header id="headerPage" style="height: 50px;z-index: 2000;line-height: 50px;background-color: white;">
-        <div style="display: flex; float: left" class="ksjLogo" v-if="$headerLogo">
-          <img v-show="!$isOwner" :src="$headerLogo" style="height: 40px; margin: 5px 0 5px 10px" alt="跨~界 云空间" />
+    <el-container
+      v-if="shareDataContainerVisible && !errorContainerVisible"
+      style="position: static"
+    >
+      <el-header
+        id="headerPage"
+        style="height: 50px;z-index: 2000;line-height: 50px;background-color: white;"
+      >
+        <div
+          v-if="$headerLogo"
+          style="display: flex; float: left"
+          class="ksjLogo"
+        >
+          <img
+            v-show="!$isOwner"
+            :src="$headerLogo"
+            style="height: 40px; margin: 5px 0 5px 10px"
+            alt="跨~界 云空间"
+          >
         </div>
       </el-header>
       <el-container style="background-color: #f2f5fa; position: relative">
         <el-main style="margin: 20px;border-radius: 8px; overflow-y: unset">
-          <div class="app-container background" style="height: calc(100vh - 90px)">
+          <div
+            class="app-container background"
+            style="height: calc(100vh - 90px)"
+          >
             <div class="table-box">
-              <div v-if="loaded" class="flex jc-between ai-center" style="margin-bottom: 15px;">
+              <div
+                v-if="loaded"
+                class="flex jc-between ai-center"
+                style="margin-bottom: 15px;"
+              >
                 <div>
                   <div class="flex">
-                    <img src="@/assets/corpDetailImg/文件夹.png" style="width: 20ox;height: 20px;margin-right: 5px;" alt="">
+                    <img
+                      src="@/assets/corpDetailImg/文件夹.png"
+                      style="width: 20ox;height: 20px;margin-right: 5px;"
+                      alt=""
+                    >
                     <span>
                       {{ shareInfo.projectName }}
                     </span>
                   </div>
-                  <div class="flex" style="margin-top: 20px;">
-                    <div> <i class="el-icon-time"></i> {{ shareInfo.shareTime }}</div>
-                    <div style="margin-left: 40px;"> {{ shareType }}</div>
+                  <div
+                    class="flex"
+                    style="margin-top: 20px;"
+                  >
+                    <div> <i class="el-icon-time" /> {{ shareInfo.shareTime }}</div>
+                    <div style="margin-left: 40px;">
+                      {{ shareType }}
+                    </div>
                   </div>
                 </div>
-                <downloadBtn v-if="canDownload" :rows="tableSelection" :fullPath="getFolderFullPath" />
+                <downloadBtn
+                  v-if="canDownload"
+                  :rows="tableSelection"
+                  :full-path="getFolderFullPath"
+                />
               </div>
               <el-row v-if="folderLists.length > 0">
                 <el-breadcrumb separator="/">
@@ -33,65 +68,134 @@
                   <el-breadcrumb-item v-else>
                     <span>全部文件</span>
                   </el-breadcrumb-item>
-                  <el-breadcrumb-item v-for="(item, index) in folderLists" :key="index">
+                  <el-breadcrumb-item
+                    v-for="(item, index) in folderLists"
+                    :key="index"
+                  >
                     <span v-if="index == folderLists.length - 1">{{ item.name }}</span>
-                    <a v-else @click="folderMenuClick(false, item)">{{ item.name }}</a>
+                    <a
+                      v-else
+                      @click="folderMenuClick(false, item)"
+                    >{{ item.name }}</a>
                   </el-breadcrumb-item>
                 </el-breadcrumb>
               </el-row>
               <el-row class="table">
-                <el-table v-show='tableVisible' class="t-table" ref="multipleTable" :data="tableData" stripe :header-cell-style="$thStyle" :style="{ 'margin-top': canDownload ? '15px' : '0' }" style="width: 100%; font-size: 13px" height="100%" @selection-change="handleSelectionChange">
+                <el-table
+                  v-show="tableVisible"
+                  ref="multipleTable"
+                  class="t-table"
+                  :data="tableData"
+                  stripe
+                  :header-cell-style="$thStyle"
+                  :style="{ 'margin-top': canDownload ? '15px' : '0' }"
+                  style="width: 100%; font-size: 13px"
+                  height="100%"
+@selection-change="handleSelectionChange"
+                >
                   <!-- @sort-change="sortChange"
                   :default-sort="{ prop: 'createTime', order: 'descending' }" -->
-                  <el-table-column type="selection" width="55">
-                  </el-table-column>
-                  <el-table-column prop="fileName" :label="$t('base.button.fileName')" show-overflow-tooltip>
+                  <el-table-column
+                    type="selection"
+                    width="55"
+                  />
+                  <el-table-column
+                    prop="fileName"
+                    :label="$t('base.button.fileName')"
+                    show-overflow-tooltip
+                  >
                     <template slot-scope="scope">
-                      <fileIconComponends :fullPath="getFolderFullPath" :row="scope.row" @linkToFilePage="linkToFilePage" />
+                      <fileIconComponends
+                        :full-path="getFolderFullPath"
+                        :row="scope.row"
+                        @linkToFilePage="linkToFilePage"
+                      />
                     </template>
                   </el-table-column>
-                  <el-table-column prop="fileSize" :label="$t('base.button.fileSize')" width="200"></el-table-column>
-                  <el-table-column prop="createTime" :label="$t('base.button.createTime')" width="200"></el-table-column>
+                  <el-table-column
+                    prop="fileSize"
+                    :label="$t('base.button.fileSize')"
+                    width="200"
+                  />
+                  <el-table-column
+                    prop="createTime"
+                    :label="$t('base.button.createTime')"
+                    width="200"
+                  />
                 </el-table>
               </el-row>
-              <pagination :pageTotal="total" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange"></pagination>
+              <pagination
+                :page-total="total"
+                @handleCurrentChange="paginationCurrentChange"
+                @handleSizeChange="handleSizeChange"
+              />
             </div>
           </div>
         </el-main>
         <el-aside class="userAside">
           <div class="userBg">
             <div style="text-align: center">
-              <div v-if="shareUserAvatarDivVisible" class="shareHeadLeft">
+              <div
+                v-if="shareUserAvatarDivVisible"
+                class="shareHeadLeft"
+              >
                 {{ shareUserName }}
               </div>
-              <img v-if="shareUserAvatarImgVisible" :src="shareUserAvatarImg" class="shareManAvator" />
-              <div class="shareManDescription">{{ shareUserName }}</div>
-              <div class="shareManDescription com">{{ corpName }}</div>
+              <img
+                v-if="shareUserAvatarImgVisible"
+                :src="shareUserAvatarImg"
+                class="shareManAvator"
+              >
+              <div class="shareManDescription">
+                {{ shareUserName }}
+              </div>
+              <div class="shareManDescription com">
+                {{ corpName }}
+              </div>
             </div>
           </div>
         </el-aside>
       </el-container>
     </el-container>
-    <div v-if="errorContainerVisible" style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;padding-top: 140px;">
+    <div
+      v-if="errorContainerVisible"
+      style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;padding-top: 140px;"
+    >
       <div style="text-align: center">
-        <img :src="shareErrorImg" style="width: 50%" />
+        <img
+          :src="shareErrorImg"
+          style="width: 50%"
+        >
         <div style="color: #909399; font-size: 15px">
           Sorry {{ errorText ? "," + errorText : "" }}
         </div>
       </div>
     </div>
-    <div class="passDailog" v-if="verifyContainerVisible && !shareDataContainerVisible && !errorContainerVisible">
-      <div style="width: 38%; margin: 0 auto 50px auto;" class="flex ai-center jc-between">
+    <div
+      v-if="verifyContainerVisible && !shareDataContainerVisible && !errorContainerVisible"
+      class="passDailog"
+    >
+      <div
+        style="width: 38%; margin: 0 auto 50px auto;"
+        class="flex ai-center jc-between"
+      >
         <!--<img :src="defaultLogo" style="height: 46px" />-->
         <!--<span style="font-size: 28px;font-weight: bold;color: #555;">跨~界云空间</span>-->
       </div>
       <div style="border: 1px solid #ddd; border-radius: 15px;box-shadow: 1px 1px 5px #ccc;">
         <div class="shareHeader">
           <div class="shareHeadCon">
-            <div v-if="shareUserAvatarDivVisible" class="shareHeadLeft1">
+            <div
+              v-if="shareUserAvatarDivVisible"
+              class="shareHeadLeft1"
+            >
               {{ shareUserName }}
             </div>
-            <img v-if="shareUserAvatarImgVisible" :src="shareUserAvatarImg" style="border-radius: 8px; width: 60px; height: 60px" />
+            <img
+              v-if="shareUserAvatarImgVisible"
+              :src="shareUserAvatarImg"
+              style="border-radius: 8px; width: 60px; height: 60px"
+            >
             <div class="shareHeadRight">
               <div>{{ shareUserName }}</div>
               <div>{{ corpName }}</div>
@@ -99,37 +203,71 @@
           </div>
         </div>
         <div class="shareBottom">
-          <div class="shareBottomTit">请输入分享密码：</div>
+          <div class="shareBottomTit">
+            请输入分享密码：
+          </div>
           <div class="flex jc-between ai-center">
-            <el-input class="passValue" size="default" v-model="sharePassword" />
-            <el-button type="primary" style="width:20%" size="default" @click="enterShareIndexPage">{{ $t('base.button.confirm') }}</el-button>
+            <el-input
+              v-model="sharePassword"
+              class="passValue"
+              size="default"
+            />
+            <el-button
+              type="primary"
+              style="width:20%"
+              size="default"
+              @click="enterShareIndexPage"
+            >
+              {{ $t('base.button.confirm') }}
+            </el-button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="share-unauthorized" v-if="unauthorized === 1 || unauthorized === 2 || unauthorized === 3 || unauthorized === 4">
+    <div
+      v-if="unauthorized === 1 || unauthorized === 2 || unauthorized === 3 || unauthorized === 4"
+      class="share-unauthorized"
+    >
       <div class="share-unauthorized-contain">
         <template v-if="unauthorized === 1">
           <el-form label-width="100px">
             <el-form-item label="申请人：">
-              <el-input v-model="corpSpaceModel.usertext" placeholder="请输入申请人" />
+              <el-input
+                v-model="corpSpaceModel.usertext"
+                placeholder="请输入申请人"
+              />
             </el-form-item>
 
             <el-form-item label="使用场景：">
-              <el-input rows="6" type="textarea" v-model="scene" placeholder="请输入使用场景" />
+              <el-input
+                v-model="scene"
+                rows="6"
+                type="textarea"
+                placeholder="请输入使用场景"
+              />
             </el-form-item>
           </el-form>
 
           <div style="text-align: right">
-            <el-button type="primary" :loading="loading" @click="submit">提交</el-button>
+            <el-button
+              type="primary"
+              :loading="loading"
+              @click="submit"
+            >
+              提交
+            </el-button>
           </div>
         </template>
 
         <template v-if="unauthorized === 2">
           <el-form label-width="100px">
             <el-form-item label="申请人：">
-              <el-input v-model="corpSpaceModel.usertext" placeholder="请输入申请人" disabled />
+              <el-input
+                v-model="corpSpaceModel.usertext"
+                placeholder="请输入申请人"
+                disabled
+              />
             </el-form-item>
 
             <el-form-item label="申请状态：">
@@ -141,7 +279,11 @@
         <template v-if="unauthorized === 3">
           <el-form label-width="100px">
             <el-form-item label="申请人：">
-              <el-input v-model="corpSpaceModel.usertext" placeholder="请输入申请人" disabled />
+              <el-input
+                v-model="corpSpaceModel.usertext"
+                placeholder="请输入申请人"
+                disabled
+              />
             </el-form-item>
 
             <el-form-item label="申请状态：">
@@ -150,14 +292,23 @@
           </el-form>
 
           <div style="text-align: right">
-            <el-button type="primary" @click="reset">重新申请</el-button>
+            <el-button
+              type="primary"
+              @click="reset"
+            >
+              重新申请
+            </el-button>
           </div>
         </template>
 
         <template v-if="unauthorized === 4">
           <el-form label-width="100px">
             <el-form-item label="申请人：">
-              <el-input v-model="corpSpaceModel.usertext" placeholder="请输入申请人" disabled />
+              <el-input
+                v-model="corpSpaceModel.usertext"
+                placeholder="请输入申请人"
+                disabled
+              />
             </el-form-item>
 
             <el-form-item label="申请状态：">
@@ -166,7 +317,12 @@
           </el-form>
 
           <div style="text-align: right">
-            <el-button type="primary" @click="reviewData">查看</el-button>
+            <el-button
+              type="primary"
+              @click="reviewData"
+            >
+              查看
+            </el-button>
           </div>
         </template>
       </div>
@@ -221,7 +377,7 @@ export default {
       shareDataContainerVisible: false,
       errorContainerVisible: false,
       errorText: null,
-      avatorUrl: process.env.BASE_API + "/api/home/GetimgFile?fileUrl=",
+      avatorUrl: process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=",
       showModelTree: undefined,
       unauthorized: 0,
       corpSpaceModel: {

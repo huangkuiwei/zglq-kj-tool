@@ -1,104 +1,298 @@
 <template>
   <div class="app-container background table-box">
-    <el-dialog :title="folderDialogOpeType === 'reset' ? '重命名' : '新建文件夹'" :visible.sync="reloadNameDialogVisible" width="30%">
-      <el-input v-model="inputFileName">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
+    <el-dialog
+      :title="folderDialogOpeType === 'reset' ? '重命名' : '新建文件夹'"
+      :visible.sync="reloadNameDialogVisible"
+      width="30%"
+    >
+      <el-input v-model="inputFileName" />
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="reloadNameDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
-        <el-button type="primary" @click="reloadNameOK">{{ $t('base.button.confirm') }}</el-button>
+        <el-button
+          type="primary"
+          @click="reloadNameOK"
+        >{{ $t('base.button.confirm') }}</el-button>
       </span>
     </el-dialog>
     <el-row style="display: flex">
-      <el-col :span="14" class="btn-group flex ai-center" style="flex: 1">
-        <div class="btnCon mr_10" v-if="btnShow && filePermissionCon.setupbit == true">
-          <div style="cursor: pointer;flex-shrink:0;font-weight: bold;" @click="uploadDialogVisible = !uploadDialogVisible">
-            <i class="iconfont icon-upload" style="font-size: 12px"></i>{{ $t('base.button.upload') }}
+      <el-col
+        :span="14"
+        class="btn-group flex ai-center"
+        style="flex: 1"
+      >
+        <div
+          v-if="btnShow && filePermissionCon.setupbit == true"
+          class="btnCon mr_10"
+        >
+          <div
+            style="cursor: pointer;flex-shrink:0;font-weight: bold;"
+            @click="uploadDialogVisible = !uploadDialogVisible"
+          >
+            <i
+              class="iconfont icon-upload"
+              style="font-size: 12px"
+            />{{ $t('base.button.upload') }}
           </div>
           <transition name="el-zoom-in-top">
-            <div v-show="uploadDialogVisible" class="uploadFileBox">
-              <a href="javascript:;" @click="uploadDialogVisible = false" class="fileFolderUploadHref">{{ $t('base.button.uploadFile') }} <input class="fileFolderUploadBtn" type="file" name="file" multiple @change="submitFile" alt="请选择文件" />
+            <div
+              v-show="uploadDialogVisible"
+              class="uploadFileBox"
+            >
+              <a
+                href="javascript:;"
+                class="fileFolderUploadHref"
+                @click="uploadDialogVisible = false"
+              >{{ $t('base.button.uploadFile') }} <input
+                class="fileFolderUploadBtn"
+                type="file"
+                name="file"
+                multiple
+                alt="请选择文件"
+                @change="submitFile"
+              >
               </a>
-              <a href="javascript:;" class="fileFolderUploadHref" @click="uploadDialogVisible = false">{{ $t('base.button.uploadFolder') }} <input class="fileFolderUploadBtn" type="file" name="file" @change="fileFolderUpload" webkitdirectory alt="请选择文件夹" />
+              <a
+                href="javascript:;"
+                class="fileFolderUploadHref"
+                @click="uploadDialogVisible = false"
+              >{{ $t('base.button.uploadFolder') }} <input
+                class="fileFolderUploadBtn"
+                type="file"
+                name="file"
+                webkitdirectory
+                alt="请选择文件夹"
+                @change="fileFolderUpload"
+              >
               </a>
             </div>
           </transition>
         </div>
-        <el-button class="mr_10" size="small" @click="addFolder('add')" v-if="btnShow && filePermissionCon.setupbit == true">
-          <i class="iconfont icon-xinjianwenjianjia">
-          </i>{{ $t('base.button.newFolder') }}</el-button>
-        <downloadBtn class="mr_10" :rows="multipleSelection" :fullPath="getFolderFullPath" v-if="filePermissionCon.downloadbit == true" />
-        <el-button size="small" class="mr_10" @click="copyTo('move')" v-if="multipleSelection.length >= 1 && leftName != $t('comLib.nav.drawings') && btnShow && filePermissionCon.movebit == true">
-          <i class="iconfont icon-download">
-          </i>移动到</el-button>
-        <el-button size="small" style="margin-left: 0px;margin-right: 10px;" @click="copyTo('copy')" v-if="multipleSelection.length >= 1 && leftName != $t('comLib.nav.drawings') && btnShow && filePermissionCon.movebit == true">
-          <i class="iconfont icon-download">
-          </i>{{ $t('projects.operation.copyTo') }}</el-button>
-        <shareMutiple v-if="multipleSelection.length >= 1 && $shareMultipleVisible(multipleSelection)" :rows="multipleSelection" style="margin-right: 10px;" />
-        <el-button size="small" type="danger" @click="handleDelete" v-if="btnShow && filePermissionCon.deletebit == true">
-          <i class="iconfont icon-delete">
-          </i>{{ $t('base.button.delete') }}</el-button>
+        <el-button
+          v-if="btnShow && filePermissionCon.setupbit == true"
+          class="mr_10"
+          size="small"
+          @click="addFolder('add')"
+        >
+          <i class="iconfont icon-xinjianwenjianjia" />{{ $t('base.button.newFolder') }}
+        </el-button>
+        <downloadBtn
+          v-if="filePermissionCon.downloadbit == true"
+          class="mr_10"
+          :rows="multipleSelection"
+          :full-path="getFolderFullPath"
+        />
+        <el-button
+          v-if="multipleSelection.length >= 1 && leftName != $t('comLib.nav.drawings') && btnShow && filePermissionCon.movebit == true"
+          size="small"
+          class="mr_10"
+          @click="copyTo('move')"
+        >
+          <i class="iconfont icon-download" />移动到
+        </el-button>
+        <el-button
+          v-if="multipleSelection.length >= 1 && leftName != $t('comLib.nav.drawings') && btnShow && filePermissionCon.movebit == true"
+          size="small"
+          style="margin-left: 0px;margin-right: 10px;"
+          @click="copyTo('copy')"
+        >
+          <i class="iconfont icon-download" />{{ $t('projects.operation.copyTo') }}
+        </el-button>
+        <shareMutiple
+          v-if="multipleSelection.length >= 1 && $shareMultipleVisible(multipleSelection)"
+          :rows="multipleSelection"
+          style="margin-right: 10px;"
+        />
+        <el-button
+          v-if="btnShow && filePermissionCon.deletebit == true"
+          size="small"
+          type="danger"
+          @click="handleDelete"
+        >
+          <i class="iconfont icon-delete" />{{ $t('base.button.delete') }}
+        </el-button>
         <!-- <el-buttonsize="mini" @click="reloadTranscoding"><i class="iconfont icon-delete"></i>{{ $t('projects.transcoding.transcoding') }}</el-button> -->
       </el-col>
-      <el-col :span="8" :offset="2" class="flex right" style="flex: 1">
-        <el-input :placeholder="$t('base.button.inputFilename')" prefix-icon="el-icon-search" style="width: 240px" clearable v-model="inputValue" @change="queryData(true)" size="mini">
-        </el-input>
+      <el-col
+        :span="8"
+        :offset="2"
+        class="flex right"
+        style="flex: 1"
+      >
+        <el-input
+          v-model="inputValue"
+          :placeholder="$t('base.button.inputFilename')"
+          prefix-icon="el-icon-search"
+          style="width: 240px"
+          clearable
+          size="mini"
+          @change="queryData(true)"
+        />
       </el-col>
     </el-row>
-    <el-row style="margin-top: 20px" >
+    <el-row style="margin-top: 20px">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
           <a @click="queryAll">{{ leftName }}</a>
         </el-breadcrumb-item>
-        <el-breadcrumb-item @click="querySelect(item, index)" v-for="(item, index) in breadcrumb" :key="index">
+        <el-breadcrumb-item
+          v-for="(item, index) in breadcrumb"
+          :key="index"
+          @click="querySelect(item, index)"
+        >
           <a @click="querySelect(item, index)">{{ item.fileName }}</a>
         </el-breadcrumb-item>
       </el-breadcrumb>
     </el-row>
     <el-row class="table">
-      <el-table :data="tableData" class="t-table" :row-class-name="tableRowClassName" :header-cell-style="$thStyle" style="width: 100%; margin-top: 20px; font-size: 13px" height="100%" stripe @selection-change="handleSelectionChange" @sort-change="sortChange" :default-sort="{ prop: 'createTime', order: 'descending' }"> > <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="fileName" :label="$t('base.button.fileName')" show-overflow-tooltip>
+      <el-table
+        :data="tableData"
+        class="t-table"
+        :row-class-name="tableRowClassName"
+        :header-cell-style="$thStyle"
+        style="width: 100%; margin-top: 20px; font-size: 13px"
+        height="100%"
+        stripe
+        :default-sort="{ prop: 'createTime', order: 'descending' }"
+        @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
+      >
+        > <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column
+          prop="fileName"
+          :label="$t('base.button.fileName')"
+          show-overflow-tooltip
+        >
           <template slot-scope="scope">
-            <fileIconComponends :fullPath="getFolderFullPath" :row="scope.row" @linkToFilePage="linkToFilePage" />
+            <fileIconComponends
+              :full-path="getFolderFullPath"
+              :row="scope.row"
+              @linkToFilePage="linkToFilePage"
+            />
           </template>
         </el-table-column>
-        <el-table-column prop="fileSize" :label="$t('base.button.fileSize')" width="180">
-        </el-table-column>
-        <el-table-column prop="createTime" :label="$t('base.button.createTime')" sortable="custom" width="220">
-        </el-table-column>
-        <el-table-column prop="statusType" :label="$t('base.button.fileStatus')" width="180">
-          <template slot-scope="scope" v-if="scope.row.fileSuffix.toLowerCase() != ''">
+        <el-table-column
+          prop="fileSize"
+          :label="$t('base.button.fileSize')"
+          width="180"
+        />
+        <el-table-column
+          prop="createTime"
+          :label="$t('base.button.createTime')"
+          sortable="custom"
+          width="220"
+        />
+        <el-table-column
+          prop="statusType"
+          :label="$t('base.button.fileStatus')"
+          width="180"
+        >
+          <template
+            v-if="scope.row.fileSuffix.toLowerCase() != ''"
+            slot-scope="scope"
+          >
             <fileStatusComponends :scope="scope" />
           </template>
         </el-table-column>
         <el-table-column :label="$t('base.formLabel.operation')">
           <template slot-scope="scope">
             <div class="flex ai-center">
-              <operateColCom :row="scope.row" class="tableOpeColMargin" :isZsk="isZsk" />
+              <operateColCom
+                :row="scope.row"
+                class="tableOpeColMargin"
+                :is-zsk="isZsk"
+              />
               <!-- 压缩文件解压操作 -->
-              <el-tooltip v-if="scope.row.fileSuffix && (scope.row.fileSuffix.toLowerCase() === '.zip' || scope.row.fileSuffix.toLowerCase() === '.rar')" class="tableOpeColMargin" effect="light" content="解压" placement="top">
-                <i class="el-icon-folder-opened" style="color: #8f9ab4; cursor: pointer" @click="decompression(scope.row)" />
+              <el-tooltip
+                v-if="scope.row.fileSuffix && (scope.row.fileSuffix.toLowerCase() === '.zip' || scope.row.fileSuffix.toLowerCase() === '.rar')"
+                class="tableOpeColMargin"
+                effect="light"
+                content="解压"
+                placement="top"
+              >
+                <i
+                  class="el-icon-folder-opened"
+                  style="color: #8f9ab4; cursor: pointer"
+                  @click="decompression(scope.row)"
+                />
               </el-tooltip>
               <template v-if="scope.row.statusType === '3' || scope.row.statusType === '4'">
-                <el-tooltip v-if="($modelFileSuffix.indexOf(scope.row.fileSuffix.toLowerCase()) != -1 && scope.row.actionType === '2' && scope.row.fileSuffix.toLowerCase() != '.dgn') || ($reTransCodeVideo.indexOf(scope.row.fileSuffix.toLowerCase()) !== -1 && scope.row.statusType !== '3')" class="tableOpeColMargin" effect="light" content="重新转码" placement="top">
-                  <el-link :underline="false" icon="el-icon-convert" @click="reloadTranscoding(scope.row.iuid, undefined, scope.row)">
-                  </el-link>
+                <el-tooltip
+                  v-if="($modelFileSuffix.indexOf(scope.row.fileSuffix.toLowerCase()) != -1 && scope.row.actionType === '2' && scope.row.fileSuffix.toLowerCase() != '.dgn') || ($reTransCodeVideo.indexOf(scope.row.fileSuffix.toLowerCase()) !== -1 && scope.row.statusType !== '3')"
+                  class="tableOpeColMargin"
+                  effect="light"
+                  content="重新转码"
+                  placement="top"
+                >
+                  <el-link
+                    :underline="false"
+                    icon="el-icon-convert"
+                    @click="reloadTranscoding(scope.row.iuid, undefined, scope.row)"
+                  />
                 </el-tooltip>
               </template>
-              <el-dropdown v-if="$modelFileSuffix.indexOf(scope.row.fileSuffix.toLowerCase()) != -1 && scope.row.actionType === '2' && scope.row.fileSuffix.toLowerCase() == '.dgn'" @command="handleCommand($event, scope.row)">
-                <i class="el-icon-convert" style="color: #8f9ab4; margin-right: 10px"></i>
+              <el-dropdown
+                v-if="$modelFileSuffix.indexOf(scope.row.fileSuffix.toLowerCase()) != -1 && scope.row.actionType === '2' && scope.row.fileSuffix.toLowerCase() == '.dgn'"
+                @command="handleCommand($event, scope.row)"
+              >
+                <i
+                  class="el-icon-convert"
+                  style="color: #8f9ab4; margin-right: 10px"
+                />
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item v-for="(item, index) in Conversion" :key="index" :command="item.code + '/' + scope.row.iuid">{{ item.name }}</el-dropdown-item>
+                  <el-dropdown-item
+                    v-for="(item, index) in Conversion"
+                    :key="index"
+                    :command="item.code + '/' + scope.row.iuid"
+                  >
+                    {{ item.name }}
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
               <!-- 更多 -->
-              <el-tooltip v-if="filePermissionCon.editbit == true" class="tableOpeColMargin" effect="light" content="重命名" placement="top">
-                <i class="el-icon-rename shrink" style="color: #8f9ab4; cursor: pointer" @click="reloadClick('reset', scope.row)" />
+              <el-tooltip
+                v-if="filePermissionCon.editbit == true"
+                class="tableOpeColMargin"
+                effect="light"
+                content="重命名"
+                placement="top"
+              >
+                <i
+                  class="el-icon-rename shrink"
+                  style="color: #8f9ab4; cursor: pointer"
+                  @click="reloadClick('reset', scope.row)"
+                />
               </el-tooltip>
-              <el-tooltip v-if="leftName == $t('comLib.nav.companyKnowledge') && scope.row.fileSuffix.toLowerCase() == '' && scope.row.authorizebit == true" class="tableOpeColMargin" effect="light" content="权限设置" placement="top">
-                <i class="el-icon-setting" style="color: #8f9ab4; cursor: pointer;font-size: 16px" @click="permissionSet(scope.row)" />
+              <el-tooltip
+                v-if="leftName == $t('comLib.nav.companyKnowledge') && scope.row.fileSuffix.toLowerCase() == '' && scope.row.authorizebit == true"
+                class="tableOpeColMargin"
+                effect="light"
+                content="权限设置"
+                placement="top"
+              >
+                <i
+                  class="el-icon-setting"
+                  style="color: #8f9ab4; cursor: pointer;font-size: 16px"
+                  @click="permissionSet(scope.row)"
+                />
               </el-tooltip>
-              <el-tooltip v-if="scope.row.fileSuffix && scope.row.fileSuffix.toLowerCase() === '.json'" class="tableOpeColMargin" effect="light" content="复制链接" placement="top">
-                <i class="el-icon-document-copy" style="color: #8f9ab4; cursor: pointer;font-size: 16px;" @click="copyLink(scope.row)" />
+              <el-tooltip
+                v-if="scope.row.fileSuffix && scope.row.fileSuffix.toLowerCase() === '.json'"
+                class="tableOpeColMargin"
+                effect="light"
+                content="复制链接"
+                placement="top"
+              >
+                <i
+                  class="el-icon-document-copy"
+                  style="color: #8f9ab4; cursor: pointer;font-size: 16px;"
+                  @click="copyLink(scope.row)"
+                />
               </el-tooltip>
               <!-- <el-dropdown v-if="btnShow">
               <i class="iconfont icon-more" style="color: #8f9ab4"></i>
@@ -115,18 +309,48 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <chunkUploader ref="chunkUploader" @reloadData="queryData" :folderIuid="IUID" isZsk />
-    <versionViewComponeds :centerDialogVisible.sync="versionDialogVisible" :rowData="versionData" :selectedData="selectArray" @queryADDVersion="queryADDVersionPost" @sureVersion="sureVersionPost">
-    </versionViewComponeds>
+    <chunkUploader
+      ref="chunkUploader"
+      :folder-iuid="IUID"
+      is-zsk
+      @reloadData="queryData"
+    />
+    <versionViewComponeds
+      :center-dialog-visible.sync="versionDialogVisible"
+      :row-data="versionData"
+      :selected-data="selectArray"
+      @queryADDVersion="queryADDVersionPost"
+      @sureVersion="sureVersionPost"
+    />
     <!-- 移动复制 -->
-    <moveCopyComponends :moveCopyDialogVisble.sync="moveCopyDialogVisible" :moveCopyType="moveCopyType" :rowData="multipleSelection" @shiftData="shiftData" :isResources="zskBoolean">
-    </moveCopyComponends>
+    <moveCopyComponends
+      :move-copy-dialog-visble.sync="moveCopyDialogVisible"
+      :move-copy-type="moveCopyType"
+      :row-data="multipleSelection"
+      :is-resources="zskBoolean"
+      @shiftData="shiftData"
+    />
     <!-- 权限设置 -->
-    <perssionComponends :permissionDialogVisble.sync="setDialogVisible" :fileData="perrsionData" :fileIUID="viewFileIuID" :isZskSet="isZskSetBoo" @choseItem="filterData" @surePermission="surePermissionPost" :inheritbit.sync="inheritbit">
-    </perssionComponends>
-    <pagination :pageTotal="Total" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange">
-    </pagination>
-    <partOfDeleteSuccess :containerVisible.sync="pdsVisible" :deleteFilelist="deleteFilelist" :successcount="successcount" :failurecount="failurecount" />
+    <perssionComponends
+      :permission-dialog-visble.sync="setDialogVisible"
+      :file-data="perrsionData"
+      :file-i-u-i-d="viewFileIuID"
+      :is-zsk-set="isZskSetBoo"
+      :inheritbit.sync="inheritbit"
+      @choseItem="filterData"
+      @surePermission="surePermissionPost"
+    />
+    <pagination
+      :page-total="Total"
+      @handleCurrentChange="paginationCurrentChange"
+      @handleSizeChange="handleSizeChange"
+    />
+    <partOfDeleteSuccess
+      :container-visible.sync="pdsVisible"
+      :delete-filelist="deleteFilelist"
+      :successcount="successcount"
+      :failurecount="failurecount"
+    />
   </div>
 </template>
 <script>
@@ -330,7 +554,7 @@ export default {
       const commonRouteName = ['blueprint', 'StandardInfo']
       var res
       if (commonRouteName.indexOf(this.$route.name) > -1) {
-        res = await zskFileApi.post("/api/KnowledgeBase/GetKnowledgeBaseDocument", formData, process.env.BASE_API);
+        res = await zskFileApi.post("/api/KnowledgeBase/GetKnowledgeBaseDocument", formData, process.env.VUE_APP_BASE_API);
       } else {
         res = await zskFileApi.post("/api/KnowledgeBase/GetKnowledgeBaseDocument", formData);
       }
@@ -651,7 +875,7 @@ export default {
         (i) => !val.includes(i.userName));
     },
     copyLink(row) {
-      let downloadUrl = process.env.BASE_API + '/' + row.filePath
+      let downloadUrl = process.env.VUE_APP_BASE_API + '/' + row.filePath
       let input = document.createElement('input')
       input.value = downloadUrl
       document.body.appendChild(input)

@@ -1,32 +1,70 @@
 <!-- 现在模型文件都进入了bimiframe 本文件不再更新 -->
 <template>
-    <div class="kanban">
-      <iframe v-if="$supportWebGL() && showIframe" ref="imodelIframe" :src="src" @load="sendtreeData" class="kanbaniframe"></iframe>
+  <div class="kanban">
+    <iframe
+      v-if="$supportWebGL() && showIframe"
+      ref="imodelIframe"
+      :src="src"
+      class="kanbaniframe"
+      @load="sendtreeData"
+    />
 
-      <div v-if="!$supportWebGL()">
-        <img :src="notSupportWebGLImg">
-      </div>
+    <div v-if="!$supportWebGL()">
+      <img :src="notSupportWebGLImg">
+    </div>
 
-      <imodelInvokeFunction :rowData="dataModel" :isFullScreen.sync="isFullScreen" @pageClose="hiddenIframe" ref="imodelInvokeContainer" />
+    <imodelInvokeFunction
+      ref="imodelInvokeContainer"
+      :row-data="dataModel"
+      :is-full-screen.sync="isFullScreen"
+      @pageClose="hiddenIframe"
+    />
 
-      <div class="wscn-http404-container" v-if="errorPageVisible">
-        <div class="wscn-http404">
-          <div class="pic-404">
-            <img class="pic-404__parent" src="@/assets/errorImg/404.png" alt="404">
-            <img class="pic-404__child left" src="@/assets/errorImg/404_cloud.png" alt="404">
-            <img class="pic-404__child mid" src="@/assets/errorImg/404_cloud.png" alt="404">
-            <img class="pic-404__child right" src="@/assets/errorImg/404_cloud.png" alt="404">
+    <div
+      v-if="errorPageVisible"
+      class="wscn-http404-container"
+    >
+      <div class="wscn-http404">
+        <div class="pic-404">
+          <img
+            class="pic-404__parent"
+            src="@/assets/errorImg/404.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child left"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child mid"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child right"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+        </div>
+        <div class="bullshit">
+          <div class="bullshit__headline">
+            当前项目中不包含模型文件。。。
           </div>
-          <div class="bullshit">
-            <div class="bullshit__headline">当前项目中不包含模型文件。。。</div>
-            <div class="bullshit__info">请重新选择项目，并再次进入本界面。</div>
+          <div class="bullshit__info">
+            请重新选择项目，并再次进入本界面。
           </div>
         </div>
       </div>
-
-      <versionFilesDialog :dialogVisibleProp.sync="versionFilesDialogVisible" :versionFiles="versionFiles" @versionFilesCallBack="versionFilesCallBack" />
     </div>
-  </template>
+
+    <versionFilesDialog
+      :dialog-visible-prop.sync="versionFilesDialogVisible"
+      :version-files="versionFiles"
+      @versionFilesCallBack="versionFilesCallBack"
+    />
+  </div>
+</template>
   <script>
   import { mapGetters } from "vuex";
   import projectFileApi from "@/api/document/indexApi.js";
@@ -123,13 +161,13 @@
       },
       firstTurnPath() {
         this.showIframe = true
-        this.src = this.dataModel && (process.env.GisIframeOrigin + "/?" + this.dataModel.turnPath + "?" + "editable")  // YGP: "editable" 为了初始化为编辑环境
+        this.src = this.dataModel && (process.env.VUE_APP_GisIframeOrigin + "/?" + this.dataModel.turnPath + "?" + "editable")  // YGP: "editable" 为了初始化为编辑环境
         console.log(this.src)
       },
       sendtreeData() {
         //var obj = {treeData:this.initTreeList,currentProj:this.projectInfo,currentFile:this.dataModel}
 
-        var obj = { treeData: this.list, currentProj: this.projectInfo, currentFile: this.dataModel, fileOriginalUrl: process.env.BASE_API }
+        var obj = { treeData: this.list, currentProj: this.projectInfo, currentFile: this.dataModel, fileOriginalUrl: process.env.VUE_APP_BASE_API }
         this.$iframeEditPostMes(this.$refs.imodelIframe.contentWindow, 'csdmodeler', obj)   // YGP: 'csdmodeler'
       },
       async queryData(iuid) {

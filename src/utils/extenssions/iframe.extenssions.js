@@ -138,5 +138,5 @@ export default function addIframeExtenssions() {
     alert(store.state.app.currApp);
   };
 
-  fn.$iframePosturl = process.env.GisIframeOrigin + "/?";
+  fn.$iframePosturl = process.env.VUE_APP_GisIframeOrigin + "/?";
 }

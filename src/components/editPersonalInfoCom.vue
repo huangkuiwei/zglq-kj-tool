@@ -1,87 +1,243 @@
 <template>
-  <el-dialog class="people-info" v-dialogDrag append-to-body :title="dialogTitle" :close-on-click-modal="false" :modal="true" :width="opeType == 'checkCompanyPerson' ? '650px' : '425px'" :visible.sync="dialogVisible" :before-close="handleClose">
+  <el-dialog
+    v-dialogDrag
+    class="people-info"
+    append-to-body
+    :title="dialogTitle"
+    :close-on-click-modal="false"
+    :modal="true"
+    :width="opeType == 'checkCompanyPerson' ? '650px' : '425px'"
+    :visible.sync="dialogVisible"
+    :before-close="handleClose"
+  >
     <div v-if="opeType == 'joinCompany'">
-      <el-form ref="companyJoinForm" :model="companyJoinForm" :rules="companyJoinFormRules" label-width="120px" size="small">
-        <el-form-item label="企业名称：" prop="name">
-          <el-select style="width: 244px;" v-model="companyJoinForm.name" value-key="value" remote :remote-method="getCompanyList" filterable placeholder="请输入企业名称" clearable @clear="handleClear" @change="corpChange">
-            <el-option v-for="item in companyList" :key="item.corpId" :label="item.corpName" :value="item.corpName" />
+      <el-form
+        ref="companyJoinForm"
+        :model="companyJoinForm"
+        :rules="companyJoinFormRules"
+        label-width="120px"
+        size="small"
+      >
+        <el-form-item
+          label="企业名称："
+          prop="name"
+        >
+          <el-select
+            v-model="companyJoinForm.name"
+            style="width: 244px;"
+            value-key="value"
+            remote
+            :remote-method="getCompanyList"
+            filterable
+            placeholder="请输入企业名称"
+            clearable
+            @clear="handleClear"
+@change="corpChange"
+          >
+            <el-option
+              v-for="item in companyList"
+              :key="item.corpId"
+              :label="item.corpName"
+              :value="item.corpName"
+            />
           </el-select>
           <!-- <el-input v-model="companyJoinForm.name" placeholder="请输入企业名称"></el-input> -->
         </el-form-item>
-        <el-form-item label="组织机构代码：" prop="code">
-          <el-input style="width: 244px;" :disabled="codeDisable" v-model="companyJoinForm.code" placeholder="请输入组织机构代码"></el-input>
-          <div class="joinTit">如还未开通企业版，请联系跨世纪官方客服</div>
+        <el-form-item
+          label="组织机构代码："
+          prop="code"
+        >
+          <el-input
+            v-model="companyJoinForm.code"
+            style="width: 244px;"
+            :disabled="codeDisable"
+            placeholder="请输入组织机构代码"
+          />
+          <div class="joinTit">
+            如还未开通企业版，请联系跨世纪官方客服
+          </div>
         </el-form-item>
-        <el-form-item :label="$t('base.label.name')" prop="userName">
-          <el-input style="width:50%" v-model="companyJoinForm.userName"></el-input>
-          <el-checkbox style="margin-left:10px" v-model="companyJoinForm.useUserName">同时作为姓名</el-checkbox>
+        <el-form-item
+          :label="$t('base.label.name')"
+          prop="userName"
+        >
+          <el-input
+            v-model="companyJoinForm.userName"
+            style="width:50%"
+          />
+          <el-checkbox
+            v-model="companyJoinForm.useUserName"
+            style="margin-left:10px"
+          >
+            同时作为姓名
+          </el-checkbox>
         </el-form-item>
       </el-form>
     </div>
     <div v-if="opeType == 'checkCompanyPerson'">
       <div class="flex ai-center">
-        <el-radio-group v-model="activeName" size="mini">
-          <el-radio-button :label="1">查看人员</el-radio-button>
-          <el-radio-button v-if="applyUserTabVisible" :label="2"> 新人员申请 <div style="position: absolute;width: 8px;height: 8px;border-radius: 50%;background-color: #FF3300;right: 6px;top: 3px;" v-if="hasNotDealApply"></div>
+        <el-radio-group
+          v-model="activeName"
+          size="mini"
+        >
+          <el-radio-button :label="1">
+            查看人员
           </el-radio-button>
-          <el-button size='mini' @click="addPerson" style="vertical-align: middle;margin-left: 10px;">{{$t('base.button.create')}}</el-button>
+          <el-radio-button
+            v-if="applyUserTabVisible"
+            :label="2"
+          >
+            新人员申请 <div
+              v-if="hasNotDealApply"
+              style="position: absolute;width: 8px;height: 8px;border-radius: 50%;background-color: #FF3300;right: 6px;top: 3px;"
+            />
+          </el-radio-button>
+          <el-button
+            size="mini"
+            style="vertical-align: middle;margin-left: 10px;"
+            @click="addPerson"
+          >
+            {{ $t('base.button.create') }}
+          </el-button>
         </el-radio-group>
-        <div style="font-size: 14px;margin-left: auto;display: inline-block;font-weight: 500;color:#777">{{ corpName }}</div>
+        <div style="font-size: 14px;margin-left: auto;display: inline-block;font-weight: 500;color:#777">
+          {{ corpName }}
+        </div>
       </div>
 
       <div style="margin-top: 10px">
-        <table class="companyPersonTable" v-if="activeName == 1">
+        <table
+          v-if="activeName == 1"
+          class="companyPersonTable"
+        >
           <tr>
-            <td width="50">序号</td>
+            <td width="50">
+              序号
+            </td>
             <td>手机号</td>
             <td>姓名</td>
-            <td width="210">操作</td>
+            <td width="210">
+              操作
+            </td>
           </tr>
           <template v-if="companyPersonData && companyPersonData.length > 0">
-            <tr v-for="(item, index) in companyPersonData" :key="index">
+            <tr
+              v-for="(item, index) in companyPersonData"
+              :key="index"
+            >
               <td>{{ index + 1 }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.userName }}</td>
               <td>
                 <template v-if="item.isAdmin && item.power">
-                  <el-link type="danger" style="margin-right: 10px" @click="handleDeleteUser(item)">{{ $t('base.button.delete') }}</el-link>
-                  <el-link type="primary" style="margin-right: 10px" v-if="!item.isadministrator" @click="handleSetUserAdmin(item)">设为管理员</el-link>
-                  <el-link type="primary" style="margin-right: 10px" v-else @click="handleSetUserAdmin(item, true)">取消管理员</el-link>
-                  <el-link type="danger" style="margin-right: 10px" v-if="!item.invitebit" @click="copyUser(item)">复制链接</el-link>
+                  <el-link
+                    type="danger"
+                    style="margin-right: 10px"
+                    @click="handleDeleteUser(item)"
+                  >
+                    {{ $t('base.button.delete') }}
+                  </el-link>
+                  <el-link
+                    v-if="!item.isadministrator"
+                    type="primary"
+                    style="margin-right: 10px"
+                    @click="handleSetUserAdmin(item)"
+                  >
+                    设为管理员
+                  </el-link>
+                  <el-link
+                    v-else
+                    type="primary"
+                    style="margin-right: 10px"
+                    @click="handleSetUserAdmin(item, true)"
+                  >
+                    取消管理员
+                  </el-link>
+                  <el-link
+                    v-if="!item.invitebit"
+                    type="danger"
+                    style="margin-right: 10px"
+                    @click="copyUser(item)"
+                  >
+                    复制链接
+                  </el-link>
                 </template>
               </td>
             </tr>
           </template>
-          <tr v-else style="text-align: center">
-            <td colspan="5">{{ $t('base.button.noData') }}</td>
+          <tr
+            v-else
+            style="text-align: center"
+          >
+            <td colspan="5">
+              {{ $t('base.button.noData') }}
+            </td>
           </tr>
         </table>
-        <table class="companyPersonTable" v-else>
+        <table
+          v-else
+          class="companyPersonTable"
+        >
           <tr>
-            <td width="50">序号</td>
-            <td width="130">手机号</td>
+            <td width="50">
+              序号
+            </td>
+            <td width="130">
+              手机号
+            </td>
             <td>姓名</td>
             <td>申请时间</td>
             <td>操作</td>
           </tr>
           <template v-if="companyApplyPersonData && companyApplyPersonData.length > 0">
-            <tr v-for="(item, index) in companyApplyPersonData" :key="index">
+            <tr
+              v-for="(item, index) in companyApplyPersonData"
+              :key="index"
+            >
               <td>{{ index + 1 }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.userName }}</td>
               <td>{{ $dayjs(item.createTime, "YYYY-MM-DD HH:mm:ss") }}</td>
               <td>
                 <template v-if="item.operateStatus == 2">
-                  <el-link type="danger" style="margin-right: 10px" @click="handleRejectApply(item)">拒绝</el-link>
-                  <el-link type="primary" @click="handleApproveApply(item)">通过</el-link>
+                  <el-link
+                    type="danger"
+                    style="margin-right: 10px"
+                    @click="handleRejectApply(item)"
+                  >
+                    拒绝
+                  </el-link>
+                  <el-link
+                    type="primary"
+                    @click="handleApproveApply(item)"
+                  >
+                    通过
+                  </el-link>
                 </template>
-                <el-tag type="success" size="small" v-if="item.operateStatus == 1">已通过</el-tag>
-                <el-tag type="danger" size="small" v-if="item.operateStatus == 0">已拒绝</el-tag>
+                <el-tag
+                  v-if="item.operateStatus == 1"
+                  type="success"
+                  size="small"
+                >
+                  已通过
+                </el-tag>
+                <el-tag
+                  v-if="item.operateStatus == 0"
+                  type="danger"
+                  size="small"
+                >
+                  已拒绝
+                </el-tag>
               </td>
             </tr>
           </template>
-          <tr v-else style="text-align: center">
-            <td colspan="5">{{ $t('base.button.noData') }}</td>
+          <tr
+            v-else
+            style="text-align: center"
+          >
+            <td colspan="5">
+              {{ $t('base.button.noData') }}
+            </td>
           </tr>
         </table>
       </div>
@@ -90,81 +246,227 @@
       <div style="margin-top: 10px">
         <table class="companyPersonTable">
           <tr>
-            <td width="50">序号</td>
-            <td width="130">手机号</td>
+            <td width="50">
+              序号
+            </td>
+            <td width="130">
+              手机号
+            </td>
             <td>姓名</td>
             <td>角色</td>
           </tr>
           <template v-if="companyAdminData && companyAdminData.length > 0">
-            <tr v-for="(item, index) in companyAdminData" :key="index">
+            <tr
+              v-for="(item, index) in companyAdminData"
+              :key="index"
+            >
               <td>{{ index + 1 }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.userName }}</td>
               <td>管理员</td>
             </tr>
           </template>
-          <tr v-else style="text-align: center">
-            <td colspan="4">{{ $t('base.button.noData') }}</td>
+          <tr
+            v-else
+            style="text-align: center"
+          >
+            <td colspan="4">
+              {{ $t('base.button.noData') }}
+            </td>
           </tr>
         </table>
       </div>
     </div>
-    <div v-if="opeType == 'editUserInfo'" class="passDiv">
-      <el-form ref="personalForm" :model="personalForm" :rules="personalFormRules" label-width="80px" size="small">
-        <el-form-item label="头像：" prop="avator">
-          <el-upload class="avatar-uploader" action="" :show-file-list="false" :on-change="fileListChange" :auto-upload="false" accept="image/*">
-            <img v-if="userAvator" :src="userAvator" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    <div
+      v-if="opeType == 'editUserInfo'"
+      class="passDiv"
+    >
+      <el-form
+        ref="personalForm"
+        :model="personalForm"
+        :rules="personalFormRules"
+        label-width="80px"
+        size="small"
+      >
+        <el-form-item
+          label="头像："
+          prop="avator"
+        >
+          <el-upload
+            class="avatar-uploader"
+            action=""
+            :show-file-list="false"
+            :on-change="fileListChange"
+            :auto-upload="false"
+            accept="image/*"
+          >
+            <img
+              v-if="userAvator"
+              :src="userAvator"
+              class="avatar"
+            >
+            <i
+              v-else
+              class="el-icon-plus avatar-uploader-icon"
+            />
           </el-upload>
           <!-- <div class="joinTit" style="color: #3296fa">修改头像</div> -->
         </el-form-item>
-        <el-form-item prop="userName" :label="$t('base.label.name')">
-          <el-input v-model="personalForm.userName" placeholder="请输入姓名"></el-input>
+        <el-form-item
+          prop="userName"
+          :label="$t('base.label.name')"
+        >
+          <el-input
+            v-model="personalForm.userName"
+            placeholder="请输入姓名"
+          />
         </el-form-item>
       </el-form>
     </div>
     <div v-if="opeType == 'editPwd'">
-      <el-form ref="passForm" :rules="passsFormRules" :model="passForm" label-width="100px" size="small">
-        <el-form-item prop="oldPwd" label="原密码：">
-          <el-input v-model="passForm.oldPwd" show-password placeholder="请输入原密码"></el-input>
+      <el-form
+        ref="passForm"
+        :rules="passsFormRules"
+        :model="passForm"
+        label-width="100px"
+        size="small"
+      >
+        <el-form-item
+          prop="oldPwd"
+          label="原密码："
+        >
+          <el-input
+            v-model="passForm.oldPwd"
+            show-password
+            placeholder="请输入原密码"
+          />
           <!-- <div class="joinTit"> 如忘记密码，请在手机钉钉上使用验证码登入，即可重置密码。 </div> -->
         </el-form-item>
-        <el-form-item prop="newPwd" label="新密码：">
-          <el-input v-model="passForm.newPwd" show-password placeholder="请输入新密码"></el-input>
+        <el-form-item
+          prop="newPwd"
+          label="新密码："
+        >
+          <el-input
+            v-model="passForm.newPwd"
+            show-password
+            placeholder="请输入新密码"
+          />
         </el-form-item>
-        <el-form-item prop="confirmPwd" label="确认密码：">
-          <el-input v-model="passForm.confirmPwd" show-password placeholder="再次输入密码"></el-input>
+        <el-form-item
+          prop="confirmPwd"
+          label="确认密码："
+        >
+          <el-input
+            v-model="passForm.confirmPwd"
+            show-password
+            placeholder="再次输入密码"
+          />
         </el-form-item>
       </el-form>
     </div>
     <div v-if="opeType == 'editPhone'">
-      <el-form ref="editPhoneForm" :model="editPhoneForm" label-width="80px" :rules="editPhoneRules" size="small">
-        <el-form-item v-if="editPhoneStep == 1" :label="$t('base.label.phone')" class="editPhoneFormItem">
-          <div style="display: flex" class="phoneInput PhoneIpt">
-            <div class="iconfont icon-shoujihao phone"></div>
-            <el-input v-model="editPhoneForm.oldPhone" disabled size="small"></el-input>
+      <el-form
+        ref="editPhoneForm"
+        :model="editPhoneForm"
+        label-width="80px"
+        :rules="editPhoneRules"
+        size="small"
+      >
+        <el-form-item
+          v-if="editPhoneStep == 1"
+          :label="$t('base.label.phone')"
+          class="editPhoneFormItem"
+        >
+          <div
+            style="display: flex"
+            class="phoneInput PhoneIpt"
+          >
+            <div class="iconfont icon-shoujihao phone" />
+            <el-input
+              v-model="editPhoneForm.oldPhone"
+              disabled
+              size="small"
+            />
           </div>
         </el-form-item>
-        <el-form-item v-if="editPhoneStep == 2" label="新手机号" prop="phone" class="editPhoneFormItem">
-          <div style="display: flex;" class="phoneInput PhoneIpt">
-            <div class="iconfont icon-shoujihao phone"></div>
-            <el-input v-model="editPhoneForm.phone" placeholder="请输入新手机号" size="small"></el-input>
+        <el-form-item
+          v-if="editPhoneStep == 2"
+          label="新手机号"
+          prop="phone"
+          class="editPhoneFormItem"
+        >
+          <div
+            style="display: flex;"
+            class="phoneInput PhoneIpt"
+          >
+            <div class="iconfont icon-shoujihao phone" />
+            <el-input
+              v-model="editPhoneForm.phone"
+              placeholder="请输入新手机号"
+              size="small"
+            />
           </div>
         </el-form-item>
-        <el-form-item prop="code" label="验证码" class="editPhoneFormItem">
-          <div style="display: flex;" class="phoneInput code">
-            <div class="iconfont icon-verify phone"></div>
-            <el-input v-model="editPhoneForm.code" placeholder="请输入验证码" size="small"></el-input>
-            <el-button type="primary" style="margin-left: 12px" size="small" @click="getSmsCode">获取验证码</el-button>
+        <el-form-item
+          prop="code"
+          label="验证码"
+          class="editPhoneFormItem"
+        >
+          <div
+            style="display: flex;"
+            class="phoneInput code"
+          >
+            <div class="iconfont icon-verify phone" />
+            <el-input
+              v-model="editPhoneForm.code"
+              placeholder="请输入验证码"
+              size="small"
+            />
+            <el-button
+              type="primary"
+              style="margin-left: 12px"
+              size="small"
+              @click="getSmsCode"
+            >
+              获取验证码
+            </el-button>
           </div>
         </el-form-item>
       </el-form>
-      <el-button @click="handleNextStep" v-if="editPhoneStep == 1" type="primary" style="width: 100%; margin: 28px 0" size="small">下一步</el-button>
-      <el-button @click="handleEditPhone" v-else type="primary" style="width: 100%; margin: 28px 0" size="small">确定修改</el-button>
+      <el-button
+        v-if="editPhoneStep == 1"
+        type="primary"
+        style="width: 100%; margin: 28px 0"
+        size="small"
+        @click="handleNextStep"
+      >
+        下一步
+      </el-button>
+      <el-button
+        v-else
+        type="primary"
+        style="width: 100%; margin: 28px 0"
+        size="small"
+        @click="handleEditPhone"
+      >
+        确定修改
+      </el-button>
     </div>
-    <span slot="footer" class="dialog-footer" v-else>
-      <el-button type="primary" @click="sure" v-if="opeType != 'checkCompanyPerson'" size="small">{{ opeType == "joinCompany" ? "申 请" : $t('base.button.confirm') }}</el-button>
-      <el-button @click="handleClose" size="small">{{ $t('base.button.cancel') }}</el-button>
+    <span
+      v-else
+      slot="footer"
+      class="dialog-footer"
+    >
+      <el-button
+        v-if="opeType != 'checkCompanyPerson'"
+        type="primary"
+        size="small"
+        @click="sure"
+      >{{ opeType == "joinCompany" ? "申 请" : $t('base.button.confirm') }}</el-button>
+      <el-button
+        size="small"
+        @click="handleClose"
+      >{{ $t('base.button.cancel') }}</el-button>
     </span>
   </el-dialog>
 </template>
@@ -256,7 +558,7 @@ export default {
           }
           if (this.opeType == "editUserInfo") {
             if (this.userModel.ddUserAvatar) {
-              this.userAvator = process.env.BASE_API + "/api/home/GetimgFile?fileUrl=" + encodeURIComponent(encrypt(this.userModel.ddUserAvatar));
+              this.userAvator = process.env.VUE_APP_BASE_API + "/api/home/GetimgFile?fileUrl=" + encodeURIComponent(encrypt(this.userModel.ddUserAvatar));
             }
             this.personalForm.userName = this.userModel.userName;
           }

@@ -1,96 +1,275 @@
 <!-- 校审单详情页 -->
 
 <template>
-  <div v-loading="loading" class="detailPage hide-scroll">
-    <el-button type="text" @click="close" class="closeBtn" icon="el-icon-close"></el-button>
+  <div
+    v-loading="loading"
+    class="detailPage hide-scroll"
+  >
+    <el-button
+      type="text"
+      class="closeBtn"
+      icon="el-icon-close"
+      @click="close"
+    />
     <template v-if="!loading">
       <div class="top-flex">
-        <div class="flex ai-center head bg_w pd_10" style="">
-          <div class="title">{{ approveData.userName }}
+        <div
+          class="flex ai-center head bg_w pd_10"
+          style=""
+        >
+          <div class="title">
+            {{ approveData.userName }}
             <span style="font-weight: 400;font-size: 14px;margin-left: 20px;">提交的文件审核</span>
           </div>
-          <div class="divider"></div>
-          <div class="name" style="font-size: 14px;">
+          <div class="divider" />
+          <div
+            class="name"
+            style="font-size: 14px;"
+          >
             <span>编号：{{ approveData.codenumber }}</span>
           </div>
-          <div class="flex ai-center svg downloadSvg" @click="exportData" v-if="approveData.status === '0'">
-            <img src="@/assets/iconImg/download.png" style="width: 15px;margin-right: 5px;" />
+          <div
+            v-if="approveData.status === '0'"
+            class="flex ai-center svg downloadSvg"
+            @click="exportData"
+          >
+            <img
+              src="@/assets/iconImg/download.png"
+              style="width: 15px;margin-right: 5px;"
+            >
             <span> 校审单下载 </span>
           </div>
           <!-- <img src="@/assets/iconimg/print.svg" class="svg ml_15" @click="print" /> -->
         </div>
         <div class="pd_10 info-box flex bg_w jc-between">
-          <div class="info-item flex ai-center" v-for="(item, idx) in itemList" :key="idx">
-            <div class="itemLabel">{{ item.title }}：</div>
-            <div class="itemText">{{ approveData[item.code] }}</div>
+          <div
+            v-for="(item, idx) in itemList"
+            :key="idx"
+            class="info-item flex ai-center"
+          >
+            <div class="itemLabel">
+              {{ item.title }}：
+            </div>
+            <div class="itemText">
+              {{ approveData[item.code] }}
+            </div>
           </div>
         </div>
       </div>
       <!-- 文件列表 -->
-      <div class="bg_w pd_10 pt_114" style="position: relative;">
-        <div class="flex" style="margin-bottom: 15px">
+      <div
+        class="bg_w pd_10 pt_114"
+        style="position: relative;"
+      >
+        <div
+          class="flex"
+          style="margin-bottom: 15px"
+        >
           <span style="margin-right: 100px">文件列表</span>
           <!-- <span style="color: #0d99ff; font-size: 14px; cursor: pointer" @click="exportData" v-if="approveData.status === '0'">校审单下载</span> -->
         </div>
-        <img src="@/assets/iconImg/approveSuccess.svg" class="approve-status-icon" v-if="approveData.status === '0'" />
-        <img src="@/assets/iconImg/reject.svg" class="approve-status-icon" v-if="approveData.status === '5'" />
-        <img src="@/assets/iconImg/revoke.svg" class="approve-status-icon" v-if="approveData.status === '3'" />
-        <el-table ref="fileTable" class="detailTable" :border="true" :data="approveData.data" :header-cell-style="tableHeadStyle" @selection-change="filterFile">
-          <el-table-column type="selection" align="center" />
-          <el-table-column align="center" :label="$t('base.button.fileName')" prop="fileName"></el-table-column>
-          <el-table-column align="center" width="180" label="版本" prop="versionNumber">
+        <img
+          v-if="approveData.status === '0'"
+          src="@/assets/iconImg/approveSuccess.svg"
+          class="approve-status-icon"
+        >
+        <img
+          v-if="approveData.status === '5'"
+          src="@/assets/iconImg/reject.svg"
+          class="approve-status-icon"
+        >
+        <img
+          v-if="approveData.status === '3'"
+          src="@/assets/iconImg/revoke.svg"
+          class="approve-status-icon"
+        >
+        <el-table
+          ref="fileTable"
+          class="detailTable"
+          :border="true"
+          :data="approveData.data"
+          :header-cell-style="tableHeadStyle"
+          @selection-change="filterFile"
+        >
+          <el-table-column
+            type="selection"
+            align="center"
+          />
+          <el-table-column
+            align="center"
+            :label="$t('base.button.fileName')"
+            prop="fileName"
+          />
+          <el-table-column
+            align="center"
+            width="180"
+            label="版本"
+            prop="versionNumber"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.versionNumber || "" }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="180" label="文件操作">
-
+          <el-table-column
+            align="center"
+            width="180"
+            label="文件操作"
+          >
             <template slot-scope="scope">
-              <el-button type="text" size="small" style="margin-left: 5px" v-if="scope.row.fileSuffix.toLowerCase() == ''" @click="showFileList(scope.row)">打开文件夹</el-button>
-              <el-button type="text" size="small" style="margin-left: 5px" v-if="scope.row.fileSuffix.toLowerCase() != '' && isMyApprove && approveData.isEdit" @click="versionClick(scope.row)">更新</el-button>
-              <el-button type="text" size="small" v-if="scope.row.fileSuffix != ''" @click="viewMode(scope.row)">{{ $t('base.button.view') }}</el-button>
+              <el-button
+                v-if="scope.row.fileSuffix.toLowerCase() == ''"
+                type="text"
+                size="small"
+                style="margin-left: 5px"
+                @click="showFileList(scope.row)"
+              >
+                打开文件夹
+              </el-button>
+              <el-button
+                v-if="scope.row.fileSuffix.toLowerCase() != '' && isMyApprove && approveData.isEdit"
+                type="text"
+                size="small"
+                style="margin-left: 5px"
+                @click="versionClick(scope.row)"
+              >
+                更新
+              </el-button>
+              <el-button
+                v-if="scope.row.fileSuffix != ''"
+                type="text"
+                size="small"
+                @click="viewMode(scope.row)"
+              >
+                {{ $t('base.button.view') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
-
       </div>
       <!-- 校审信息 -->
-      <div class="bg_w pd_10" style="margin-bottom: 0">
-        <div class="flex" style="margin-bottom: 15px">
+      <div
+        class="bg_w pd_10"
+        style="margin-bottom: 0"
+      >
+        <div
+          class="flex"
+          style="margin-bottom: 15px"
+        >
           <span>校审信息</span>
-          <el-button size="small" v-if="approveData.isAdd" type="primary" style="margin-left: 10px" @click="addApproveInfo">{{ $t('base.button.create') }}</el-button>
+          <el-button
+            v-if="approveData.isAdd"
+            size="small"
+            type="primary"
+            style="margin-left: 10px"
+            @click="addApproveInfo"
+          >
+            {{ $t('base.button.create') }}
+          </el-button>
         </div>
-        <el-table class="detailTable infoTable" stripe border :data="apprpveInfo" :header-cell-style="tableHeadStyle">
-          <el-table-column align="center" :label="$t('base.button.index')" width="120px" type="index"></el-table-column>
-          <el-table-column align="center" label="审批人" prop="userName"></el-table-column>
-          <el-table-column align="center" label="审批意见" prop="approveidea"></el-table-column>
-          <el-table-column align="center" label="提出时间" prop="posetime"></el-table-column>
-          <el-table-column align="center" label="设计回复" prop="designanswer"></el-table-column>
-          <el-table-column align="center" label="回复时间" prop="answertime"></el-table-column>
-          <el-table-column align="center" label="意见定位">
-
+        <el-table
+          class="detailTable infoTable"
+          stripe
+          border
+          :data="apprpveInfo"
+          :header-cell-style="tableHeadStyle"
+        >
+          <el-table-column
+            align="center"
+            :label="$t('base.button.index')"
+            width="120px"
+            type="index"
+          />
+          <el-table-column
+            align="center"
+            label="审批人"
+            prop="userName"
+          />
+          <el-table-column
+            align="center"
+            label="审批意见"
+            prop="approveidea"
+          />
+          <el-table-column
+            align="center"
+            label="提出时间"
+            prop="posetime"
+          />
+          <el-table-column
+            align="center"
+            label="设计回复"
+            prop="designanswer"
+          />
+          <el-table-column
+            align="center"
+            label="回复时间"
+            prop="answertime"
+          />
+          <el-table-column
+            align="center"
+            label="意见定位"
+          >
             <template slot-scope="scope">
-              <el-button v-if="!!scope.row.imodelDataIUID" type="text" size="small" @click="positionLabel(scope.row)">{{ $t('base.button.view') }}</el-button>
+              <el-button
+                v-if="!!scope.row.imodelDataIUID"
+                type="text"
+                size="small"
+                @click="positionLabel(scope.row)"
+              >
+                {{ $t('base.button.view') }}
+              </el-button>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="意见状态" prop="opinionstatus">
-
+          <el-table-column
+            align="center"
+            label="意见状态"
+            prop="opinionstatus"
+          >
             <template slot-scope="scope">
-              <el-select v-if="scope.row.isstatus" @change="changeStauts(...arguments, scope.row.iuid)" size="small" v-model="scope.row.opinionstatus">
-                <el-option value="复核通过"></el-option>
-                <el-option value="复核不通过"></el-option>
+              <el-select
+                v-if="scope.row.isstatus"
+                v-model="scope.row.opinionstatus"
+                size="small"
+                @change="changeStauts(...arguments, scope.row.iuid)"
+              >
+                <el-option value="复核通过" />
+                <el-option value="复核不通过" />
               </el-select>
-              <div v-else :class="scope.row.opinionstatus == '复核不通过' ? 'red' : scope.row.opinionstatus == '复核通过' ? 'green' : ''">
+              <div
+                v-else
+                :class="scope.row.opinionstatus == '复核不通过' ? 'red' : scope.row.opinionstatus == '复核通过' ? 'green' : ''"
+              >
                 {{ scope.row.opinionstatus }}
               </div>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="130px" :label="$t('base.formLabel.operation')">
-
+          <el-table-column
+            align="center"
+            width="130px"
+            :label="$t('base.formLabel.operation')"
+          >
             <template slot-scope="scope">
-              <el-button size="mini" type="text" v-if="scope.row.isanswer" @click="editApproveInfo(scope.row, 'reply')">回复</el-button>
-              <el-button size="mini" type="text" v-if="scope.row.iseditdel" @click="editApproveInfo(scope.row, 'edit')">{{ $t('base.button.edit') }}</el-button>
-              <el-button size="mini" type="text" v-if="scope.row.iseditdel" @click="deleteInfo(scope.row)">
+              <el-button
+                v-if="scope.row.isanswer"
+                size="mini"
+                type="text"
+                @click="editApproveInfo(scope.row, 'reply')"
+              >
+                回复
+              </el-button>
+              <el-button
+                v-if="scope.row.iseditdel"
+                size="mini"
+                type="text"
+                @click="editApproveInfo(scope.row, 'edit')"
+              >
+                {{ $t('base.button.edit') }}
+              </el-button>
+              <el-button
+                v-if="scope.row.iseditdel"
+                size="mini"
+                type="text"
+                @click="deleteInfo(scope.row)"
+              >
                 <span :style="{ color: scope.row.iseditdel ? '#f56c6c' : '#f56c6c66' }">{{ $t('base.button.delete') }}</span>
               </el-button>
             </template>
@@ -99,121 +278,419 @@
       </div>
       <!-- 底部按钮 -->
       <div class="footer-box flex">
-        <div class="flex" style="width: 100%;" v-if="approveData.status != 3 && approveData.status != 0 && approveData.status != 5">
+        <div
+          v-if="approveData.status != 3 && approveData.status != 0 && approveData.status != 5"
+          class="flex"
+          style="width: 100%;"
+        >
           <div>
-            <el-button size="small" v-if="approveData.isrevoke" type="primary" @click="submitRevoke" plain>撤回</el-button>
-            <el-button size="small" v-if="isMyApprove && (showOperBtn == -1 || showOperBtn == -2)" :disabled="!approveData.isEdit" @click="showSubmit('提交')" type="primary">重新提交</el-button>
+            <el-button
+              v-if="approveData.isrevoke"
+              size="small"
+              type="primary"
+              plain
+              @click="submitRevoke"
+            >
+              撤回
+            </el-button>
+            <el-button
+              v-if="isMyApprove && (showOperBtn == -1 || showOperBtn == -2)"
+              size="small"
+              :disabled="!approveData.isEdit"
+              type="primary"
+              @click="showSubmit('提交')"
+            >
+              重新提交
+            </el-button>
           </div>
-          <div style="margin-left: auto;" v-if="showOperBtn == 0">
-            <el-popover ref="reject" placement="top" width="100" :visible-arrow="true" style="margin: 0 5px;" popper-class="popover" trigger="click">
+          <div
+            v-if="showOperBtn == 0"
+            style="margin-left: auto;"
+          >
+            <el-popover
+              ref="reject"
+              placement="top"
+              width="100"
+              :visible-arrow="true"
+              style="margin: 0 5px;"
+              popper-class="popover"
+              trigger="click"
+            >
               <div class="flex column">
-                <el-button style="margin:0;width:80px" type="text" size="small" @click="showSubmit(4)">修改再审</el-button>
-                <el-button style="margin:0;width:80px" type="text" size="small" @click="showSubmit(3)">重启流程</el-button>
+                <el-button
+                  style="margin:0;width:80px"
+                  type="text"
+                  size="small"
+                  @click="showSubmit(4)"
+                >
+                  修改再审
+                </el-button>
+                <el-button
+                  style="margin:0;width:80px"
+                  type="text"
+                  size="small"
+                  @click="showSubmit(3)"
+                >
+                  重启流程
+                </el-button>
               </div>
-              <el-button slot="reference" size="small" plain>退回 <i class="el-icon-arrow-up"></i></el-button>
+              <el-button
+                slot="reference"
+                size="small"
+                plain
+              >
+                退回 <i class="el-icon-arrow-up" />
+              </el-button>
             </el-popover>
-            <el-button size="small" :disabled="!canHandover(approveItem)" @click="handoverTask(approveItem)" type="primary">转交</el-button>
-            <el-button size="small" type="danger" @click="showSubmit(2)">拒绝</el-button>
-            <el-button size="small" type="primary" @click="showSubmit(0)">同意</el-button>
+            <el-button
+              size="small"
+              :disabled="!canHandover(approveItem)"
+              type="primary"
+              @click="handoverTask(approveItem)"
+            >
+              转交
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="showSubmit(2)"
+            >
+              拒绝
+            </el-button>
+            <el-button
+              size="small"
+              type="primary"
+              @click="showSubmit(0)"
+            >
+              同意
+            </el-button>
           </div>
         </div>
       </div>
       <!-- 选择转交人 -->
-      <el-dialog append-to-body v-dialogDrag title="选择转交人" :close-on-click-modal="false" width="425px" :visible.sync="transferVisible">
-        <el-checkbox-group v-model="responsiblePersonChecked" class="select-person-container">
-          <div style="padding: 0px 8px; margin: 0px; display:flex; align-items: center; height: 30px" v-for="(item, index) in rolePersonData" :key="index">
-            <el-checkbox class="person-option" :disabled="item.userID == user.userID" style="display:block;margin-top:10px" :value="item" :label="item" :key="index">{{ item.userName }}</el-checkbox>
+      <el-dialog
+        v-dialogDrag
+        append-to-body
+        title="选择转交人"
+        :close-on-click-modal="false"
+        width="425px"
+        :visible.sync="transferVisible"
+      >
+        <el-checkbox-group
+          v-model="responsiblePersonChecked"
+          class="select-person-container"
+        >
+          <div
+            v-for="(item, index) in rolePersonData"
+            :key="index"
+            style="padding: 0px 8px; margin: 0px; display:flex; align-items: center; height: 30px"
+          >
+            <el-checkbox
+              :key="index"
+              class="person-option"
+              :disabled="item.userID == user.userID"
+              style="display:block;margin-top:10px"
+              :value="item"
+              :label="item"
+            >
+              {{ item.userName }}
+            </el-checkbox>
           </div>
         </el-checkbox-group>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="transferVisible = false" size="small">{{ $t('base.button.cancel') }}</el-button>
-          <el-button type="primary" @click="submitTransfer" size="small">{{ $t('base.button.confirm') }}</el-button>
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            size="small"
+            @click="transferVisible = false"
+          >
+            {{ $t('base.button.cancel') }}
+          </el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="submitTransfer"
+          >
+            {{ $t('base.button.confirm') }}
+          </el-button>
         </div>
       </el-dialog>
       <!-- 提交信息 -->
-      <el-dialog append-to-body :visible.sync="submitVisible" @close="close1" width="450px" :title="`${submitType == 'submit' ? '提交' : '审批'}结果`">
+      <el-dialog
+        append-to-body
+        :visible.sync="submitVisible"
+        width="450px"
+        :title="`${submitType == 'submit' ? '提交' : '审批'}结果`"
+        @close="close1"
+      >
         <el-form class="approve-form">
-
           <template v-if="submitType == 'submit'">
             <el-form-item label="提交结果：">
               <el-radio-group v-model="approveResult">
-                <el-radio label="0">已修改</el-radio>
-                <el-radio label="1">不予修改</el-radio>
+                <el-radio label="0">
+                  已修改
+                </el-radio>
+                <el-radio label="1">
+                  不予修改
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="提交信息：">
-              <el-input type="textarea" :rows="4" placeholder="请输入提交信息" v-model="approveOpinion" />
+              <el-input
+                v-model="approveOpinion"
+                type="textarea"
+                :rows="4"
+                placeholder="请输入提交信息"
+              />
             </el-form-item>
           </template>
 
           <template v-else-if="submitType == 'approve'">
-            <el-form-item label="审批内容：" v-if="module === 'share' || module === 'download'">
+            <el-form-item
+              v-if="module === 'share' || module === 'download'"
+              label="审批内容："
+            >
               <div>{{ nodeName }}</div>
             </el-form-item>
 
-            <el-form-item label="审批结果：" v-if="module === 'share' || module === 'download'">
+            <el-form-item
+              v-if="module === 'share' || module === 'download'"
+              label="审批结果："
+            >
               <el-radio-group v-model="approveResult">
-                <el-radio :label="0">同意</el-radio>
-                <el-radio :label="2">拒绝</el-radio>
+                <el-radio :label="0">
+                  同意
+                </el-radio>
+                <el-radio :label="2">
+                  拒绝
+                </el-radio>
               </el-radio-group>
             </el-form-item>
 
-            <el-form-item label="审批结果：" v-else>
+            <el-form-item
+              v-else
+              label="审批结果："
+            >
               <div>{{ approveResult | resultMap }}</div>
             </el-form-item>
             <el-form-item label="审批意见：">
-              <el-input type="textarea" :rows="4" placeholder="请输入审批意见" v-model="approveOpinion" />
+              <el-input
+                v-model="approveOpinion"
+                type="textarea"
+                :rows="4"
+                placeholder="请输入审批意见"
+              />
             </el-form-item>
           </template>
         </el-form>
 
-        <template slot="footer" class="dialog-footer">
-          <el-button @click="submitVisible = false" size="small">{{ $t('base.button.cancel') }}</el-button>
-          <el-button type="primary" v-if="submitType == 'approve'" @click="submitReturn" size="small">{{ $t('base.button.confirm') }}</el-button>
-          <el-button type="primary" v-if="submitType == 'submit'" @click="submitResult" size="small">{{ $t('base.button.confirm') }}</el-button>
+        <template
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            size="small"
+            @click="submitVisible = false"
+          >
+            {{ $t('base.button.cancel') }}
+          </el-button>
+          <el-button
+            v-if="submitType == 'approve'"
+            type="primary"
+            size="small"
+            @click="submitReturn"
+          >
+            {{ $t('base.button.confirm') }}
+          </el-button>
+          <el-button
+            v-if="submitType == 'submit'"
+            type="primary"
+            size="small"
+            @click="submitResult"
+          >
+            {{ $t('base.button.confirm') }}
+          </el-button>
         </template>
       </el-dialog>
       <!-- 校审信息 -->
-      <el-dialog append-to-body :visible.sync="approveInfoDialogVisible" width="450px" :title="approveInfoType + '校审信息'" :before-close="(done) => { this.$refs['approveInfoForm'].clearValidate(); done() }">
-        <el-form ref="approveInfoForm" :model="approveInfoForm" :rules="approveInfoFormRules" label-width="120px" size="small">
-          <el-form-item label="所属文件：" prop="approveidea">
-            <el-select v-model="approveInfoForm.FileIUID" :disabled="approveInfoType != $t('base.button.add')" placeholder="请选择文件" clearable>
-              <el-option v-for="item in fileOptions" :key="item.fileIUID" :label="item.fileName" :value="item.fileIUID" />
+      <el-dialog
+        append-to-body
+        :visible.sync="approveInfoDialogVisible"
+        width="450px"
+        :title="approveInfoType + '校审信息'"
+        :before-close="(done) => { this.$refs['approveInfoForm'].clearValidate(); done() }"
+      >
+        <el-form
+          ref="approveInfoForm"
+          :model="approveInfoForm"
+          :rules="approveInfoFormRules"
+          label-width="120px"
+          size="small"
+        >
+          <el-form-item
+            label="所属文件："
+            prop="approveidea"
+          >
+            <el-select
+              v-model="approveInfoForm.FileIUID"
+              :disabled="approveInfoType != $t('base.button.add')"
+              placeholder="请选择文件"
+              clearable
+            >
+              <el-option
+                v-for="item in fileOptions"
+                :key="item.fileIUID"
+                :label="item.fileName"
+                :value="item.fileIUID"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item label="审批意见：" prop="approveidea" :rules="{ required: true, message: '审批意见不能为空', trigger: 'blur' }">
-            <el-input type="textarea" :disabled="approveInfoType == '回复'" placeholder="请输入内容" style="width: 100%" :rows="4" v-model="approveInfoForm.approveidea"></el-input>
+          <el-form-item
+            label="审批意见："
+            prop="approveidea"
+            :rules="{ required: true, message: '审批意见不能为空', trigger: 'blur' }"
+          >
+            <el-input
+              v-model="approveInfoForm.approveidea"
+              type="textarea"
+              :disabled="approveInfoType == '回复'"
+              placeholder="请输入内容"
+              style="width: 100%"
+              :rows="4"
+            />
           </el-form-item>
           <template v-if="isMyApprove && approveItem.status < 0">
-            <el-form-item label="设计回复：" prop="designanswer" :rules="{ required: true, message: '设计回复不能为空', trigger: 'blur' }">
-              <el-input type="textarea" :rows="4" placeholder="请输入内容" style="width: 100%" v-model="approveInfoForm.designanswer" />
+            <el-form-item
+              label="设计回复："
+              prop="designanswer"
+              :rules="{ required: true, message: '设计回复不能为空', trigger: 'blur' }"
+            >
+              <el-input
+                v-model="approveInfoForm.designanswer"
+                type="textarea"
+                :rows="4"
+                placeholder="请输入内容"
+                style="width: 100%"
+              />
             </el-form-item>
           </template>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button size="small" @click="() => { approveInfoDialogVisible = false; this.$refs['approveInfoForm'].clearValidate() }">{{ $t('base.button.cancel') }}</el-button>
-          <el-button size="small" type="primary" v-if="approveInfoType == $t('base.button.add')" @click="submitReply('add')">提 交</el-button>
-          <el-button size="small" type="primary" v-if="approveInfoType == '回复'" @click="submitReply('reply')">提 交</el-button>
-          <el-button size="small" type="primary" v-if="approveInfoType == $t('base.button.edit')" @click="submitReply('edit')">提 交</el-button>
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            size="small"
+            @click="() => { approveInfoDialogVisible = false; this.$refs['approveInfoForm'].clearValidate() }"
+          >
+            {{ $t('base.button.cancel') }}
+          </el-button>
+          <el-button
+            v-if="approveInfoType == $t('base.button.add')"
+            size="small"
+            type="primary"
+            @click="submitReply('add')"
+          >
+            提 交
+          </el-button>
+          <el-button
+            v-if="approveInfoType == '回复'"
+            size="small"
+            type="primary"
+            @click="submitReply('reply')"
+          >
+            提 交
+          </el-button>
+          <el-button
+            v-if="approveInfoType == $t('base.button.edit')"
+            size="small"
+            type="primary"
+            @click="submitReply('edit')"
+          >
+            提 交
+          </el-button>
         </div>
       </el-dialog>
       <!-- 选择下一步 -->
-      <AssignWorkflowTask :dialogVisible.sync="assignWorkflowDialogVisible" :taskData="nextTask" @reload="getData" @parentClose="close">
-      </AssignWorkflowTask>
+      <AssignWorkflowTask
+        :dialog-visible.sync="assignWorkflowDialogVisible"
+        :task-data="nextTask"
+        @reload="getData"
+        @parentClose="close"
+      />
       <!-- 版本 -->
-      <versionViewComponeds :isApprove="true" :centerDialogVisible.sync="versionDialogVisible" :rowData="versionData" :selectedData="versionFile" @queryADDVersion="queryVersionData" @sureVersion="getData">
-      </versionViewComponeds>
+      <versionViewComponeds
+        :is-approve="true"
+        :center-dialog-visible.sync="versionDialogVisible"
+        :row-data="versionData"
+        :selected-data="versionFile"
+        @queryADDVersion="queryVersionData"
+        @sureVersion="getData"
+      />
       <!-- 文件夹审核 -->
-      <el-dialog style="z-index:505" :modal-append-to-body="false" v-dialogDrag title="文件列表" :visible.sync="fileListVisible" width="500">
-        <el-table :data="fileList" border :header-cell-style="$thStyle" stripe>
-          <el-table-column type="index" align="center" width="60" :label="$t('base.button.index')" />
-          <el-table-column prop="fileName" align="center" label="文件列表" />
-          <el-table-column prop="version" width="120" align="center" label="版本" />
-          <el-table-column align="center" width="180" label="文件操作">
+      <el-dialog
+        v-dialogDrag
+        style="z-index:505"
+        :modal-append-to-body="false"
+        title="文件列表"
+        :visible.sync="fileListVisible"
+        width="500"
+      >
+        <el-table
+          :data="fileList"
+          border
+          :header-cell-style="$thStyle"
+          stripe
+        >
+          <el-table-column
+            type="index"
+            align="center"
+            width="60"
+            :label="$t('base.button.index')"
+          />
+          <el-table-column
+            prop="fileName"
+            align="center"
+            label="文件列表"
+          />
+          <el-table-column
+            prop="version"
+            width="120"
+            align="center"
+            label="版本"
+          />
+          <el-table-column
+            align="center"
+            width="180"
+            label="文件操作"
+          >
             <template slot-scope="scope">
-              <el-button type="text" size="small" style="margin-left: 5px" v-if="scope.row.fileSuffix.toLowerCase() == ''" @click="showFileList(scope.row)">打开文件夹</el-button>
-              <el-button type="text" size="small" style="margin-left: 5px" v-if="scope.row.fileSuffix.toLowerCase() != '' && isMyApprove && approveData.isEdit" @click="versionClick(scope.row)">更新</el-button>
-              <el-button type="text" size="small" @click="viewMode(scope.row)">{{ $t('base.button.view') }}</el-button>
+              <el-button
+                v-if="scope.row.fileSuffix.toLowerCase() == ''"
+                type="text"
+                size="small"
+                style="margin-left: 5px"
+                @click="showFileList(scope.row)"
+              >
+                打开文件夹
+              </el-button>
+              <el-button
+                v-if="scope.row.fileSuffix.toLowerCase() != '' && isMyApprove && approveData.isEdit"
+                type="text"
+                size="small"
+                style="margin-left: 5px"
+                @click="versionClick(scope.row)"
+              >
+                更新
+              </el-button>
+              <el-button
+                type="text"
+                size="small"
+                @click="viewMode(scope.row)"
+              >
+                {{ $t('base.button.view') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -223,7 +700,14 @@
       </el-dialog>
     </template>
 
-    <iframe v-if="showModel" :src="modelPreViewInitUrl" class="iframe" ref="imodelIframe" @load="sendFileData" style="background-color: white"></iframe>
+    <iframe
+      v-if="showModel"
+      ref="imodelIframe"
+      :src="modelPreViewInitUrl"
+      class="iframe"
+      style="background-color: white"
+      @load="sendFileData"
+    />
   </div>
 </template>
 
@@ -250,6 +734,10 @@ export default {
       }
       return resList[val]
     }
+  },
+  components: {
+    AssignWorkflowTask,
+    versionViewComponeds,
   },
   props: ["showDetail", "approveId", "loadWorkflowList", "queryApproveCount", "getAllTasks", "approveFileList", "module"],
   data() {
@@ -354,10 +842,6 @@ export default {
       imodelAuditCountInfoDialog: false,
       iframeLoading: null
     };
-  },
-  components: {
-    AssignWorkflowTask,
-    versionViewComponeds,
   },
   computed: {
     imodelAuditCountInfo() {
@@ -495,7 +979,7 @@ export default {
       }
     },
     exportData() {
-      window.open(process.env.BASE_API + `/api/projectworkflow/ProofreadingSetExport?iuid=${this.approveId}`)
+      window.open(process.env.VUE_APP_BASE_API + `/api/projectworkflow/ProofreadingSetExport?iuid=${this.approveId}`)
     },
     messageReceived(res) {
       if (res.data.command === "ImodelClose") {
@@ -626,7 +1110,7 @@ export default {
       let currentFile = this.getItemFolder(this.approveFilesTree, fileIUID)
 
       let query = "path=" + currentFile.turnPath + "&editable=0" + "&selectFile=0"
-      this.modelPreViewInitUrl = process.env.KmwOrigin + "/?" + encrypt(encodeURIComponent(query))
+      this.modelPreViewInitUrl = process.env.VUE_APP_KmwOrigin + "/?" + encrypt(encodeURIComponent(query))
       this.selectImodelFile = { ...currentFile }
       this.positionIuid = row.iuid
 
@@ -844,10 +1328,10 @@ export default {
           return {
             ...item,
             yjview: item.yjview
-              ? process.env.BASE_API + "/" + item.yjview
+              ? process.env.VUE_APP_BASE_API + "/" + item.yjview
               : null,
             hfview: item.hfview
-              ? process.env.BASE_API + "/" + item.hfview
+              ? process.env.VUE_APP_BASE_API + "/" + item.hfview
               : null,
             isMyApprove: item.creatorID == this.user.userid,
           };
@@ -940,7 +1424,7 @@ export default {
           let path = row.turnPath ? row.turnPath : row.filePath
           // let path = 'C:\\Users\\kui10\\Desktop\\临时文件夹\\模型\\铲车\\铲车.dgn.bim'
           // let query = "path=" + path + "&editable=0" + "&selectFile=0"
-          // this.modelPreViewInitUrl = process.env.KmwOrigin + "/?" + encrypt(encodeURIComponent(query))
+          // this.modelPreViewInitUrl = process.env.VUE_APP_KmwOrigin + "/?" + encrypt(encodeURIComponent(query))
           // this.showModel = true
 
           localStorage.setItem('approve', JSON.stringify(true))
@@ -968,7 +1452,7 @@ export default {
             let path = fileItem.turnPath;
             // let path = 'C:\\Users\\kui10\\Desktop\\临时文件夹\\模型\\铲车\\铲车.dgn.bim'
             let query = "path=" + path + "&editable=0" + "&selectFile=0"
-            this.modelPreViewInitUrl = process.env.KmwOrigin + "/?" + encrypt(encodeURIComponent(query))
+            this.modelPreViewInitUrl = process.env.VUE_APP_KmwOrigin + "/?" + encrypt(encodeURIComponent(query))
             this.selectImodelFile = { ...fileItem }
             this.positionIuid = undefined
           }
@@ -1047,7 +1531,7 @@ export default {
     // 导出校审单
     exportExl() {
       let downloadUrl =
-        process.env.BASE_API +
+        process.env.VUE_APP_BASE_API +
         `/api/Verify/ProofreadingSetExport?iuid=${this.approveData.iuid}`;
       window.open(downloadUrl, "校审单.xls");
     },

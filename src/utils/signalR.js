@@ -4,7 +4,7 @@ import local from '@/utils/auth'
 
 const signal = new signalR.HubConnectionBuilder()
     //服务器地址
-    .withUrl(process.env.BASE_API + '/api/chatHub')
+    .withUrl(process.env.VUE_APP_BASE_API + '/api/chatHub')
     // .withAutomaticReconnect([10000, 4000, 10000, 10000])
     .build()
 //自动重连

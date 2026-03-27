@@ -464,7 +464,7 @@ export default {
     },
 
     copyLink(row) {
-      let downloadUrl = process.env.BASE_API + '/' + row.filePath
+      let downloadUrl = process.env.VUE_APP_BASE_API + '/' + row.filePath
       let input = document.createElement('input')
       input.value = downloadUrl
       document.body.appendChild(input)

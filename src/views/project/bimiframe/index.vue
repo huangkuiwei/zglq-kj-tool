@@ -1,36 +1,93 @@
 <template>
   <div class="kanban">
     <!-- <iframe v-if="$supportWebGL() && showIframe" ref="imodelIframe" :src="testUrl" @load="sendtreeData" id="kanbaniframe" class="kanbaniframe" allowfullscreen></iframe> -->
-    <iframe v-if="$supportWebGL() && showIframe" ref="imodelIframe" :src="src" @load="sendtreeData" id="kanbaniframe" class="kanbaniframe" allowfullscreen></iframe>
-    <img v-if="$supportWebGL() && showImg && !errorPageVisible" class="pic-404__parent" :src="$route.query.appImage" :alt="$route.query.name" style="margin: auto;left: 0;right: 0;top: 0;bottom: 0; position:fixed;border-radius: 12px;box-shadow: 2px 2px 6px #44444477;" fit="cover" />
+    <iframe
+      v-if="$supportWebGL() && showIframe"
+      id="kanbaniframe"
+      ref="imodelIframe"
+      :src="src"
+      class="kanbaniframe"
+      allowfullscreen
+      @load="sendtreeData"
+    />
+    <img
+      v-if="$supportWebGL() && showImg && !errorPageVisible"
+      class="pic-404__parent"
+      :src="$route.query.appImage"
+      :alt="$route.query.name"
+      style="margin: auto;left: 0;right: 0;top: 0;bottom: 0; position:fixed;border-radius: 12px;box-shadow: 2px 2px 6px #44444477;"
+      fit="cover"
+    >
     <!-- <img v-if="$supportWebGL() && !showIframe" class="pic-404__parent" :src="$route.query.appLogo" style="width:48px; height:48px; position: absolute; left: 50px; top: 50px"> -->
     <!-- <span v-if="$supportWebGL() && !showIframe" style="font-size:48px; font-weight: 800; position: absolute; left: 110px; top: 50px">{{$route.query.name}}</span> -->
     <div v-if="!$supportWebGL()">
-      <img :src="notSupportWebGLImg" />
+      <img :src="notSupportWebGLImg">
     </div>
 
-    <imodelInvokeFunction :rowData="dataModel" :isFullScreen.sync="isFullScreen" @pageClose="hiddenIframe" ref="imodelInvokeContainer" />
+    <imodelInvokeFunction
+      ref="imodelInvokeContainer"
+      :row-data="dataModel"
+      :is-full-screen.sync="isFullScreen"
+      @pageClose="hiddenIframe"
+    />
 
-    <div class="wscn-http404-container" v-if="errorPageVisible">
+    <div
+      v-if="errorPageVisible"
+      class="wscn-http404-container"
+    >
       <div class="wscn-http404">
         <div class="pic-404">
-          <img class="pic-404__parent" src="@/assets/errorImg/404.png" alt="404" />
-          <img class="pic-404__child left" src="@/assets/errorImg/404_cloud.png" alt="404" />
-          <img class="pic-404__child mid" src="@/assets/errorImg/404_cloud.png" alt="404" />
-          <img class="pic-404__child right" src="@/assets/errorImg/404_cloud.png" alt="404" />
+          <img
+            class="pic-404__parent"
+            src="@/assets/errorImg/404.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child left"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child mid"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
+          <img
+            class="pic-404__child right"
+            src="@/assets/errorImg/404_cloud.png"
+            alt="404"
+          >
         </div>
         <div class="bullshit">
-          <div class="bullshit__headline">当前项目中不包含模型文件。。。</div>
-          <div class="bullshit__info">请重新选择项目，并再次进入本界面。</div>
+          <div class="bullshit__headline">
+            当前项目中不包含模型文件。。。
+          </div>
+          <div class="bullshit__info">
+            请重新选择项目，并再次进入本界面。
+          </div>
         </div>
       </div>
     </div>
 
-    <versionFilesDialog :dialogVisibleProp.sync="versionFilesDialogVisible" :versionFiles="versionFiles" @versionFilesCallBack="versionFilesCallBack" />
+    <versionFilesDialog
+      :dialog-visible-prop.sync="versionFilesDialogVisible"
+      :version-files="versionFiles"
+      @versionFilesCallBack="versionFilesCallBack"
+    />
 
-    <linkModel2Dialog :visible.sync="linkModel2Dialog" v-if="linkModel2Dialog" :list="list" :linkModelFiles="linkModelFiles" :openedProject="openedProject" @linkModelSubmit="linkModelSubmit" />
+    <linkModel2Dialog
+      v-if="linkModel2Dialog"
+      :visible.sync="linkModel2Dialog"
+      :list="list"
+      :link-model-files="linkModelFiles"
+      :opened-project="openedProject"
+      @linkModelSubmit="linkModelSubmit"
+    />
 
-    <div v-if="imodelAuditCountInfoDialog" class="imodel-audit-count-info-dialog">
+    <div
+      v-if="imodelAuditCountInfoDialog"
+      class="imodel-audit-count-info-dialog"
+    >
       <div>
         <span>问题数量：</span>
         <span>{{ imodelAuditCountInfo.total }}</span>
@@ -84,7 +141,7 @@ export default {
   },
   data() {
     return {
-      testUrl: process.env.KmwOrigin + '?d:/file/ld.bim',
+      testUrl: process.env.VUE_APP_KmwOrigin + '?d:/file/ld.bim',
       src: "",
       showIframe: false,
       showImg: true,
@@ -201,7 +258,7 @@ export default {
     async queryTree() {
       this.list = [];
       // 获取目录树
-      // if (this.$route.query.appOrigin == 'GisIframeOrigin') {
+      // if (this.$route.query.appOrigin == 'VUE_APP_GisIframeOrigin') {
       var url = "/api/Noticeboard/GetProjectFileTree?type=1" + (this.$route.query.appType != 'bimWorks' ? "&intall=1" : '') + (this.fileIuid ? "&IUID=" + this.fileIuid : '');
       let fileTree = await projectFileApi.post(url);
       if (fileTree.code == 1 && fileTree.data.length != 0) {
@@ -317,7 +374,7 @@ export default {
         //     userId: this.user.userID,
         //     currentProj: this.projectInfo,
         //     currentFile: this.dataModel,
-        //     fileOriginalUrl: process.env.BASE_API,
+        //     fileOriginalUrl: process.env.VUE_APP_BASE_API,
         //     token: this.token,
         //     bridgeList: data.data || []
         // };
@@ -344,7 +401,7 @@ export default {
       let selectFile = this.$route.query.selectFile == 'true' ? '1' : '0'
       console.log(process.env);
       let originUrl = process.env[this.$route.query.appOrigin]
-      let query = "path=" + (this.dataModel.turnPath ? this.dataModel.turnPath : 'null') + "&editable=0" + "&selectFile=" + selectFile + (this.$route.query.appOrigin == 'GisIframeOrigin' ? '&type=' : '')
+      let query = "path=" + (this.dataModel.turnPath ? this.dataModel.turnPath : 'null') + "&editable=0" + "&selectFile=" + selectFile + (this.$route.query.appOrigin == 'VUE_APP_GisIframeOrigin' ? '&type=' : '')
       this.src = this.dataModel && originUrl + '?' + encrypt(encodeURIComponent(query))
     },
     async sendtreeData() {
@@ -374,7 +431,7 @@ export default {
         localStorage.removeItem('approve')
       }
 
-      this.dataModel.fileOriginalUrl = process.env.BASE_API
+      this.dataModel.fileOriginalUrl = process.env.VUE_APP_BASE_API
       this.token = local.getToken();
       let obj = {}
       if (this.$route.query.name === 'Bridge Master') {
@@ -393,7 +450,7 @@ export default {
           userId: this.user.userID,
           currentProj: this.projectInfo,
           currentFile: this.dataModel,
-          fileOriginalUrl: process.env.BASE_API,
+          fileOriginalUrl: process.env.VUE_APP_BASE_API,
           token: this.token,
           projectIuid: this.projectInfo.iuid,
           folderiuid: folderiuid
@@ -404,14 +461,14 @@ export default {
           userId: this.user.userID,
           currentProj: this.projectInfo,
           currentFile: this.dataModel,
-          fileOriginalUrl: process.env.BASE_API,
+          fileOriginalUrl: process.env.VUE_APP_BASE_API,
           token: this.token
         };
       }
       let _this = this
       this.$iframePostMes(
         _this.$refs.imodelIframe.contentWindow,
-        (_this.$route.query.appOrigin == 'GisIframeOrigin' ? 'bimwindows' : 'initData'),
+        (_this.$route.query.appOrigin == 'VUE_APP_GisIframeOrigin' ? 'bimwindows' : 'initData'),
         obj
       );
 
@@ -444,7 +501,7 @@ export default {
         //         });
         //         res.data = pathItem.join("/");
 
-        //         shijingLinkList.push({ url: process.env.BASE_API + "/" + res.data, name: shijingItem[i].fileName })
+        //         shijingLinkList.push({ url: process.env.VUE_APP_BASE_API + "/" + res.data, name: shijingItem[i].fileName })
         //       }
         //     }
 

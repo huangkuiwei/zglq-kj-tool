@@ -36,7 +36,7 @@ export default {
   },
   // //针对主动下载
   // downloadFile (fileUrl,fileName) {
-  //   var baseApi=process.env.BASE_API;
+  //   var baseApi=process.env.VUE_APP_BASE_API;
   //   window.location.href =baseApi+'/api/Home/Get UploadPictureFileZip?fileUrl='+fileUrl+'&fileName='+fileName
   // },
   chunkUploadFile(model, isProject) {

@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+  <div />
 </template>
 
 <script>
@@ -25,7 +25,7 @@ export default {
             return obj[key];
         }
 
-        location.href=process.env.BASE_API +  "/api/WebOrder/WxRedirect?code="+code+"&state="+state+"";
+        location.href=process.env.VUE_APP_BASE_API +  "/api/WebOrder/WxRedirect?code="+code+"&state="+state+"";
     }
 }
 </script>
