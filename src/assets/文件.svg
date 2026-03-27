@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>文件</title>
+    <desc>Created with Sketch.</desc>
+    <g id="BIM看板" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1、BIM-WINDOWS-图档-全部文件" transform="translate(-316.000000, -356.000000)">
+            <g id="编组-24" transform="translate(240.000000, 128.000000)">
+                <g id="编组-22备份-2" transform="translate(0.000000, 216.000000)">
+                    <g id="文件" transform="translate(76.000000, 12.000000)">
+                        <path d="M1.5625,0 L6.40285486,0 C7.3828036,1.15225397e-15 8.29962451,0.483585815 8.8529858,1.29234463 L10,2.96875 L18.4375,2.96875 C19.3004449,2.96875 20,3.66830508 20,4.53125 L20,18.4375 C20,19.3004449 19.3004449,20 18.4375,20 L1.5625,20 C0.699555078,20 1.05680274e-16,19.3004449 0,18.4375 L0,1.5625 C-1.05680274e-16,0.699555078 0.699555078,1.5852041e-16 1.5625,0 Z" id="矩形" fill="#F7C204"></path>
+                        <path d="M10,2.96875 L18.4375,2.96875 C19.3004449,2.96875 20,3.66830508 20,4.53125 L20,18.4375 C20,19.3004449 19.3004449,20 18.4375,20 L1.5625,20 C0.699555078,20 1.05680274e-16,19.3004449 0,18.4375 L0,2.96875 L10,2.96875 Z" id="矩形" fill="#FFD23D"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

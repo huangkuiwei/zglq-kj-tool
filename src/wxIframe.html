@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<body>
+    <iframe class="iframe" src=""></iframe>
+</body>
+</html>
+<style>
+    body,html{
+        padding: 0;
+        margin: 0;
+    }
+    .iframe{
+        width: 100vw;
+        height: 100vh;
+        display: block;
+        border: 0 none;
+    }
+</style>
+<script>
+    $.ajaxPrefilter(function (options) {
+        if (options.crossDomain && jQuery.support.cors) {
+            var http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+            options.url = 'https:' + '//cors-anywhere.herokuapp.com/' + options.url;
+        }
+    });
+    var link = "https://mp.weixin.qq.com/s/bHkgs0ofj7AQ1ON74-ucpw";
+    
+    $.get(
+        link,
+        function (response) {
+            var html = response;
+            html = html.replace(/data-src/g, "src");
+            //iframe的嵌套
+            // var html_src = 'data:text/html;charset=utf-8,' + html; //解析码解决乱码
+            // $("iframe").attr("src", html_src);
+            $("div").html(html)
+        }
+    );
+</script>

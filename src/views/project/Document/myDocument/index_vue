@@ -1,0 +1,1043 @@
+<template>
+  <div class="app-container background table-box">
+    <!-- //重命名 -->
+    <el-dialog :title="folderDialogOpeType === 'reset' ? '重命名' : '新建文件夹'" :visible.sync="reloadNameDialogVisible" width="30%">
+      <el-input v-model="inputFileName"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="reloadNameDialogVisible = false">{{ $t('base.button.cancel') }}</el-button>
+        <el-button type="primary" @click="reloadNameOK">{{ $t('base.button.confirm') }}</el-button>
+      </span>
+    </el-dialog>
+    <el-row>
+      <el-col :span="14" class="btn-group">
+        <div style="
+            position: relative;
+            display: inline-block;
+            padding: 7px 15px;
+            font-size: 12px;
+            border-radius: 3px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+            color: #606266;
+            margin-right: 10px;
+          ">
+          <div style="cursor: pointer" @click="uploadDialogVisible = !uploadDialogVisible">
+            <i class="iconfont icon-upload" style="font-size: 12px"></i>上传
+          </div>
+          <transition name="el-zoom-in-top">
+            <div v-if="uploadDialogVisible" style="
+                padding-top: 5px;
+                position: absolute;
+                top: 28px;
+                left: 0px;
+                width: 110px;
+                height: 70px;
+                z-index: 99;
+                background-color: white;
+                box-shadow: 0 0 10px #ccc;
+                border-radius: 3px;
+              ">
+              <a href="javascript:;" @click="uploadDialogVisible = false" class="fileFolderUploadHref">上传文件
+                <input class="fileFolderUploadBtn" type="file" name="file" multiple @change="submitFile" alt="请选择文件" />
+              </a>
+              <a href="javascript:;" class="fileFolderUploadHref" @click="uploadDialogVisible = false">上传文件夹
+                <input class="fileFolderUploadBtn" type="file" name="file" @change="fileFolderUpload" webkitdirectory alt="请选择文件夹" />
+              </a>
+            </div>
+          </transition>
+        </div>
+
+        <el-button size="mini" @click="addFolder('', 'add')">
+          <i class="iconfont icon-xinjianwenjianjia"></i>新建文件夹
+        </el-button>
+        <downloadBtn :rows="multipleSelection" :fullPath="getFolderFullPath" />
+        <el-button size="mini" @click="copyTo('move')" v-if="multipleSelection.length > 1">
+          <i class="iconfont icon-download"></i>移动到
+        </el-button>
+        <el-button size="mini" @click="copyTo('copy')" v-if="multipleSelection.length > 1">
+          <i class="iconfont icon-download"></i>复制到
+        </el-button>
+        <shareMutiple v-if="
+            multipleSelection.length > 1 &&
+            $shareMultipleVisible(multipleSelection)
+          " :rows="multipleSelection" />
+        <el-button size="mini" type="danger" @click="handleDelete">
+          <i class="iconfont icon-delete"></i>删除
+        </el-button>
+        <!-- <el-button
+          size="mini"
+          @click="reloadTranscoding"
+        ><i class="iconfont icon-delete"></i>重新转码</el-button> -->
+      </el-col>
+      <el-col :span="8" :offset="2" class="flex right">
+        <el-input :placeholder="$t('base.button.inputFilename')" prefix-icon="el-icon-search" style="width: 240px" clearable v-model="inputValue" @change="queryData(true)" size="mini">
+        </el-input>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 20px" v-if="breadcrumb.length > 0">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>
+          <a @click="queryAll">文件夹</a>
+        </el-breadcrumb-item>
+        <el-breadcrumb-item @click="querySelect(item, index)" v-for="(item, index) in breadcrumb" :key="index">
+          <a @click="querySelect(item, index)">{{ item.fileName }}</a>
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-row>
+
+    <el-row class="table">
+      <ksj-table :tableData="tableData" class="t-table" style="width: 100%; margin-top: 20px; font-size: 13px" :height="clientHeight - 350" stripe @selection-change="handleSelectionChange" @filter-change="filterChange"
+        @sort-change="sortChange" :default-sort="{ prop: 'createTime', order: 'descending' }">
+        <ksj-table-column type="selection" width="55"> </ksj-table-column>
+        <ksj-table-column prop="fileName" :label="$t('base.button.fileName')" sortable>
+          <template slot-scope="scope">
+            <fileIconComponends :fullPath="getFolderFullPath" :row="scope.row" @linkToFilePage="linkToFilePage" />
+          </template>
+        </ksj-table-column>
+        <ksj-table-column prop="fileSize" :label="$t('base.button.fileSize')" width="180">
+        </ksj-table-column>
+        <ksj-table-column prop="createTime" :label="$t('base.button.createTime')" sortable timeRangeBoxable width="220">
+        </ksj-table-column>
+        <ksj-table-column prop="statusType" :filterCheckBoxData="$fileStatus" :label="$t('base.button.fileStatus')" width="180">
+          <template slot-scope="scope" v-if="scope.row.fileSuffix != ''">
+            <fileStatusComponends :scope="scope" />
+          </template>
+        </ksj-table-column>
+        <ksj-table-column fixed="right" :label="$t('base.formLabel.operation')" width="180">
+          <template slot-scope="scope" v-if="scope.row.fileType == '2'">
+            <operateColCom :row="scope.row" />
+
+            <template v-if="scope.row.statusType === '3' || scope.row.statusType === '4'">
+              <el-tooltip v-if="
+                ($modelFileSuffix.indexOf(scope.row.fileSuffix) != -1 &&
+                scope.row.actionType === '2' &&
+                scope.row.fileSuffix != '.dgn') ||
+                ($reTransCodeVideo.indexOf(scope.row.fileSuffix) !== -1 && scope.row.statusType !== '3')
+              " class="tableOpeColMargin" effect="light" content="重新转码" placement="top">
+                <el-link :underline="false" icon="iconfont icon-zhuanma" @click="reloadTranscoding(scope.row.iuid, undefined, scope.row)"></el-link>
+              </el-tooltip>
+            </template>
+
+            <!-- 压缩文件解压操作 -->
+            <el-tooltip v-if="scope.row.fileSuffix && (scope.row.fileSuffix.toLowerCase() === '.zip' || scope.row.fileSuffix.toLowerCase() === '.rar')" class="tableOpeColMargin" effect="light" content="解压"
+              placement="top">
+              <i class="el-icon-folder-opened" style="color: #8f9ab4; cursor: pointer" @click="decompression(scope.row)" />
+            </el-tooltip>
+
+            <el-dropdown v-if="
+                $modelFileSuffix.indexOf(scope.row.fileSuffix) != -1 &&
+                scope.row.actionType === '2' &&
+                scope.row.fileSuffix == '.dgn'
+              " @command="handleCommand($event, scope.row)">
+              <i class="iconfont icon-zhuanma" style="color: #8f9ab4; margin-right: 10px"></i>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="(item, index) in Conversion" :key="index" :command="item.code + '/' + scope.row.iuid">{{ item.name }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!-- 更多 -->
+            <el-dropdown>
+              <i class="iconfont icon-more" style="color: #8f9ab4"></i>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item @click.native="moveCopy('move', scope.row)">移动到</el-dropdown-item>
+                <el-dropdown-item @click.native="moveCopy('copy', scope.row)">复制到</el-dropdown-item>
+                <el-dropdown-item @click.native="reloadClick('reset', scope.row)">重命名</el-dropdown-item>
+                <el-dropdown-item @click.native="versionClick(scope.row)" style="text-align: center" v-if="scope.row.fileSuffix != ''">版本</el-dropdown-item>
+
+                <template v-if="scope.row.fileSuffix && scope.row.fileSuffix.toLowerCase() === '.json'">
+                  <el-dropdown-item @click.native="copyLink(scope.row)">复制链接</el-dropdown-item>
+                </template>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </ksj-table-column>
+      </ksj-table>
+    </el-row>
+    <chunkUploader ref="chunkUploader" @reloadData="queryData" :folderIuid="IUID" />
+    <moveCopyComponends :moveCopyDialogVisble.sync="moveCopyDialogVisible" :moveCopyType="moveCopyType" :rowData="multipleSelection" @shiftData="shiftData" :isType="zskBoolean"></moveCopyComponends>
+    <versionViewComponeds :centerDialogVisible.sync="versionDialogVisible" :rowData="versionData" :selectedData="selectArray" @queryADDVersion="queryADDVersionPost" @sureVersion="sureVersionPost"></versionViewComponeds>
+    <pagination :pageTotal="Total" :pageIndex="page" @handleCurrentChange="paginationCurrentChange" @handleSizeChange="handleSizeChange"></pagination>
+    <partOfDeleteSuccess :containerVisible.sync="pdsVisible" :deleteFilelist="deleteFilelist" :successcount="successcount" :failurecount="failurecount" />
+    <delelteVersionFilesRemindDialog :dialogVisibleProp.sync="deleteVersionFilesDialogVisible" :versionFiles="deleteVersionFiles" @versionFilesCallBack="deleteVersionFilesCallBack" />
+  </div>
+</template>
+<script>
+import { mapGetters } from "vuex";
+import projectFileApi from "@/api/document/indexApi.js";
+import conversionApi from "@/api/project/file";
+import commonApi from "@/api/common";
+import local from "@/utils/auth";
+import socketio from "socket.io-client";
+import pagination from "@/components/pagination/index";
+import chunkUploader from "@/components/ChunkUploader/trigger"; //分片上传触发器
+import fileStatusComponends from "@/components/FileStatus";
+import fileIconComponends from "@/components/fileIcon";
+import operateColCom from "@/components/operateColCom";
+import versionViewComponeds from "@/components/versionView";
+import downloadBtn from "@/components/PreViewAndlistComBtn/downloadButton";
+import moveCopyComponends from "@/components/moveCopyCom";
+import shareMutiple from "@/components/Share/shareBtn_mutiple";
+import partOfDeleteSuccess from "@/components/partOfDeleteSuccess";
+import delelteVersionFilesRemindDialog from "@/components/DeleteRemindAndImodelVersions/versionFiles";
+import request from '@/utils/request'
+import { decrypt } from '@/utils'
+
+export default {
+  components: {
+    shareMutiple,
+    pagination,
+    chunkUploader,
+    fileStatusComponends,
+    fileIconComponends,
+    operateColCom,
+    versionViewComponeds,
+    downloadBtn,
+    moveCopyComponends,
+    partOfDeleteSuccess,
+    delelteVersionFilesRemindDialog,
+  },
+  computed: {
+    ...mapGetters(["signalRTableData", "clientHeight"]),
+  },
+  watch: {
+    signalRTableData() {
+      this.tableData.forEach((element) => {
+        if (element.iuid == this.signalRTableData.iuid) {
+          element.statusType = this.signalRTableData.statusType;
+          element.turnPath = this.signalRTableData.turnPath;
+        }
+      });
+    },
+    $route(to, from) {
+      this.handleCreated();
+    },
+  },
+  data() {
+    return {
+      // 翻页
+      Total: 0,
+      page: 1,
+      rows: 20,
+      // ---------------
+      inputValue: "",
+      fileDialogVisible: false,
+      shareDialogVisible: false,
+      autoUpload: false,
+      fileList: [],
+      tableData: [],
+      multipleSelection: [],
+      breadcrumb: [],
+      IUID: "",
+      inputFileName: "",
+      shareFileName: "",
+      reloadNameIuid: "",
+      oldPlaceholder: "",
+      Conversion: [],
+      folderDialogOpeType: null,
+      moveCopyType: null,
+      treeIsvisible: null,
+      data: [],
+      sameFileData: [],
+      defaultProps: {
+        children: "children",
+        label: "name",
+      },
+      reloadNameDialogVisible: false,
+      moveCopyDialogVisible: false,
+      sameFileDialogVisible: false,
+      activityindex: 0,
+      uploadDialogVisible: false,
+      orderBy: "DESC",
+      allRadio: "",
+      radioSelectedId: "",
+      numType: "",
+      allData: [],
+      folderDialogIndex: "",
+      folderDialogAddType: "",
+      leftFileIuid: "",
+      leftFileMainIuid: "",
+      slectedClick: "",
+      versionDialogVisible: false,
+      versionData: [],
+      selectArray: [
+        {
+          iuid: null,
+          fileType: null,
+        },
+      ],
+      fileIuid: "",
+      locationRowIndex: null,
+      cacheLocationPageIndex: null,
+      zskBoolean: false,
+      pdsVisible: false,
+      deleteFilelist: [],
+      successcount: 0,
+      failurecount: 0,
+      deleteVersionFiles: [],
+      deleteVersionFilesDialogVisible: false,
+      documentFileFilterCallBackRules: [],
+      sortColumn: {
+        prop: 'createTime',
+        order: 'desc'
+      },
+      retryCount: 0,
+      lastRetryTime: Date.now()
+    };
+  },
+  async created() {
+    await this.handleCreated();
+    this.querySelectConversion();
+  },
+  mounted() {
+    //-------------------chunkUploader组件必须----------------------------------
+    document.addEventListener(
+      "dragenter",
+      this.changeUploadDialogVisible,
+      false
+    );
+    document.addEventListener(
+      "dragleave",
+      this.changeUploadDialogVisible,
+      false
+    );
+    document.addEventListener("dragover", (e) => {
+      e.preventDefault();
+    });
+    document.addEventListener("drop", this.changeUploadDialogVisible, false);
+    //-------------------chunkUploader组件必须----------------------------------
+  },
+  destroyed() {
+    //-------------------chunkUploader组件必须----------------------------------
+    document.removeEventListener("dragenter", this.changeUploadDialogVisible);
+    document.removeEventListener("dragleave", this.changeUploadDialogVisible);
+    document.removeEventListener("drop", this.changeUploadDialogVisible);
+    //-------------------chunkUploader组件必须----------------------------------
+  },
+  methods: {
+    filterChange(data) {
+      var index = this.documentFileFilterCallBackRules.findIndex((item) => {
+        return item.key == data.key;
+      });
+      if (index > -1) {
+        this.documentFileFilterCallBackRules.splice(index, 1);
+      }
+      this.documentFileFilterCallBackRules.push(data);
+      this.queryData()
+    },
+    async handleCreated() {
+      if (this.$route.query.pageMode == "location") {
+        var fileType = this.$route.query.fileType;
+        var iuid = this.$route.query.iuid;
+        var res = await projectFileApi.get("/api/Drawing/LocationFileInfo", {
+          fileType,
+          iuid,
+          pageSize: this.rows,
+          orderBy: this.orderBy,
+          fileName: this.inputValue,
+        });
+        if (res.data.fileDeleted) {
+          this.$warning('文件已删除，无法进行定位')
+          this.$router.go(-1)
+          return
+        }
+        this.breadcrumb = res.data.folders.reverse();
+        this.inputValue = "";
+        this.IUID = res.data.folderIuid;
+        this.cacheLocationPageIndex = res.data.pageIndex;
+        this.page = res.data.pageIndex;
+        this.locationRowIndex = res.data.rowIndex;
+      }
+      //this.breadcrumb = [];
+      this.queryData();
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (
+        rowIndex === this.locationRowIndex - 1 &&
+        this.page === this.cacheLocationPageIndex
+      ) {
+        return "success-row";
+      }
+      return "";
+    },
+    //-------------------chunkUploader组件必须----------------------------------
+    changeUploadDialogVisible(event) {
+      event.preventDefault();
+      if (event.type === "dragenter") {
+        this.elementNode = event.target;
+        this.$chunkUploaderChangeVisible(this.$refs["chunkUploader"], true);
+      } else if (event.type === "dragleave") {
+        if (this.elementNode === event.target) {
+          this.uploadDialogVisble = false;
+
+          this.$chunkUploaderChangeVisible(this.$refs["chunkUploader"]);
+        }
+      } else if (event.type === "drop") {
+        this.$chunkUploaderChangeVisible(this.$refs["chunkUploader"]);
+        let items = event.dataTransfer.items;
+        let folderFullPath = this.getFolderFullPath();
+        this.$refs["chunkUploader"].fileDrop(items, folderFullPath);
+      }
+    },
+    getFolderFullPath() {
+      return this.$folderFullPath("图档 / 我的文档", this.breadcrumb);
+    },
+    //-------------------chunkUploader组件必须----------------------------------
+    paginationCurrentChange(val) {
+      this.page = val;
+      this.queryData();
+    },
+    handleSizeChange(val) {
+      this.rows = val;
+      this.queryData();
+    },
+    handleCommand(data, row) {
+      var list = data.split("/");
+      this.reloadTranscoding(list[1], list[0], row);
+    },
+    async reloadTranscoding(data, tool, row) {
+      // if (this.retryCount >= 3 && (Date.now() - this.lastRetryTime < 60000)) {
+      //   this.$message.warning('操作频繁，请稍后重试')
+      //   return
+      // }
+      //
+      // this.retryCount++
+      // this.lastRetryTime = Date.now()
+
+      row.statusType = '-1'
+
+      var res = await projectFileApi.post("/api/Drawing/ReTranscoding", [
+        { iuid: data, tool: tool ? tool : "" },
+      ]);
+      if (res.code == 1) {
+        this.$message({
+          message: "已开始重新转码",
+          type: "success",
+        });
+      } else {
+        this.$message({
+          message: res.msg,
+          type: "success",
+        });
+      }
+    },
+    closeModel() {
+      this.imodelDialogVisible = false;
+    },
+    querySelect(item, index) {
+      this.locationRowIndex = null;
+      this.cacheLocationPageIndex = null;
+      this.breadcrumb.splice(index + 1);
+      this.IUID = item.iuid;
+      this.queryData();
+    },
+    queryAll() {
+      this.locationRowIndex = null;
+      this.cacheLocationPageIndex = null;
+      this.IUID = "";
+      this.breadcrumb = [];
+      this.queryData();
+    },
+    linkToFilePage(row) {
+      this.breadcrumb.push(row);
+      this.IUID = row.iuid;
+      this.page = 1
+      this.queryData();
+    },
+    reloadClick(type, row) {
+      this.folderDialogOpeType = type;
+
+      this.inputFileName = row.fileName.substr(
+        0,
+        row.fileSuffix.length > 0
+          ? row.fileName.lastIndexOf(".")
+          : row.fileName.length
+      );
+      this.reloadNameIuid = row.iuid;
+      this.reloadNameDialogVisible = true;
+    },
+    versionClick(row) {
+      this.selectArray = [];
+      this.selectArray.push(row);
+      // this.fileIuid = this.selectArray[0].iuid
+      // console.log(this.fileIuid)
+      this.versionDialogVisible = true;
+      this.queryVersionData();
+    },
+
+    copyLink(row) {
+      let downloadUrl = process.env.BASE_API + '/' + row.filePath
+      let input = document.createElement('input')
+      input.value = downloadUrl
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+      this.$message.success('复制成功')
+    },
+
+    async queryVersionData() {
+      var formData = new FormData();
+      formData.append("MainIUID", this.selectArray[0].iuid);
+      formData.append("MainFileType", this.selectArray[0].fileType);
+      var res = await conversionApi.queryFileVersion(formData);
+      this.versionData = res.data;
+    },
+    queryADDVersionPost() {
+      this.queryVersionData();
+    },
+    sureVersionPost() {
+      this.queryData();
+    },
+    async reloadNameOK() {
+      if (!this.$fileNameCheck(this.inputFileName)) {
+        return;
+      }
+      if (this.inputFileName.indexOf())
+        if (this.folderDialogAddType == "treeAdd") {
+          if (this.folderDialogIndex == 1) {
+            var formData = new FormData();
+            formData.append("IUID", this.formData.TargetIUID);
+            formData.append("name", this.inputFileName);
+            var res = await projectFileApi.post(
+              "/api/Drawing/DrawingFileAdd",
+              formData
+            );
+            this.$message(res.msg);
+            this.myTree(1);
+            this.reloadNameDialogVisible = false;
+          } else {
+            if (this.treeIsvisible != false) {
+              var formData = new FormData();
+              formData.append("name", this.inputFileName);
+              formData.append("MainIUID", this.leftFileIuid);
+              formData.append("IUID", this.leftFileMainIuid);
+              var res = await conversionApi.addFolder(formData);
+              this.$message(res.msg);
+              // this.projectTree(0);
+              this.reloadNameDialogVisible = false;
+            } else {
+              var formData = new FormData();
+              formData.append("MainIUID", this.formData.TargetIUID);
+              formData.append("Name", this.inputFileName);
+              var res = await projectFileApi.post(
+                "/api/ProjectManagement/ProjectFileAdd",
+                formData
+              );
+              this.$message(res.msg);
+              // this.projectTree(0);
+              this.reloadNameDialogVisible = false;
+            }
+          }
+        } else {
+          var fileName = this.inputFileName;
+          if (this.inputFileName == "") {
+            this.reloadNameDialogVisible = false;
+            return false;
+          }
+          // if (this.inputFileName.indexOf(".") == -1) {
+          //   fileName = this.inputFileName;
+          // } else {
+          //   fileName = this.inputFileName.slice(
+          //     0,
+          //     this.inputFileName.indexOf(".")
+          //   );
+          // }
+          if (this.folderDialogOpeType === "reset") {
+            var formData = new FormData();
+            formData.append("IUID", this.reloadNameIuid);
+            formData.append("Name", fileName);
+            var res = await projectFileApi.docmentResetFileOrFolderName(
+              formData
+            );
+            if (res.code == 1) {
+              this.$message({
+                message: res.msg,
+                type: "success",
+              });
+              this.queryData();
+            }
+          } else {
+            // if (this.inputFileName == "") {
+            //   return false;
+            // }
+            var formData = new FormData();
+            formData.append("flie", "");
+            formData.append("IUID", this.IUID);
+            formData.append("name", this.inputFileName);
+            var res = await projectFileApi.post(
+              "/api/Drawing/DrawingFileAdd",
+              formData
+            );
+            this.$message(res.msg);
+            this.queryData();
+          }
+          this.reloadNameDialogVisible = false;
+        }
+    },
+    // 移动复制
+    moveCopy(type, row) {
+      this.multipleSelection = [];
+      this.moveCopyDialogVisible = true;
+      this.moveCopyType = type;
+      this.multipleSelection.push(row);
+    },
+    copyTo(type) {
+      this.moveCopyType = type;
+      this.moveCopyDialogVisible = true;
+    },
+    formaResouse(row) {
+      switch (row.fileType) {
+        case "0":
+          return "我的文件";
+          break;
+        case "1":
+          return "项目文件";
+          break;
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    async deleteVersionFilesCallBack(data) {
+      var masterFilesIUID = this.multipleSelection.map((item) => {
+        return item.iuid
+      })
+      var res = await projectFileApi.post("/api/Drawing/DrawingFileDeleteNew", { masterFilesIUID: masterFilesIUID.join(','), versionFilesIUID: data.join(',') });
+
+      if (res.code == 1) {
+        this.$deleteSuccess();
+      } else if (res.code == -2) {
+        this.pdsVisible = true;
+        this.deleteFilelist = res.data.deleteFilelist;
+        this.successcount = res.data.successcount;
+        this.failurecount = res.data.failurecount;
+      }
+
+      this.queryData();
+    },
+    async handleDelete() {
+      if (this.multipleSelection.length === 0) {
+        this.$error("请选中一行操作");
+        return;
+      }
+      var versionFilesPostData = this.multipleSelection.map((item) => {
+        return item.iuid;
+      });
+      var versionFilesPostStr = versionFilesPostData.join(",");
+      var versionFilesRes = await projectFileApi.post(
+        "/api/Drawing/DrawingVersionFileData?IUID=" + versionFilesPostStr
+      );
+      if (versionFilesRes.code == 1 && versionFilesRes.data.length > 0) {
+        this.deleteVersionFiles = versionFilesRes.data;
+        this.deleteVersionFilesDialogVisible = true;
+      } else {
+        this.$confirm("确定要删除吗？").then(async () => {
+          let IUID = [];
+          let fileType = [];
+          for (let key in this.multipleSelection) {
+            IUID.push(this.multipleSelection[key].iuid);
+            fileType.push(this.multipleSelection[key].fileType);
+          }
+          var formData = new FormData();
+          formData.append("IUID", IUID.join(","));
+          formData.append("fileType", fileType.join(","));
+
+          let url =
+            "/api/Drawing/DrawingFileDelete?IUID=" +
+            IUID.join(",") +
+            "&fileType=" +
+            fileType.join(",");
+          var res = await projectFileApi.post(url, formData);
+          if (res.code == 1) {
+            this.$deleteSuccess();
+          } else if (res.code == -2) {
+            this.pdsVisible = true;
+            this.deleteFilelist = res.data.deleteFilelist;
+            this.successcount = res.data.successcount;
+            this.failurecount = res.data.failurecount;
+          }
+          this.queryData();
+        });
+      }
+    },
+    async addFolder(index, type, addType) {
+      this.folderDialogOpeType = type;
+      this.reloadNameDialogVisible = true;
+      this.inputFileName = "";
+      // this.folderDialogOpeType = type;
+      // this.folderDialogIndex = index;
+      // this.folderDialogAddType = addType;
+      // if (this.folderDialogAddType == "headAdd") {
+      //   this.inputFileName = "";
+      //   this.reloadNameDialogVisible = true;
+      // } else {
+      //   this.inputFileName = "";
+      //   if (this.folderDialogIndex == 0) {
+      //     if (
+      //       this.formData.TargetIUID == "" &&
+      //       (this.formData.Operationtype == "YD" ||
+      //         this.formData.Operationtype == "FZ")
+      //     ) {
+      //       this.$message({
+      //         message: "请选择目标文件",
+      //       });
+      //     } else {
+      //       this.reloadNameDialogVisible = true;
+      //     }
+      //   } else {
+      //     if (
+      //       this.slectedClick != 1 &&
+      //       (this.formData.Operationtype == "YD" ||
+      //         this.formData.Operationtype == "FZ")
+      //     ) {
+      //       this.$message({
+      //         message: "请选择目标文件",
+      //       });
+      //     } else {
+
+      //     }
+      //   }
+      // }
+    },
+    sortChange(column) {
+      // this.locationRowIndex = null;
+      // this.cacheLocationPageIndex = null;
+      // if (column.order === null) {
+      //   this.orderBy === "DESC"
+      //     ? (column.order = "ascending")
+      //     : (column.order = "descending");
+      //   column.column.order = column.order;
+      // }
+      // this.orderBy = column.order == "ascending" ? "ASC" : "DESC";
+
+      this.locationRowIndex = null;
+      this.cacheLocationPageIndex = null;
+      if (column.order === null) {
+        column.order = "ascending";
+      }
+      this.sortColumn = JSON.parse(JSON.stringify(column));
+      this.sortColumn.order =
+        this.sortColumn.order == "ascending" ? "asc" : "desc";
+      this.queryData();
+    },
+    async queryData(fileNameSearch) {
+      if (fileNameSearch) {
+        this.cacheLocationPageIndex = null;
+        this.locationRowIndex = null;
+      }
+
+      var formData = new FormData();
+      formData.append("IUID", this.IUID);
+      formData.append("page", this.page);
+      formData.append("rows", this.rows);
+      formData.append("FileName", this.inputValue);
+
+      this.documentFileFilterCallBackRules.forEach((item) => {
+        var stringFyValue = item.value;
+        switch (item.key) {
+          case "statusType":
+            formData.append("FileType", stringFyValue.join(','));
+            break;
+          case "createTime":
+            formData.append("Starttime", stringFyValue ? stringFyValue[0] : '');
+            formData.append("Endtime", stringFyValue ? stringFyValue[1] : '')
+            break;
+        }
+      });
+
+      if (this.sortColumn) {
+        formData.append("sortfield", this.sortColumn.prop);
+        formData.append("Orderby", this.sortColumn.order);
+      }
+
+      var res = await projectFileApi.post(
+        "/api/Drawing/GetpersonalDocument",
+        formData
+      );
+      res.data && res.data.forEach(item => {
+        item.checkBoxChecked = false
+      })
+      this.Total = res.count;
+
+      // filePath 和 turnPath 解码
+      res.data && res.data.forEach(item => {
+        item.filePath = decrypt(item.filePath || '')
+        item.turnPath = decrypt(item.turnPath || '')
+      })
+
+      this.tableData = res.data;
+    },
+    async querySelectConversion() {
+      var res = await conversionApi.querySelectConversion({});
+      if (res.code) {
+        this.Conversion = res.data;
+      }
+    },
+    fileFolderUpload(event) {
+      var _self = this;
+      this.$refs.chunkUploader.fileData = [];
+
+      if (event.target.files.length > 1000) {
+        this.$message.warning('单次仅支持1000以内的文件上传，可以通过上传压缩包再线上解压的形式上传大批量文件。')
+        return
+      }
+
+      for (var i = 0; i < event.target.files.length; i++) {
+        let arr
+        let item = event.target.files[i];
+        arr = item.name.substring(item.name.lastIndexOf('.'));
+        this.$refs.chunkUploader.fileData.push({
+          folderIuid: _self.IUID,
+          fileName: item.name,
+          fullPath: _self.getFolderFullPath(),
+          relativePath: item.webkitRelativePath,
+          file: item,
+          fileSuffix: arr,
+          Operatingstate: 0,
+          Operationmode: 0,
+          sign: null,  //作为标识传给后台，后台有用
+          fileSize: _self.$getFileSize(item.size),
+          lastModifiedData: _self.$dayjs(
+            item.lastModifiedDate,
+            "YYYY-MM-DD HH:mm:ss"
+          ),
+          uploadTime: _self.$dayjs(new Date(), "YYYY-MM-DD HH:mm:ss"),
+        });
+      }
+
+      this.$refs.chunkUploader.uploadDragFile();
+    },
+    async submitFile(file) {
+      var files = file.target.files;
+      var _self = this;
+      this.$refs.chunkUploader.fileData = [];
+      var arr
+      for (var i = 0; i < files.length; i++) {
+        arr = files[i].name.substring(files[i].name.lastIndexOf('.'));
+        this.$refs.chunkUploader.fileData.push({
+          folderIuid: _self.IUID,
+          fileName: files[i].name,
+          relativePath: files[i].name,
+          fullPath: _self.getFolderFullPath(),
+          fileSuffix: arr,
+          Operatingstate: 0,
+          Operationmode: 0,
+          sign: null,   //作为标识传给后台，后台有用
+          file: files[i],
+          fileSize: _self.$getFileSize(files[i].size),
+          lastModifiedData: _self.$dayjs(
+            files[i].lastModifiedDate,
+            "YYYY-MM-DD HH:mm:ss"
+          ),
+          uploadTime: _self.$dayjs(new Date(), "YYYY-MM-DD HH:mm:ss"),
+        });
+      }
+
+      this.$refs.chunkUploader.uploadDragFile();
+    },
+    shiftData() {
+      this.queryData();
+    },
+
+    /**
+     * 解压压缩文件
+     */
+    decompression(row) {
+      const loading = this.$loading({
+        text: '文件正在解压，请稍等...',
+        lock: true,
+        body: true
+      })
+
+      request.get('/api/Home/Testingtemporary', {
+        params: {
+          IUID: row.iuid,
+          filetype: '2',
+        }
+      }).then(res => {
+        // 正常
+        if (res.code === 1) {
+          this.decompressionHandler(row, res, true).then((data) => {
+            loading.close()
+
+            if (data.code === 1) {
+              this.$message.success('解压成功')
+              this.queryData()
+            }
+          })
+        } else if (res.code === -99) {
+          loading.close()
+          // 文件被占用
+          this.$message.error(res.msg)
+        } else if (res.code === -88) {
+          loading.close()
+
+          // 之前已解压，是否覆盖
+          const h = this.$createElement
+
+          this.$msgbox({
+            title: '提示',
+            message: h('div', res.msg),
+            showCancelButton: true,
+            confirmButtonText: '覆盖',
+            cancelButtonText: '不覆盖',
+            beforeClose: (action, instance, done) => {
+              if (action === 'close') {
+                done()
+                return
+              }
+
+              const loading = this.$loading({
+                text: '文件正在解压，请稍等...',
+                lock: true,
+                body: true
+              })
+
+              const isCover = action === 'confirm'
+
+              this.decompressionHandler(row, res, isCover).then(() => {
+                loading.close()
+                this.$message.success('解压成功')
+                this.queryData()
+              })
+
+              done()
+            }
+          })
+        }
+      })
+    },
+
+    decompressionHandler(row, res, isCover) {
+      return request.get('/api/Home/decompressingfiles', {
+        params: {
+          IUID: row.iuid,
+          filetype: '2',
+          tempIUID: res.data.tempIUID,
+          typebit: isCover,
+        }
+      })
+    }
+  },
+};
+</script>
+<style>
+.el-submenu__title {
+  display: none;
+}
+.same .el-dialog__footer {
+  text-align: center;
+}
+.el-radio__inner {
+  border-radius: 0;
+}
+.fileIconName {
+  width: 65%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* .el-dropdown {
+  margin-right: 10px;
+} */
+</style>
+<style scoped lang="scss">
+.uploadFile {
+  margin-right: 0;
+  /deep/ .el-upload-list {
+    display: none;
+  }
+  /deep/ button {
+    padding: 7px 15px;
+  }
+}
+.shareText {
+  font-size: 14px;
+  color: #3194d0;
+  margin-left: 10px;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  background: transparent;
+  width: 100%;
+  border: none;
+  line-height: 20px;
+  height: 109px;
+  padding: 0;
+  white-space: break-spaces;
+  resize: none;
+}
+.icluude {
+  padding: 15px 0;
+  font-size: 13px;
+  cursor: pointer;
+  div {
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    color: #303133;
+  }
+  .list:last-child {
+    font-weight: 400;
+    color: #606266;
+    cursor: text;
+  }
+  span {
+    margin: 0 9px;
+    font-weight: 700;
+    color: #c0c4cc;
+  }
+}
+.kanbaniframe {
+  width: 100%;
+  height: 100%;
+}
+.imodelDialog {
+  /deep/ .el-dialog {
+    height: calc(100% - 16vh);
+  }
+  /deep/ .el-dialog__body {
+    height: calc(100% - 16vh);
+  }
+}
+.allfile {
+  position: absolute;
+  height: 100%;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  padding: 10px;
+  width: 100%;
+  overflow: auto;
+}
+
+.right {
+  justify-content: flex-end;
+}
+
+.topTitle {
+  text-align: center;
+  padding-bottom: 30px;
+}
+.bottomCon {
+  background: #f7f7f7;
+  color: #424e67;
+  // padding: 0 15px 15px 15px;
+  margin-bottom: 20px;
+}
+.existing {
+  flex: 1;
+  padding-top: 17px;
+}
+.existingTit {
+  justify-content: space-around;
+  color: rgba(64, 158, 255, 1);
+  padding-bottom: 17px;
+}
+.fileInfo {
+  padding-left: 33px;
+  line-height: 33px;
+  color: gray;
+}
+.active {
+  background: rgba(228, 233, 240, 1) !important;
+}
+</style>

@@ -1,0 +1,221 @@
+ul {
+  list-style: none;
+  padding-left: 10px;
+}
+
+.mainFlex {
+  display: flex;
+}
+
+.mainFlex.fc {
+  justify-content: center;
+}
+
+.mainFlexBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mainTop {
+  display: flex;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 20px;
+  border-bottom: 1px solid #fff;
+  background: rgb(250, 250, 255);
+}
+
+.addIco {
+  width: 30px;
+  height: 30px;
+  line-height: 34px;
+  border: 2px solid rgb(0, 191, 191);
+  border-radius: 6px;
+  margin: auto 10px;
+  cursor: pointer;
+}
+
+.topTit {
+  margin-right: 15px;
+  color: #909399;
+  font-size: 14px;
+}
+
+.label {
+  height: 26px;
+  line-height: 24px;
+  font-size: 14px;
+  padding: 0 14px;
+  color: rgb(62, 181, 209);
+  border-radius: 6px;
+  margin: auto 10px auto 0;
+  border: 1px dashed rgb(62, 181, 209);
+  cursor: pointer;
+}
+
+.screening {
+  align-items: center;
+  padding-right: 20px;
+}
+
+.screeningLi {
+  display: flex;
+  font-size: 12px;
+  border: 1px solid #2dafcd;
+  padding: 0 4px;
+  background: #fff;
+  margin-right: 16px;
+  box-sizing: border-box;
+  height: 32px;
+  line-height: 30px;
+  color: #2dafcd;
+}
+
+.screeningLeft {
+  align-items: center;
+}
+
+.screeningBtn {
+  border: 1px solid #788296;
+  background-color: #fff;
+  color: #787a82;
+  font-size: 12px;
+  height: 32px;
+  line-height: 30px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  margin-right: 16px;
+}
+
+.emphasis {
+  color: #2dafcd;
+}
+
+.filename {
+  line-height: 24px;
+  height: 48px;
+  font-size: 16px;
+  padding: 0 8px;
+  text-align: center;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.mainConLi {
+  position: relative;
+  float: left;
+  width: calc(20% - 10px);
+  border: 1px solid #eee;
+  overflow: hidden;
+  height: 275px;
+  margin: 10px 10px 16px 0;
+  text-align: center;
+  background: #fff;
+  border-radius: 6px;
+}
+
+.sourcesInfo {
+  padding: 10px 10px;
+  background: #f5f5fa;
+}
+
+.mainConLi:hover {
+  cursor: pointer;
+  transform: translateY(-3px);
+  -webkit-transform: translateY(-3px);
+  -moz-transform: translateY(-3px);
+  box-shadow: 2px 2px 6px 3px rgba(0, 0, 0, 0.08);
+}
+
+.mainConLi img {
+  width: calc(100% - 10px);
+  height: 180px;
+  margin: 20px 5px;
+  object-fit: cover
+}
+
+.sourcesArtifacts {
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+}
+
+.fileFolderUploadBtn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 60px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.mainTop ::v-deep .el-form-item {
+  margin-bottom: 0;
+}
+
+.mainTop ::v-deep .el-form-item__label {
+  margin-right: 6px;
+  color: #000;
+}
+
+.thumbnail ::v-deep .avatar-uploader {
+  display: flex;
+  width: 100%;
+}
+
+.thumbnail ::v-deep ul {
+  display: flex;
+}
+
+.thumbnail ::v-deep li {
+  width: 88px;
+  height: 88px;
+}
+
+.thumbnail ::v-deep .el-upload--picture-card {
+  width: 88px;
+  height: 88px;
+  line-height: 88px;
+}
+
+.thumbnail ::v-deep .avatar-uploader {
+  overflow-x: auto;
+  height: 88px;
+  border: none;
+
+  .avatar-uploader-icon {
+    width: 88px;
+    height: 88px;
+    line-height: 88px;
+    min-height: 88px;
+  }
+}
+
+.cover {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  /*宽度设置为100%，这样才能使隐藏背景层覆盖原页面*/
+  height: 100%;
+  filter: alpha(opacity=60);
+  /*设置透明度为60%*/
+  opacity: 0.6;
+  /*非IE浏览器下设置透明度为60%*/
+  z-Index: 999;
+}
+.filter-tree{
+  height: calc(100vh - 51px);
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 1200px) {
+  .mainConLi {
+    width: calc(33.3% - 10px);
+  }
+}

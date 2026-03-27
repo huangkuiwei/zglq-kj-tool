@@ -1,0 +1,1279 @@
+[
+  {
+    "cName": "欧洲",
+    "name": "Europe",
+    "children": [
+      {
+        "cName": "丹麦",
+        "code": "DK",
+        "name": "Denmark"
+      },
+      {
+        "cName": "乌克兰",
+        "code": "UA",
+        "name": "Ukraine"
+      },
+      {
+        "cName": "俄罗斯",
+        "code": "RU",
+        "name": "Russia"
+      },
+      {
+        "cName": "保加利亚",
+        "code": "BG",
+        "name": "Bulgaria"
+      },
+      {
+        "cName": "克罗地亚",
+        "code": "HR",
+        "name": "Croatia"
+      },
+      {
+        "cName": "冰岛",
+        "code": "IS",
+        "name": "Iceland"
+      },
+      {
+        "cName": "列支敦士登",
+        "code": "LI",
+        "name": "Liechtenstein"
+      },
+      {
+        "cName": "匈牙利",
+        "code": "HU",
+        "name": "Hungary"
+      },
+      {
+        "cName": "卢森堡",
+        "code": "LU",
+        "name": "Luxembourg"
+      },
+      {
+        "cName": "圣马力诺",
+        "code": "SM",
+        "name": "San Marino"
+      },
+      {
+        "cName": "塞尔维亚",
+        "code": "RS",
+        "name": "Serbia"
+      },
+      {
+        "cName": "奥兰群岛",
+        "code": "AX",
+        "name": "Aland Island"
+      },
+      {
+        "cName": "奥地利",
+        "code": "AT",
+        "name": "Austria"
+      },
+      {
+        "cName": "安道尔",
+        "code": "AD",
+        "name": "Andorra"
+      },
+      {
+        "cName": "希腊",
+        "code": "GR",
+        "name": "Greece"
+      },
+      {
+        "cName": "德国",
+        "code": "DE",
+        "name": "Germany"
+      },
+      {
+        "cName": "意大利",
+        "code": "IT",
+        "name": "Italy"
+      },
+      {
+        "cName": "拉脱维亚",
+        "code": "LV",
+        "name": "Latvia"
+      },
+      {
+        "cName": "挪威",
+        "code": "NO",
+        "name": "Norway"
+      },
+      {
+        "cName": "捷克",
+        "code": "CZ",
+        "name": "Czech Republic"
+      },
+      {
+        "cName": "摩尔多瓦",
+        "code": "MD",
+        "name": "Moldova"
+      },
+      {
+        "cName": "摩纳哥",
+        "code": "MC",
+        "name": "Monaco"
+      },
+      {
+        "cName": "斯洛伐克",
+        "code": "SK",
+        "name": "Slovakia"
+      },
+      {
+        "cName": "斯洛文尼亚",
+        "code": "SI",
+        "name": "Slovenia"
+      },
+      {
+        "cName": "根西岛",
+        "code": "GG",
+        "name": "Guernsey"
+      },
+      {
+        "cName": "比利时",
+        "code": "BE",
+        "name": "Belgium"
+      },
+      {
+        "cName": "法国",
+        "code": "FR",
+        "name": "France"
+      },
+      {
+        "cName": "法罗群岛",
+        "code": "FO",
+        "name": "Faroe Islands"
+      },
+      {
+        "cName": "波兰",
+        "code": "PL",
+        "name": "Poland"
+      },
+      {
+        "cName": "波黑",
+        "code": "BA",
+        "name": "Bosnia & Herzegovina"
+      },
+      {
+        "cName": "泽西岛",
+        "code": "JE",
+        "name": "Jersey"
+      },
+      {
+        "cName": "爱尔兰",
+        "code": "IE",
+        "name": "Ireland"
+      },
+      {
+        "cName": "爱沙尼亚",
+        "code": "EE",
+        "name": "Estonia"
+      },
+      {
+        "cName": "瑞典",
+        "code": "SE",
+        "name": "Sweden"
+      },
+      {
+        "cName": "瑞士",
+        "code": "CH",
+        "name": "Switzerland"
+      },
+      {
+        "cName": "白俄罗斯",
+        "code": "BY",
+        "name": "Belarus"
+      },
+      {
+        "cName": "直布罗陀",
+        "code": "GI",
+        "name": "Gibraltar"
+      },
+      {
+        "cName": "立陶宛",
+        "code": "LT",
+        "name": "Lithuania"
+      },
+      {
+        "cName": "罗马尼亚",
+        "code": "RO",
+        "name": "Romania"
+      },
+      {
+        "cName": "芬兰",
+        "code": "FI",
+        "name": "Finland"
+      },
+      {
+        "cName": "英国",
+        "code": "GB",
+        "name": "United Kingdom"
+      },
+      {
+        "cName": "荷兰",
+        "code": "NL",
+        "name": "Netherlands"
+      },
+      {
+        "cName": "葡萄牙",
+        "code": "PT",
+        "name": "Portugal"
+      },
+      {
+        "cName": "西班牙",
+        "code": "ES",
+        "name": "Spain"
+      },
+      {
+        "cName": "阿尔巴尼亚",
+        "code": "AL",
+        "name": "Albania"
+      },
+      {
+        "cName": "马其顿",
+        "code": "MK",
+        "name": "Republic of Macedonia (FYROM)"
+      },
+      {
+        "cName": "马恩岛",
+        "code": "IM",
+        "name": "Isle of Man"
+      },
+      {
+        "cName": "马耳他",
+        "code": "MT",
+        "name": "Malta"
+      },
+      {
+        "cName": "黑山",
+        "code": "ME",
+        "name": "Montenegro"
+      }
+    ]
+  },
+  {
+    "cName": "北美洲",
+    "name": "North America",
+    "children": [
+      {
+        "cName": "荷兰加勒比区",
+        "code": "BQ",
+        "name": "Caribbean Netherlands"
+      },
+      {
+        "cName": "蒙塞拉特岛",
+        "code": "MS",
+        "name": "Montserrat"
+      },
+      {
+        "cName": "伯利兹",
+        "code": "BZ",
+        "name": "Belize"
+      },
+      {
+        "cName": "加拿大",
+        "code": "CA",
+        "name": "Canada"
+      },
+      {
+        "cName": "危地马拉",
+        "code": "GT",
+        "name": "Guatemala"
+      },
+      {
+        "cName": "古巴",
+        "code": "CU",
+        "name": "Cuba"
+      },
+      {
+        "cName": "哥斯达黎加",
+        "code": "CR",
+        "name": "Costa Rica"
+      },
+      {
+        "cName": "圣卢西亚",
+        "code": "LC",
+        "name": "St. Lucia"
+      },
+      {
+        "cName": "圣基茨和尼维斯",
+        "code": "KN",
+        "name": "St. Kitts & Nevis"
+      },
+      {
+        "cName": "圣巴泰勒米岛",
+        "code": "BL",
+        "name": "Saint Barthélemy"
+      },
+      {
+        "cName": "圣文森特和格林纳丁斯",
+        "code": "VC",
+        "name": "St. Vincent & the Grenadines"
+      },
+      {
+        "cName": "圣皮埃尔和密克隆",
+        "code": "PM",
+        "name": "Saint-Pierre & Miquelon"
+      },
+      {
+        "cName": "墨西哥",
+        "code": "MX",
+        "name": "Mexico"
+      },
+      {
+        "cName": "多米尼克",
+        "code": "DM",
+        "name": "Dominica"
+      },
+      {
+        "cName": "多米尼加",
+        "code": "DO",
+        "name": "Dominican Republic"
+      },
+      {
+        "cName": "安圭拉",
+        "code": "AI",
+        "name": "Anguilla"
+      },
+      {
+        "cName": "安提瓜和巴布达",
+        "code": "AG",
+        "name": "Antigua & Barbuda"
+      },
+      {
+        "cName": "尼加拉瓜",
+        "code": "NI",
+        "name": "Nicaragua"
+      },
+      {
+        "cName": "巴哈马",
+        "code": "BS",
+        "name": "The Bahamas"
+      },
+      {
+        "cName": "巴巴多斯",
+        "code": "BB",
+        "name": "Barbados"
+      },
+      {
+        "cName": "巴拿马",
+        "code": "PA",
+        "name": "Panama"
+      },
+      {
+        "cName": "库拉索",
+        "code": "CW",
+        "name": "Curacao"
+      },
+      {
+        "cName": "开曼群岛",
+        "code": "KY",
+        "name": "Cayman Islands"
+      },
+      {
+        "cName": "格林纳达",
+        "code": "GD",
+        "name": "Grenada"
+      },
+      {
+        "cName": "格陵兰",
+        "code": "GL",
+        "name": "Greenland"
+      },
+      {
+        "cName": "法属圣马丁",
+        "code": "MF",
+        "name": "Saint Martin (France)"
+      },
+      {
+        "cName": "波多黎各",
+        "code": "PR",
+        "name": "Puerto Rico"
+      },
+      {
+        "cName": "洪都拉斯",
+        "code": "HN",
+        "name": "Honduras"
+      },
+      {
+        "cName": "海地",
+        "code": "HT",
+        "name": "Haiti"
+      },
+      {
+        "cName": "牙买加",
+        "code": "JM",
+        "name": "Jamaica"
+      },
+      {
+        "cName": "特克斯和凯科斯群岛",
+        "code": "TC",
+        "name": "Turks & Caicos Islands"
+      },
+      {
+        "cName": "特立尼达和多巴哥",
+        "code": "TT",
+        "name": "Trinidad & Tobago"
+      },
+      {
+        "cName": "瓜德罗普",
+        "code": "GP",
+        "name": "Guadeloupe"
+      },
+      {
+        "cName": "百慕大",
+        "code": "BM",
+        "name": "Bermuda"
+      },
+      {
+        "cName": "美国",
+        "code": "US",
+        "name": "United States of America (USA)"
+      },
+      {
+        "cName": "美国本土外小岛屿",
+        "code": "UM",
+        "name": "United States Minor Outlying Islands"
+      },
+      {
+        "cName": "美属维尔京群岛",
+        "code": "VI",
+        "name": "United States Virgin Islands"
+      },
+      {
+        "cName": "英属维尔京群岛",
+        "code": "VG",
+        "name": "British Virgin Islands"
+      },
+      {
+        "cName": "荷属圣马丁",
+        "code": "SX",
+        "name": "Sint Maarten"
+      },
+      {
+        "cName": "萨尔瓦多",
+        "code": "SV",
+        "name": "El Salvador"
+      },
+      {
+        "cName": "阿鲁巴",
+        "code": "AW",
+        "name": "Aruba"
+      },
+      {
+        "cName": "马提尼克",
+        "code": "MQ",
+        "name": "Martinique"
+      }
+    ]
+  },
+  {
+    "cName": "非洲",
+    "name": "Africa",
+    "children": [
+      {
+        "cName": "西撒哈拉",
+        "code": "EH",
+        "name": "Western Sahara"
+      },
+      {
+        "cName": "中非",
+        "code": "CF",
+        "name": "Central African Republic"
+      },
+      {
+        "cName": "乌干达",
+        "code": "UG",
+        "name": "Uganda"
+      },
+      {
+        "cName": "乍得",
+        "code": "TD",
+        "name": "Chad"
+      },
+      {
+        "cName": "佛得角",
+        "code": "CV",
+        "name": "Cape Verde"
+      },
+      {
+        "cName": "冈比亚",
+        "code": "GM",
+        "name": "Gambia"
+      },
+      {
+        "cName": "几内亚",
+        "code": "GN",
+        "name": "Guinea"
+      },
+      {
+        "cName": "几内亚比绍",
+        "code": "GW",
+        "name": "Guinea-Bissau"
+      },
+      {
+        "cName": "刚果(布)",
+        "code": "CG",
+        "name": "Republic of the Congo"
+      },
+      {
+        "cName": "刚果(金)",
+        "code": "CD",
+        "name": "Democratic Republic of the Congo"
+      },
+      {
+        "cName": "利比亚",
+        "code": "LY",
+        "name": "Libya"
+      },
+      {
+        "cName": "利比里亚",
+        "code": "LR",
+        "name": "Liberia"
+      },
+      {
+        "cName": "加纳",
+        "code": "GH",
+        "name": "Ghana"
+      },
+      {
+        "cName": "加蓬",
+        "code": "GA",
+        "name": "Gabon"
+      },
+      {
+        "cName": "南苏丹",
+        "code": "SS",
+        "name": "South Sudan"
+      },
+      {
+        "cName": "南非",
+        "code": "ZA",
+        "name": "South Africa"
+      },
+      {
+        "cName": "博茨瓦纳",
+        "code": "BW",
+        "name": "Botswana"
+      },
+      {
+        "cName": "卢旺达",
+        "code": "RW",
+        "name": "Rwanda"
+      },
+      {
+        "cName": "厄立特里亚",
+        "code": "ER",
+        "name": "Eritrea"
+      },
+      {
+        "cName": "吉布提",
+        "code": "DJ",
+        "name": "Djibouti"
+      },
+      {
+        "cName": "喀麦隆",
+        "code": "CM",
+        "name": "Cameroon"
+      },
+      {
+        "cName": "圣多美和普林西比",
+        "code": "ST",
+        "name": "Sao Tome & Principe"
+      },
+      {
+        "cName": "圣赫勒拿",
+        "code": "SH",
+        "name": "St. Helena & Dependencies"
+      },
+      {
+        "cName": "坦桑尼亚",
+        "code": "TZ",
+        "name": "Tanzania"
+      },
+      {
+        "cName": "埃及",
+        "code": "EG",
+        "name": "Egypt"
+      },
+      {
+        "cName": "埃塞俄比亚",
+        "code": "ET",
+        "name": "Ethiopia"
+      },
+      {
+        "cName": "塞内加尔",
+        "code": "SN",
+        "name": "Senegal"
+      },
+      {
+        "cName": "塞拉利昂",
+        "code": "SL",
+        "name": "Sierra Leone"
+      },
+      {
+        "cName": "塞舌尔",
+        "code": "SC",
+        "name": "Seychelles"
+      },
+      {
+        "cName": "多哥",
+        "code": "TG",
+        "name": "Togo"
+      },
+      {
+        "cName": "安哥拉",
+        "code": "AO",
+        "name": "Angola"
+      },
+      {
+        "cName": "尼日利亚",
+        "code": "NG",
+        "name": "Nigeria"
+      },
+      {
+        "cName": "尼日尔",
+        "code": "NE",
+        "name": "Niger"
+      },
+      {
+        "cName": "布基纳法索",
+        "code": "BF",
+        "name": "Burkina"
+      },
+      {
+        "cName": "布隆迪",
+        "code": "BI",
+        "name": "Burundi"
+      },
+      {
+        "cName": "摩洛哥",
+        "code": "MA",
+        "name": "Morocco"
+      },
+      {
+        "cName": "斯威士兰",
+        "code": "SZ",
+        "name": "Swaziland"
+      },
+      {
+        "cName": "毛里塔尼亚",
+        "code": "MR",
+        "name": "Mauritania"
+      },
+      {
+        "cName": "毛里求斯",
+        "code": "MU",
+        "name": "Mauritius"
+      },
+      {
+        "cName": "津巴布韦",
+        "code": "ZW",
+        "name": "Zimbabwe"
+      },
+      {
+        "cName": "留尼汪",
+        "code": "RE",
+        "name": "Réunion"
+      },
+      {
+        "cName": "科摩罗",
+        "code": "KM",
+        "name": "The Comoros"
+      },
+      {
+        "cName": "科特迪瓦",
+        "code": "CI",
+        "name": "Cote d'Ivoire"
+      },
+      {
+        "cName": "突尼斯",
+        "code": "TN",
+        "name": "Tunisia"
+      },
+      {
+        "cName": "索马里",
+        "code": "SO",
+        "name": "Somalia"
+      },
+      {
+        "cName": "纳米比亚",
+        "code": "NA",
+        "name": "Namibia"
+      },
+      {
+        "cName": "肯尼亚",
+        "code": "KE",
+        "name": "Kenya"
+      },
+      {
+        "cName": "苏丹",
+        "code": "SD",
+        "name": "Sudan"
+      },
+      {
+        "cName": "英属印度洋领地",
+        "code": "IO",
+        "name": "British Indian Ocean Territory"
+      },
+      {
+        "cName": "莫桑比克",
+        "code": "MZ",
+        "name": "Mozambique"
+      },
+      {
+        "cName": "莱索托",
+        "code": "LS",
+        "name": "Lesotho"
+      },
+      {
+        "cName": "贝宁",
+        "code": "BJ",
+        "name": "Benin"
+      },
+      {
+        "cName": "赞比亚",
+        "code": "ZM",
+        "name": "Zambia"
+      },
+      {
+        "cName": "赤道几内亚",
+        "code": "GQ",
+        "name": "Equatorial Guinea"
+      },
+      {
+        "cName": "阿尔及利亚",
+        "code": "DZ",
+        "name": "Algeria"
+      },
+      {
+        "cName": "马拉维",
+        "code": "MW",
+        "name": "Malawi"
+      },
+      {
+        "cName": "马约特",
+        "code": "YT",
+        "name": "Mayotte"
+      },
+      {
+        "cName": "马达加斯加",
+        "code": "MG",
+        "name": "Madagascar"
+      },
+      {
+        "cName": "马里",
+        "code": "ML",
+        "name": "Mali"
+      }
+    ]
+  },
+  {
+    "cName": "亚洲",
+    "name": "Asia",
+    "children": [
+      {
+        "cName": "不丹",
+        "code": "BT",
+        "name": "Bhutan"
+      },
+      {
+        "cName": "东帝汶",
+        "code": "TL",
+        "name": "Timor-Leste (East Timor)"
+      },
+      {
+        "cName": "中国",
+        "code": "CN",
+        "name": "China"
+      },
+      {
+        "cName": "乌兹别克斯坦",
+        "code": "UZ",
+        "name": "Uzbekistan"
+      },
+      {
+        "cName": "也门",
+        "code": "YE",
+        "name": "Yemen"
+      },
+      {
+        "cName": "亚美尼亚",
+        "code": "AM",
+        "name": "Armenia"
+      },
+      {
+        "cName": "以色列",
+        "code": "IL",
+        "name": "Israel"
+      },
+      {
+        "cName": "伊拉克",
+        "code": "IQ",
+        "name": "Iraq"
+      },
+      {
+        "cName": "伊朗",
+        "code": "IR",
+        "name": "Iran"
+      },
+      {
+        "cName": "卡塔尔",
+        "code": "QA",
+        "name": "Qatar"
+      },
+      {
+        "cName": "印尼",
+        "code": "ID",
+        "name": "Indonesia"
+      },
+      {
+        "cName": "印度",
+        "code": "IN",
+        "name": "India"
+      },
+      {
+        "cName": "叙利亚",
+        "code": "SY",
+        "name": "Syria"
+      },
+      {
+        "cName": "中国台湾",
+        "code": "TW",
+        "name": "Taiwan"
+      },
+      {
+        "cName": "吉尔吉斯斯坦",
+        "code": "KG",
+        "name": "Kyrgyzstan"
+      },
+      {
+        "cName": "哈萨克斯坦",
+        "code": "KZ",
+        "name": "Kazakhstan"
+      },
+      {
+        "cName": "土库曼斯坦",
+        "code": "TM",
+        "name": "Turkmenistan"
+      },
+      {
+        "cName": "土耳其",
+        "code": "TR",
+        "name": "Turkey"
+      },
+      {
+        "cName": "圣诞岛",
+        "code": "CX",
+        "name": "Christmas Island"
+      },
+      {
+        "cName": "塔吉克斯坦",
+        "code": "TJ",
+        "name": "Tajikistan"
+      },
+      {
+        "cName": "塞浦路斯",
+        "code": "CY",
+        "name": "Cyprus"
+      },
+      {
+        "cName": "孟加拉",
+        "code": "BD",
+        "name": "Bangladesh"
+      },
+      {
+        "cName": "尼泊尔",
+        "code": "NP",
+        "name": "Nepal"
+      },
+      {
+        "cName": "巴勒斯坦",
+        "code": "PS",
+        "name": "Palestinian territories"
+      },
+      {
+        "cName": "巴基斯坦",
+        "code": "PK",
+        "name": "Pakistan"
+      },
+      {
+        "cName": "巴林",
+        "code": "BH",
+        "name": "Bahrain"
+      },
+      {
+        "cName": "文莱",
+        "code": "BN",
+        "name": "Brunei"
+      },
+      {
+        "cName": "斯里兰卡",
+        "code": "LK",
+        "name": "Sri Lanka"
+      },
+      {
+        "cName": "新加坡",
+        "code": "SG",
+        "name": "Singapore"
+      },
+      {
+        "cName": "日本",
+        "code": "JP",
+        "name": "Japan"
+      },
+      {
+        "cName": "朝鲜",
+        "code": "KP",
+        "name": "North Korea"
+      },
+      {
+        "cName": "柬埔寨",
+        "code": "KH",
+        "name": "Cambodia"
+      },
+      {
+        "cName": "格鲁吉亚",
+        "code": "GE",
+        "name": "Georgia"
+      },
+      {
+        "cName": "沙特阿拉伯",
+        "code": "SA",
+        "name": "Saudi Arabia"
+      },
+      {
+        "cName": "泰国",
+        "code": "TH",
+        "name": "Thailand"
+      },
+      {
+        "cName": "中国澳门",
+        "code": "MO",
+        "name": "Macao"
+      },
+      {
+        "cName": "科威特",
+        "code": "KW",
+        "name": "Kuwait"
+      },
+      {
+        "cName": "科科斯群岛",
+        "code": "CC",
+        "name": "Cocos (Keeling) Islands"
+      },
+      {
+        "cName": "约旦",
+        "code": "JO",
+        "name": "Jordan"
+      },
+      {
+        "cName": "缅甸",
+        "code": "MM",
+        "name": "Myanmar (Burma)"
+      },
+      {
+        "cName": "老挝",
+        "code": "LA",
+        "name": "Laos"
+      },
+      {
+        "cName": "菲律宾",
+        "code": "PH",
+        "name": "The Philippines"
+      },
+      {
+        "cName": "蒙古国",
+        "code": "MN",
+        "name": "Mongolia"
+      },
+      {
+        "cName": "越南",
+        "code": "VN",
+        "name": "Vietnam"
+      },
+      {
+        "cName": "阿塞拜疆",
+        "code": "AZ",
+        "name": "Azerbaijan"
+      },
+      {
+        "cName": "阿富汗",
+        "code": "AF",
+        "name": "Afghanistan"
+      },
+      {
+        "cName": "阿曼",
+        "code": "OM",
+        "name": "Oman"
+      },
+      {
+        "cName": "阿根廷",
+        "code": "AR",
+        "name": "Argentina"
+      },
+      {
+        "cName": "阿联酋",
+        "code": "AE",
+        "name": "United Arab Emirates"
+      },
+      {
+        "cName": "韩国",
+        "code": "KR",
+        "name": "South Korea"
+      },
+      {
+        "cName": "中国香港",
+        "code": "HK",
+        "name": "Hong Kong"
+      },
+      {
+        "cName": "马尔代夫",
+        "code": "MV",
+        "name": "Maldives"
+      },
+      {
+        "cName": "马来西亚",
+        "code": "MY",
+        "name": "Malaysia"
+      },
+      {
+        "cName": "黎巴嫩",
+        "code": "LB",
+        "name": "Lebanon"
+      }
+    ]
+  },
+  {
+    "cName": "南极洲",
+    "name": "Antarctica",
+    "children": [
+      {
+        "cName": "南乔治亚岛和南桑威奇群岛",
+        "code": "GS",
+        "name": "South Georgia & the South Sandwich Islands"
+      },
+      {
+        "cName": "南极洲",
+        "code": "AQ",
+        "name": "Antarctica"
+      },
+      {
+        "cName": "布韦岛",
+        "code": "BV",
+        "name": "Bouvet Island"
+      },
+      {
+        "cName": "法属南部领地",
+        "code": "TF",
+        "name": "French Southern Territories"
+      },
+      {
+        "cName": "赫德岛和麦克唐纳群岛",
+        "code": "HM",
+        "name": "Heard Island & McDonald Islands"
+      }
+    ]
+  },
+  {
+    "cName": "南美洲",
+    "name": "South America",
+    "children": [
+      {
+        "cName": "乌拉圭",
+        "code": "UY",
+        "name": "Uruguay"
+      },
+      {
+        "cName": "厄瓜多尔",
+        "code": "EC",
+        "name": "Ecuador"
+      },
+      {
+        "cName": "哥伦比亚",
+        "code": "CO",
+        "name": "Colombia"
+      },
+      {
+        "cName": "圭亚那",
+        "code": "GY",
+        "name": "Guyana"
+      },
+      {
+        "cName": "委内瑞拉",
+        "code": "VE",
+        "name": "Venezuela"
+      },
+      {
+        "cName": "巴拉圭",
+        "code": "PY",
+        "name": "Paraguay"
+      },
+      {
+        "cName": "巴西",
+        "code": "BR",
+        "name": "Brazil"
+      },
+      {
+        "cName": "智利",
+        "code": "CL",
+        "name": "Chile"
+      },
+      {
+        "cName": "法属圭亚那",
+        "code": "GF",
+        "name": "French Guiana"
+      },
+      {
+        "cName": "玻利维亚",
+        "code": "BO",
+        "name": "Bolivia"
+      },
+      {
+        "cName": "秘鲁",
+        "code": "PE",
+        "name": "Peru"
+      },
+      {
+        "cName": "苏里南",
+        "code": "SR",
+        "name": "Suriname"
+      },
+      {
+        "cName": "马尔维纳斯群岛(福克兰)",
+        "code": "FK",
+        "name": "Falkland Islands"
+      }
+    ]
+  },
+  {
+    "cName": "大洋洲",
+    "name": "Oceania",
+    "children": [
+      {
+        "cName": "关岛",
+        "code": "GU",
+        "name": "Guam"
+      },
+      {
+        "cName": "北马里亚纳群岛",
+        "code": "MP",
+        "name": "Northern Mariana Islands"
+      },
+      {
+        "cName": "图瓦卢",
+        "code": "TV",
+        "name": "Tuvalu"
+      },
+      {
+        "cName": "基里巴斯",
+        "code": "KI",
+        "name": "Kiribati"
+      },
+      {
+        "cName": "密克罗尼西亚联邦",
+        "code": "FM",
+        "name": "Federated States of Micronesia"
+      },
+      {
+        "cName": "巴布亚新几内亚",
+        "code": "PG",
+        "name": "Papua New Guinea"
+      },
+      {
+        "cName": "帕劳",
+        "code": "PW",
+        "name": "Palau"
+      },
+      {
+        "cName": "库克群岛",
+        "code": "CK",
+        "name": "Cook Islands"
+      },
+      {
+        "cName": "所罗门群岛",
+        "code": "SB",
+        "name": "Solomon Islands"
+      },
+      {
+        "cName": "托克劳",
+        "code": "TK",
+        "name": "Tokelau"
+      },
+      {
+        "cName": "斐济群岛",
+        "code": "FJ",
+        "name": "Fiji"
+      },
+      {
+        "cName": "新喀里多尼亚",
+        "code": "NC",
+        "name": "New Caledonia"
+      },
+      {
+        "cName": "新西兰",
+        "code": "NZ",
+        "name": "New Zealand"
+      },
+      {
+        "cName": "汤加",
+        "code": "TO",
+        "name": "Tonga"
+      },
+      {
+        "cName": "法属波利尼西亚",
+        "code": "PF",
+        "name": "French polynesia"
+      },
+      {
+        "cName": "澳大利亚",
+        "code": "AU",
+        "name": "Australia"
+      },
+      {
+        "cName": "瑙鲁",
+        "code": "NR",
+        "name": "Nauru"
+      },
+      {
+        "cName": "瓦利斯和富图纳",
+        "code": "WF",
+        "name": "Wallis & Futuna"
+      },
+      {
+        "cName": "瓦努阿图",
+        "code": "VU",
+        "name": "Vanuatu"
+      },
+      {
+        "cName": "皮特凯恩群岛",
+        "code": "PN",
+        "name": "Pitcairn Islands"
+      },
+      {
+        "cName": "纽埃",
+        "code": "NU",
+        "name": "Niue"
+      },
+      {
+        "cName": "美属萨摩亚",
+        "code": "AS",
+        "name": "American Samoa"
+      },
+      {
+        "cName": "萨摩亚",
+        "code": "WS",
+        "name": "Samoa"
+      },
+      {
+        "cName": "诺福克岛",
+        "code": "NF",
+        "name": "Norfolk Island"
+      },
+      {
+        "cName": "马绍尔群岛",
+        "code": "MH",
+        "name": "Marshall islands"
+      }
+    ]
+  }
+]

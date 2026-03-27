@@ -1,0 +1,36 @@
+/* flex scss基础配置文件 */
+.flex {
+  display: flex;
+  justify-content: flex-start;
+  &.column {
+    flex-direction: column;   //竖向排列
+  }
+  &.ai-center {
+    align-items: center;
+  }
+  &.ai-end {
+    align-items: flex-end;
+  }
+  &.jc-around {
+    justify-content: space-around;
+  }
+  &.jc-between {
+    justify-content: space-between;
+  }
+  &.jc-center {
+    justify-content: center;
+  }
+  &.jc-end {
+    justify-content: flex-end;
+  }
+  &.wrap {
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .grow {
+    flex-grow: 1;    // 自适配拉满空间
+  }
+  .shrink{
+    flex-shrink: 0;    // 不受grow挤压
+  }
+}

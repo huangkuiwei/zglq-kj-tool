@@ -1,0 +1,57 @@
+.app-wrapper {
+  @include clearfix;
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  &.mobile.openSidebar {
+    position: fixed;
+    top: 0;
+  }
+}
+
+.drawer-bg {
+  background: #000;
+  opacity: 0.3;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 999;
+}
+
+.el-menu--horizontal>.el-submenu .el-submenu__title {
+  height: 56px;
+  line-height: 56px;
+  border-bottom: 0px;
+  color: #909399;
+}
+
+.el-header {
+  padding: 0;
+}
+
+/* body {
+    overflow: hidden;
+  } */
+
+.el-footer {
+  text-align: center;
+  color: #909399;
+  font-size: 14px;
+  background: #F2F6FC;
+  height: 50px;
+  line-height: 50px;
+}
+
+.el-container {
+  background: #f2f6fc;
+}
+
+.app-breadcrumb.el-breadcrumb[data-v-b50ef614] {
+  margin-left: 0px;
+}
+
+.el-tabs__nav-scroll {
+  background: #fff;
+}

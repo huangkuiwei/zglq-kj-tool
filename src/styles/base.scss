@@ -1,0 +1,537 @@
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+.btn-group {
+  i {
+    margin-right: 6px;
+    font-size: 12px;
+  }
+
+  // ::v-deep button{
+  //   margin-left: 6px !important;
+  // }
+  ::v-deep button:first-child {
+    margin-left: 0 !important;
+  }
+}
+
+.font-mini {
+  font-size: 12px !important;
+}
+
+.t-table {
+  ::v-deep td {
+    height: 40px;
+    line-height: 40px;
+  }
+
+  ::v-deep th {
+    height: 36px;
+    line-height: 36px;
+  }
+
+  // svg{
+  //    width: 20px;
+  //   height: 20px;
+  //   vertical-align: middle;
+  // }
+}
+
+//表格样式
+.table-box {
+  height: 100%;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  box-sizing: border-box;
+  background: #fff;
+
+  .t-tabs {
+    height: 100%;
+
+    ::v-deep .el-tabs__content {
+      height: calc(100% - 62px);
+    }
+
+    .table {
+      height: calc(100% - 46px);
+    }
+
+    .t-tab-pane {
+      height: 100%;
+    }
+  }
+  .dept-row {
+    height: 48px;
+  }
+  .current-row{
+    .dept-name{
+      font-weight: bold;
+      color: #111;
+    }
+  }
+  .table {
+    flex: 1;
+    -webkit-flex: 1;
+    position: relative;
+    margin-bottom: 20px;
+
+    .el-table {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
+
+
+.teamwork-t-table {
+  ::v-deep td {
+    height: 44px;
+    line-height: 44px;
+  }
+
+  ::v-deep th {
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
+//表格样式
+.teamwork-table-box {
+  height: calc(100% - 5px);
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  box-sizing: border-box;
+  background: #fff;
+
+  .t-tabs {
+    height: 100%;
+
+    ::v-deep .el-tabs__content {
+      height: calc(100% - 62px);
+    }
+
+    .table {
+      height: calc(100% - 46px);
+    }
+
+    .t-tab-pane {
+      height: 100%;
+    }
+  }
+
+  .table {
+    flex: 1;
+    -webkit-flex: 1;
+    position: relative;
+    margin-bottom: 20px;
+
+    .el-table {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+}
+
+.thumb-box {
+  position: relative;
+  padding: 2px 2px 2px 2px;
+  margin-bottom: 40px;
+  width: calc(20% - 20px);
+  height: 160px;
+  margin-right: 1%;
+  display: inline-block;
+  border-radius: 8px;
+  transition: all .1s;
+}
+
+.thumb-box:hover {
+  cursor: pointer;
+  background: #66b1ff99 !important;
+  border-color: #66b1ff !important;
+  .vertical-button{
+    display: flex;
+  }
+}
+
+.thumb-tabs {
+  position: absolute;
+  height: 20px;
+  left: 8px;
+  top: 6px;
+  z-index: 2;
+  background-color: #f7f4ed99;
+  border-radius: 5px;
+}
+
+.icon-wenjian {
+  color: #F7C204
+}
+
+.fileTypeIcon {
+  width: fit-content;
+  display: flex;
+  justify-items: center;
+
+  .iconfont {
+    margin-right: 14px;
+    font-size: 20px !important;
+  }
+
+  svg {
+    margin-right: 8px;
+  }
+}
+
+.tableOpeColMargin {
+  .iconfont {
+    color: #333;
+  }
+
+  &.inTable {
+    .iconfont {
+      color: #333;
+    }
+  }
+}
+
+.tip-class {
+  padding: 0.2rem !important;
+  max-width: 20% !important;
+  background-color: #f7f7f1 !important;
+  /*设置矩形框的背景颜色*/
+}
+
+/* [x-placement^='A'] A指的是el-tooltip标签中的placement的值，此处是bottom。猜测用于动态设置border-A-color。*/
+.el-tooltip__popper[x-placement^='top'].tip-class .popper__arrow::after {
+  border-top-color: #f7f7f1 !important;
+  /*设置指向箭头的颜色*/
+}
+
+
+.my-handle-class {
+  bottom: -25px;
+  right: -25px;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  display: block !important;
+  cursor: nwse-resize;
+  background: #fff;
+}
+
+.upfileImg {
+  background-color: #FF7474 !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  border: none;
+  width: 56px;
+  height: 22px;
+  line-height: 22px;
+  display: inline-block;
+  text-align: center;
+  padding: 0;
+}
+
+.hasuploadImg {
+  background-color: #fff !important;
+  color: #606266 !important;
+  font-size: 12px !important;
+  border: none;
+  width: 56px;
+  height: 22px;
+  line-height: 22px;
+  padding: 0;
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #DCDFE6;
+}
+
+//ztree默认样式
+.tree .ztree li span.button.ico_close {
+  background-image: url('../utils/ztree/img/colse.png');
+  background-size: cover;
+  background-position: 0;
+}
+
+.tree .ztree li span.button.ico_open {
+  background-image: url('../utils/ztree/img/open.png');
+  background-size: cover;
+  background-position: 0;
+}
+
+.tree .ztree li span.button.ico_docu {
+  background-image: url('../utils/ztree/img/child.png');
+  background-size: cover;
+  background-position: 0;
+}
+
+.tree .ztree li span {
+  font-size: 14px;
+}
+
+.tree .ztree li {
+  padding-top: 7px;
+}
+
+.tree .ztree li span {
+  font-size: 13px;
+
+  color: #303133;
+
+  text-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ztree>li>ul {
+  overflow: initial !important;
+}
+
+
+.fileFolderUploadHref {
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  color: #606266;
+  ;
+  text-decoration: none;
+  text-indent: 0;
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+}
+
+.fileFolderUploadHref input {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  font-size: 12px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.fileFolderUploadHref:hover {
+  cursor: pointer;
+  color: #fff;
+  background: #66b1ff;
+  border-color: #66b1ff;
+  text-decoration: none;
+}
+
+.fileFolderUploadBtn:hover {
+  cursor: pointer;
+}
+
+
+.edit-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url('../assets/编辑.svg');
+  background-position: center center;
+}
+
+.con4D-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url('../assets/4d.svg');
+  background-position: center center;
+}
+
+
+.rename-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url('../assets/重命名.svg');
+  background-position: center center;
+}
+
+
+.version-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-image: url('../assets/version.svg');
+  background-position: center center;
+}
+
+
+
+.assist-button {
+  position: relative;
+  margin-bottom: 20px;
+  margin-left: 12px;
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  font-size: 4px;
+}
+
+.assist-button:hover {
+  cursor: pointer;
+  border-radius: 2px;
+  background: #8cc1f9 !important;
+  border-color: #8cc1f9 !important;
+}
+
+
+.desktop-2col {
+  display: grid;
+  border-color: #e2e6ecea;
+  background-color: #e2e6ecea;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-column-gap: 0px;
+  column-gap: 0px;
+  grid-template-columns: 3fr 1fr;
+  align-items: center;
+}
+
+.desktop-2row {
+  display: grid;
+  width: 100%;
+  border-color: #e2e6ecea;
+  background-color: #e2e6ecea;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-template-rows: 2fr 1fr;
+  align-items: center;
+}
+
+.desktop-3row {
+  display: grid;
+  width: 100%;
+  border-color: #e2e6ecea;
+  background-color: #e2e6ecea;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-template-rows: 1fr 1fr 1fr;
+  align-items: center;
+}
+
+.bgwhite {
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #f3f5f7;
+  background-color: #fcfcfd;
+}
+
+.lround-background {
+  margin-left: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  // width: calc(100% - 10px);
+  // height: calc(100% - 10px);
+  border-radius: 8px;
+  border: 1px solid #f3f5f7;
+  background-color: #fcfcfd;
+  z-index: 999;
+}
+
+.rround-background {
+  border: 1px solid #f3f5f7;
+  background-color: #fcfcfd;
+  z-index: 15;
+}
+
+
+.mydoc-menu {
+  width: 100%;
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.mydoc-menu:hover {
+  cursor: pointer;
+  border-radius: 2px;
+  background: #66b1ff !important;
+  border-color: #66b1ff !important;
+}
+
+
+.class-2col {
+  display: grid;
+  border-color: #e2e6ecea;
+  background-color: #e2e6ecea;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-column-gap: 0px;
+  column-gap: 0px;
+  grid-template-columns: 2.5fr 2fr;
+  align-items: center;
+}
+
+.class-2row {
+  display: grid;
+  width: 100%;
+  border-color: #e2e6ecea;
+  background-color: #e2e6ecea;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+}
+
+.class-3row {
+  display: grid;
+  width: 100%;
+  border-color: #e2e6ecea;
+  background-color: #e2e6ecea;
+  grid-row-gap: 0px;
+  row-gap: 0px;
+  grid-template-rows: 1.5fr 2.5fr;
+  align-items: center;
+}
+
+.t-canvas .bjs-powered-by {
+  display: none !important;
+
+}
+
+
+
+.search-box {
+  height: 32px;
+  position: absolute;
+  right: 74px;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 32px;
+  width: 0;
+  border: 0;
+  transition: width .3s;
+
+  &.show {
+    border: 1px solid #dcdfe6;
+    width: 220px;
+    box-shadow: 0 0 4px #006fff88
+  }
+
+  .top-search {
+    .el-input__inner {
+      border: 0;
+      border-radius: 0;
+    }
+  }
+}
+.isTransition{
+  transition: all .2s;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 1;
+}

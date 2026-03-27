@@ -1,0 +1,180 @@
+//to reset element-ui default css
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+//暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+//element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+//修改ele默认table样式
+// .el-table td,
+// .el-table th.is-leaf {
+// border-bottom: 1px solid #ccc;
+// }
+
+.el-table__row--striped {
+  background-color: #F5F7FA !important;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background: none !important;
+}
+
+table tbody {
+
+  .el-divider__text,
+  .el-link {
+    font-size: 13px !important;
+  }
+
+}
+
+
+
+.el-tree-node:focus {
+  &>.el-tree-node__content {
+    background-color: rgba(64, 158, 255, .1);
+  }
+}
+
+
+/* 暗黑主题 */
+
+
+.dark {
+  .background {
+    background: #1e1e20;
+  }
+
+  /* 表头字体颜色 */
+  .el-table thead {
+    color: #c8cfdd;
+  }
+
+  /* 表格字体颜色 */
+  .el-table {
+    color: #c8cfdd;
+    border-spacing: 0;
+  }
+
+  /* 头部 */
+  .el-table th.el-table__cell {
+    background-color: #1e1e20;
+  }
+
+
+
+  /* 侧边空白区域 */
+  .el-table__header-wrapper {
+    background-color: #1e1e20;
+  }
+
+  .el-table__body-wrapper {
+    background-color: #1e1e20;
+  }
+
+  /* 单数行 */
+  .el-table tr {
+    background-color: #0c193f;
+    /* background-color: #05133f; */
+  }
+
+  /* 偶数行 */
+  .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+    background-color: #1e1e20;
+  }
+
+  .el-table td.el-table__cell,
+  .el-table th.el-table__cell.is-leaf {
+    border-bottom: 1px solid #1e1e20;
+  }
+
+  /* 表格悬浮 */
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: #29385e !important;
+    /* background-color: #1f3157 !important; */
+  }
+
+  /* 表格底部线条bug */
+  .el-table::before {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0px;
+  }
+
+  /* 输入框 */
+  input {
+    border-color: #2f61df;
+  }
+
+  input::-webkit-input-placeholder {
+    color: #93969e !important;
+  }
+
+  .el-input__inner:hover {
+    border-color: #2f61df;
+  }
+
+  .el-input__inner {
+    /* background-color: #142143; */
+    background-color: #213057;
+    border-radius: 8px;
+    border-color: #1e1e20;
+    color: aliceblue;
+  }
+
+
+  /* 全局背景 */
+  &html {
+    background: #0c193f;
+    color: aliceblue;
+  }
+}
+
+
+// searchForm 去掉下间距
+.searchForm {
+  height: 32px;
+
+  .el-form-item--mini {
+    &.el-form-item {
+      margin-bottom: 0;
+    }
+  }
+
+  .el-form-item--small {
+    &.el-form-item {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.el-table {
+  .el-table__cell {
+    padding: 11px 0;
+  }
+}

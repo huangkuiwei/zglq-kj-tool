@@ -1,0 +1,47 @@
+
+.bjs-container{
+    .djs-palette{
+        display: none;
+    }
+    .djs-palette,
+    .djs-context-pad{
+        width: 48px;
+        .bpmn-icon-intermediate-event-none,
+        .bpmn-icon-gateway-none,
+        .bpmn-icon-subprocess-expanded,
+        .bpmn-icon-data-object,
+        .bpmn-icon-data-store,
+        .bpmn-icon-participant,
+        .bpmn-icon-text-annotation,
+        .bpmn-icon-screw-wrench,
+        .bpmn-icon-group{
+            display: none;
+        }
+        .bpmn-icon-end-event-none{
+            float: right;
+        }
+
+        [data-group=connect]{
+            display: none;
+            width: 50%;
+        }
+        [data-group=edit]{
+            width: 50%;
+            // float: right;
+        }
+        [data-group=create]{
+            display: none;
+        }
+        [data-action=append]{
+            display: none;
+        }
+        [data-action=hand-tool]{
+            display: none;
+        }
+        [data-action=space-tool]{
+            display: none;
+        }
+        
+    }
+  
+}

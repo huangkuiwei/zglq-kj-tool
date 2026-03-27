@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button onclick="sendMessage()">点击发送消息给父页面</button>
+<script>
+  // 监听父页面传来的信息
+  window.addEventListener('message', receiver, false);
+  function receiver(e) {
+    //   if (e.origin == 'http://xxx.com') {
+    //       if (e.data == 'give u a message') {
+    //           e.source.postMessage('received', e.origin);  // 向原网页返回信息
+    //       } else {
+    //           alert(e.data);
+    //       }
+    //   }
+    console.log(e)
+    //   alert(e.data)
+  }
+
+  function sendMessage() {
+    // 向父页面发送信息
+    window.parent.postMessage({
+        data: {
+            info:"success",
+            data:"我是子页面的test！"
+        }
+    }, '*');
+  }
+</script>
+</body>
+</html>

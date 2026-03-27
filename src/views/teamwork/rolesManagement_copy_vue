@@ -1,0 +1,122 @@
+
+<template>
+<el-scrollbar style="height:100%;">  
+  <el-tree
+      ref="refTree"
+      :data="rolesData"
+      :props="treeDefaultProps"
+      :default-expand-all="true"
+      :show-checkbox="false"
+      :check-strictly="true"
+      node-key="ID"
+      style="margin-left:5px; margin-top:10px; width:calc(100% - 10px);  overflow-y: scroll"
+      :render-content="renderContent"
+    >
+
+
+    <el-dialog v-dialogDrag :close-on-click-modal="false" :modal="true" title="修改" :visible.sync="dialogVisible" width="400px">
+      <el-form ref="form" :model="nameForm" label-width="50px" @submit.native.prevent>
+        <el-form-item label="名称：">
+          <el-input ref="nameFormInput" v-model="nameForm.name" @keyup.enter.native="onSubmitNameInfo"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onSubmitNameInfo" style="width: 88px">确认</el-button>
+        <el-button @click="dialogVisible = false" style="width: 80px; margin-left: 5px">取消</el-button>
+      </div>
+    </el-dialog>         
+  </el-tree>
+ </el-scrollbar>
+</template>
+  
+
+<script>
+
+import projectFileApi from "@/api/document/indexApi.js";
+
+export default {
+  props: {
+    rolesData: {
+      type: Object,
+      required: true,
+    },
+  },
+  components: {
+  },
+  data() {
+    return {
+      nameForm: {
+        name: "",
+        oldPlaceName: "",
+      },
+      dialogVisible: false,
+
+      treeDefaultProps: {
+        parent: 'ParentID', // 父级唯一标识
+        value: 'ID', // 唯一标识
+        label: 'RoleName', //'OrganizeName', // 标签显示
+        children: 'children', // 子级
+        typeName: 'typeName',
+      },
+      renderContent(h, { node, data, store }) {
+        if(data.typeName == '专业') {   // 不知道为甚不能用v-if实现，暂这样分开做
+          return (
+            <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 18px;">
+              <div>
+                <i  class="el-icon-department"></i>
+                <span>{node.label}</span>
+              </div>
+              <span>
+                <el-button  class="el-icon-edit" style="font-size: 12px;" type="text" on-click={ () => this.append(data) }></el-button>
+                <el-button  class="el-icon-delete" style="font-size: 12px;" type="text" on-click={ () => this.remove(node, data) }></el-button>
+              </span>
+            </span>);
+          }
+          else if(data.typeName == '角色') {
+           return (
+            <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 18px;">
+              <div>
+                <i  class="el-icon-role"></i>
+                <span>{node.label}</span>
+              </div>
+              <span>
+                <el-button class="el-icon-edit" style="font-size: 12px;" type="text" on-click={ () => this.append(data) }></el-button>
+                <el-button  class="el-icon-delete" style="font-size: 12px;" type="text" on-click={ () => this.remove(node, data) }></el-button>
+              </span>
+            </span>);
+          }
+          else {
+            return (
+              <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 18px;">
+                <div>
+                  <i  class="el-icon-person"></i>
+                  <span>{node.label}</span>
+                </div>
+                <span>
+                  <el-button class="el-icon-edit" style="font-size: 12px;" type="text" >append</el-button>
+                  <el-button  class="el-icon-delete" style="font-size: 12px;" type="text" on-click={ () => this.remove(node, data) }></el-button>
+                </span>
+              </span>);
+          }
+      },
+
+     };
+  },
+  async mounted() {
+  },
+  methods: {
+     onSubmitNameInfo(item) {
+       this.dialogVisible = false;
+
+     },
+     append(ata) {
+      alert("1111")
+     }
+  }
+}
+</script>
+
+<style lang="scss">
+
+</style>
+

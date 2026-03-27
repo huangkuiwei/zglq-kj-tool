@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="20px" viewBox="0 0 18 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>播放</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="交互规范" transform="translate(-61.000000, -1810.000000)">
+            <g id="编组-7备份-2" transform="translate(30.000000, 1788.000000)">
+                <g id="播放" transform="translate(29.000000, 20.000000)">
+                    <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                    <path d="M4.00227789,2.1303549 L19.4093863,11.0764179 C19.9188367,11.3722278 20.0920266,12.0250202 19.7962167,12.5344706 C19.7028987,12.6951849 19.5692107,12.8287296 19.4083964,12.9218751 L4.00128792,21.845849 C3.49152045,22.1411122 2.83891418,21.9672221 2.54365101,21.4574546 C2.4495525,21.2949949 2.4,21.110577 2.4,20.9228334 L2.4,3.05279644 C2.4,2.46369271 2.87756293,1.98612978 3.46666667,1.98612978 C3.65479844,1.98612978 3.83958361,2.03588726 4.00227789,2.1303549 Z" id="矩形" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
