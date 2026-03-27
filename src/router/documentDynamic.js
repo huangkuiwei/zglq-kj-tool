@@ -28,7 +28,7 @@ const dynamicRouterMap = [
     children: [{
       path: '/myDocument',
       name: 'myDocument',
-      component: () => import('@/views/document/myDocument/index'),
+      component: () => import('@/views/project/Document/myDocument/index'),
     }],
     query: { projectName: '文档资料' }
   },
@@ -39,7 +39,7 @@ const dynamicRouterMap = [
     children: [{
       path: '',
       name: 'myCollection',
-      component: () => import('@/views/document/myCollection/index')
+      component: () => import('@/views/project/Document/myCollection/index')
     }]
   },
   {
@@ -49,7 +49,7 @@ const dynamicRouterMap = [
     children: [{
       path: '',
       name: 'myShare',
-      component: () => import('@/views/document/myShare/index')
+      component: () => import('@/views/project/Document/myShare/index')
     }]
   },
 ]

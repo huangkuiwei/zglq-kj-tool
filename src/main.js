@@ -36,8 +36,8 @@ import Chat from "vue-beautiful-chat";
 import mainSideMenu from '@/layout/mainSideMenu'
 Vue.component('mainSideMenu', mainSideMenu)
 
-import ksjTable from "@/components/table/ksjTable";
-import ksjColumn from "@/components/table/ksjTableColumn";
+import ksjTable from "@/components/Table/ksjTable";
+import ksjColumn from "@/components/Table/ksjTableColumn";
 
 import "@/styles/index.scss"; // global css
 import "@/styles/flex-base.scss"; // global css

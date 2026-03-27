@@ -14,7 +14,7 @@
             <span>编号：{{ approveData.codenumber }}</span>
           </div>
           <div class="flex ai-center svg downloadSvg" @click="exportData" v-if="approveData.status === '0'">
-            <img src="@/assets/iconimg/download.png" style="width: 15px;margin-right: 5px;" />
+            <img src="@/assets/iconImg/download.png" style="width: 15px;margin-right: 5px;" />
             <span> 校审单下载 </span>
           </div>
           <!-- <img src="@/assets/iconimg/print.svg" class="svg ml_15" @click="print" /> -->
@@ -32,9 +32,9 @@
           <span style="margin-right: 100px">文件列表</span>
           <!-- <span style="color: #0d99ff; font-size: 14px; cursor: pointer" @click="exportData" v-if="approveData.status === '0'">校审单下载</span> -->
         </div>
-        <img src="@/assets/iconimg/approveSuccess.svg" class="approve-status-icon" v-if="approveData.status === '0'" />
-        <img src="@/assets/iconimg/reject.svg" class="approve-status-icon" v-if="approveData.status === '5'" />
-        <img src="@/assets/iconimg/revoke.svg" class="approve-status-icon" v-if="approveData.status === '3'" />
+        <img src="@/assets/iconImg/approveSuccess.svg" class="approve-status-icon" v-if="approveData.status === '0'" />
+        <img src="@/assets/iconImg/reject.svg" class="approve-status-icon" v-if="approveData.status === '5'" />
+        <img src="@/assets/iconImg/revoke.svg" class="approve-status-icon" v-if="approveData.status === '3'" />
         <el-table ref="fileTable" class="detailTable" :border="true" :data="approveData.data" :header-cell-style="tableHeadStyle" @selection-change="filterFile">
           <el-table-column type="selection" align="center" />
           <el-table-column align="center" :label="$t('base.button.fileName')" prop="fileName"></el-table-column>

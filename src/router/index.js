@@ -18,7 +18,7 @@ export const constantRouterMap = [
   },
   {
     path: "/OALogin",
-    component: () => import("@/views/Login/OALogin"),
+    component: () => import("@/views/login/OALogin"),
     hidden: true
   },
   // 首页
@@ -37,7 +37,7 @@ export const constantRouterMap = [
       {
         path: "/clouddesktop",
         name: "clouddesktop",
-        component: () => import("@/views/CloudDesktop/index"),
+        component: () => import("@/views/clouddesktop/index"),
       },
     ]
   },
@@ -109,7 +109,7 @@ export const constantRouterMap = [
       {
         path: "/s",
         name: "s",
-        component: () => import("@/views/Project/share/index"),
+        component: () => import("@/views/project/share/index"),
       },
     ],
   },
@@ -117,13 +117,13 @@ export const constantRouterMap = [
   {
     path: "/shareH5",
     hidden: true,
-    component: () => import("@/views/Project/share/h5/shareH5.vue"),
+    component: () => import("@/views/project/share/h5/shareH5.vue"),
   },
   // bimWorks项目汇报
   {
     path: "/html",
     hidden: true,
-    component: () => import("@/views/Project/share/html/report.vue"),
+    component: () => import("@/views/project/share/html/report.vue"),
   },
   // 学习园地
   {
@@ -134,7 +134,7 @@ export const constantRouterMap = [
       {
         path: "/classonline",
         name: "classonline",
-        component: () => import("@/views/ClassOnline/index"),
+        component: () => import("@/views/classonline/index"),
       },
     ],
   },
@@ -147,7 +147,7 @@ export const constantRouterMap = [
       {
         path: "",
         name: "bimiframe",
-        component: () => import("@/views/Project/bimiframe/index"),
+        component: () => import("@/views/project/bimiframe/index"),
       },
     ],
   },

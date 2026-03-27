@@ -1,4 +1,4 @@
-import platfromCenter from "../views/systemSetting/index";
+import platfromCenter from "../views/SystemSetting/index";
 import NavbarLayout from "../layout/navbarLayout";
 const platformRouters = [
   {

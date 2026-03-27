@@ -41,7 +41,7 @@ const platformRouters = [
               name: 'settings.nav.questionAnswer',
               homeLink: true
             },
-            component: () => import("@/views/systemSetting/FAQ"),
+            component: () => import("@/views/SystemSetting/FAQ"),
           },
 
           {

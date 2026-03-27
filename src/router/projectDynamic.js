@@ -156,7 +156,7 @@ const dynamicRouterMap = [
   {
     path: "/bigScreen",
     hidden: true,
-    component: () => import("@/views/Project/bigScreen/index"),
+    component: () => import("@/views/project/bigScreen/index"),
   },
   // 项目文件列表
   {
@@ -171,7 +171,7 @@ const dynamicRouterMap = [
         },
         path: "/projectFile",
         name: "projectFile",
-        component: () => import("@/views/Project/file/index"),
+        component: () => import("@/views/project/file/index"),
       },
     ],
   },
