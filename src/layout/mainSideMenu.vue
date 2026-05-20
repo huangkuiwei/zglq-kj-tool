@@ -16,40 +16,40 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: "mainSideMenu",
+  name: "MainSideMenu",
   data() {
     return {
       hasCorp: false,
       isHover: false,
       permi: [],
       navAllList: [
-        {
-          name: 'desktop',
-          permi: 'desktop:*:*',
-          path: "/clouddesktop",
-          imgUrl: require(`@/assets/navBarIcon/工作台.svg`),
-          actImgUrl: require(`@/assets/navBarIcon/工作台-act.svg`),
-        },
+        // {
+        //   name: 'desktop',
+        //   permi: 'desktop:*:*',
+        //   path: "/clouddesktop",
+        //   imgUrl: require(`@/assets/navBarIcon/工作台.svg`),
+        //   actImgUrl: require(`@/assets/navBarIcon/工作台-act.svg`),
+        // },
         {
           name: 'projects',
           permi: 'projects:*:*',
           imgUrl: require(`@/assets/navBarIcon/项目空间.svg`),
           actImgUrl: require(`@/assets/navBarIcon/项目空间-act.svg`),
         },
-        {
-          name: 'teamwork',
-          permi: 'teamwork:*:*',
-          path: "/teamwork",
-          imgUrl: require(`@/assets/navBarIcon/团队协作.svg`),
-          actImgUrl: require(`@/assets/navBarIcon/团队协作-act.svg`),
-        },
-        {
-          name: 'resource',
-          permi: 'resource:*:*',
-          path: "/commonBuildLibrary",
-          imgUrl: require(`@/assets/navBarIcon/公共资源.svg`),
-          actImgUrl: require(`@/assets/navBarIcon/公共资源-act.svg`),
-        }
+        // {
+        //   name: 'teamwork',
+        //   permi: 'teamwork:*:*',
+        //   path: "/teamwork",
+        //   imgUrl: require(`@/assets/navBarIcon/团队协作.svg`),
+        //   actImgUrl: require(`@/assets/navBarIcon/团队协作-act.svg`),
+        // },
+        // {
+        //   name: 'resource',
+        //   permi: 'resource:*:*',
+        //   path: "/commonBuildLibrary",
+        //   imgUrl: require(`@/assets/navBarIcon/公共资源.svg`),
+        //   actImgUrl: require(`@/assets/navBarIcon/公共资源-act.svg`),
+        // }
       ],
     };
   },
@@ -68,15 +68,15 @@ export default {
   created() {
     this.permi = localStorage.getItem('permi').split(',')
 
-    if (!this.$isRead) {
-      this.navAllList.push({
-        name: 'setting',
-        permi: 'setting:*:*',
-        path: "/systemSetting",
-        imgUrl: require(`@/assets/navBarIcon/系统设置.svg`),
-        actImgUrl: require(`@/assets/navBarIcon/系统设置-act.svg`),
-      })
-    }
+    // if (!this.$isRead) {
+    //   this.navAllList.push({
+    //     name: 'setting',
+    //     permi: 'setting:*:*',
+    //     path: "/systemSetting",
+    //     imgUrl: require(`@/assets/navBarIcon/系统设置.svg`),
+    //     actImgUrl: require(`@/assets/navBarIcon/系统设置-act.svg`),
+    //   })
+    // }
   },
   methods: {
     handleLefeMenu() {

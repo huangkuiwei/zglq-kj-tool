@@ -159,37 +159,37 @@
                     style="padding-left: 10px"
                   >
                     <!-- 新建 -->
-                    <el-popover
-                      v-if="filePermissionCon.setupbit == true"
-                      v-model="addFilePopVisible"
-                      placement="bottom-start"
-                      transition="el-zoom-in-top"
-                      width="120"
-                      trigger="click"
-                    >
-                      <div
-                        class="fileFolderUploadHref"
-                        @click="showfolderDialog('addFile')"
-                      >
-                        新建文件
-                      </div>
-                      <div
-                        class="fileFolderUploadHref"
-                        @click="showfolderDialog('add')"
-                      >
-                        {{ $t("base.button.newFolder") }}
-                      </div>
-                      <el-button
-                        slot="reference"
-                        plain
-                        type="primary"
-                        size="small"
-                        icon="el-icon-plus"
-                      >
-                        {{
-                          $t("base.button.new") }}
-                      </el-button>
-                    </el-popover>
+                    <!-- <el-popover -->
+                    <!--   v-if="filePermissionCon.setupbit == true" -->
+                    <!--   v-model="addFilePopVisible" -->
+                    <!--   placement="bottom-start" -->
+                    <!--   transition="el-zoom-in-top" -->
+                    <!--   width="120" -->
+                    <!--   trigger="click" -->
+                    <!-- > -->
+                    <!--   <div -->
+                    <!--     class="fileFolderUploadHref" -->
+                    <!--     @click="showfolderDialog('addFile')" -->
+                    <!--   > -->
+                    <!--     新建文件 -->
+                    <!--   </div> -->
+                    <!--   <div -->
+                    <!--     class="fileFolderUploadHref" -->
+                    <!--     @click="showfolderDialog('add')" -->
+                    <!--   > -->
+                    <!--     {{ $t("base.button.newFolder") }} -->
+                    <!--   </div> -->
+                    <!--   <el-button -->
+                    <!--     slot="reference" -->
+                    <!--     plain -->
+                    <!--     type="primary" -->
+                    <!--     size="small" -->
+                    <!--     icon="el-icon-plus" -->
+                    <!--   > -->
+                    <!--     {{ -->
+                    <!--       $t("base.button.new") }} -->
+                    <!--   </el-button> -->
+                    <!-- </el-popover> -->
                     <!-- 上传 -->
                     <el-popover
                       v-if="filePermissionCon.setupbit == true"
@@ -239,42 +239,42 @@
                       </el-button>
                     </el-popover>
                     <!-- 桥梁大师项目设置 -->
-                    <template
-                      v-if="projectInfo &&
-                        projectInfo.projectTypeName === '桥梁大师项目' &&
-                        currentName === '桥梁' &&
-                        user.userID === projectInfo.creatorID
-                      "
-                    >
-                      <el-dropdown
-                        trigger="click"
-                        placement="bottom-start"
-                      >
-                        <el-button
-                          size="small"
-                          icon="el-icon-s-operation"
-                        >
-                          设置
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item @click.native="projectSetting">
-                            工程设置
-                          </el-dropdown-item>
-                          <!-- <el-dropdown-item @click.native="bridgeTable">桥梁表</el-dropdown-item> -->
-                          <el-dropdown-item @click.native="taskAllocation">
-                            任务分配
-                          </el-dropdown-item>
-                          <el-dropdown-item
-                            @click.native="
-                              rightClickItem.iuid = bridgeMasterFolders[0].iuid;
-                              permissionSet('', rightClickItem);
-                            "
-                          >
-                            权限设置
-                          </el-dropdown-item>
-                        </el-dropdown-menu>
-                      </el-dropdown>
-                    </template>
+                    <!-- <template -->
+                    <!--   v-if="projectInfo && -->
+                    <!--     projectInfo.projectTypeName === '桥梁大师项目' && -->
+                    <!--     currentName === '桥梁' && -->
+                    <!--     user.userID === projectInfo.creatorID -->
+                    <!--   " -->
+                    <!-- > -->
+                    <!--   <el-dropdown -->
+                    <!--     trigger="click" -->
+                    <!--     placement="bottom-start" -->
+                    <!--   > -->
+                    <!--     <el-button -->
+                    <!--       size="small" -->
+                    <!--       icon="el-icon-s-operation" -->
+                    <!--     > -->
+                    <!--       设置 -->
+                    <!--     </el-button> -->
+                    <!--     <el-dropdown-menu slot="dropdown"> -->
+                    <!--       <el-dropdown-item @click.native="projectSetting"> -->
+                    <!--         工程设置 -->
+                    <!--       </el-dropdown-item> -->
+                    <!--       &lt;!&ndash; <el-dropdown-item @click.native="bridgeTable">桥梁表</el-dropdown-item> &ndash;&gt; -->
+                    <!--       <el-dropdown-item @click.native="taskAllocation"> -->
+                    <!--         任务分配 -->
+                    <!--       </el-dropdown-item> -->
+                    <!--       <el-dropdown-item -->
+                    <!--         @click.native=" -->
+                    <!--           rightClickItem.iuid = bridgeMasterFolders[0].iuid; -->
+                    <!--           permissionSet('', rightClickItem); -->
+                    <!--         " -->
+                    <!--       > -->
+                    <!--         权限设置 -->
+                    <!--       </el-dropdown-item> -->
+                    <!--     </el-dropdown-menu> -->
+                    <!--   </el-dropdown> -->
+                    <!-- </template> -->
 
                     <!-- 下载 -->
                     <template v-if="filePermissionCon.downloadbit">
@@ -303,29 +303,29 @@
                       }}
                     </el-button>
                     <!-- 分享 -->
-                    <template v-if="filePermissionCon.downloadbit">
-                      <shareMutiple
-                        v-if="tableSelection.length >= 1 && $shareMultipleVisible(tableSelection)"
-                        :project-id="projectId"
-                        :size="'mini'"
-                        :rows="tableSelection"
-                        @loadWorkflow="loadWorkflow"
-                        @loadData="loadData(...$event)"
-                      />
-                    </template>
+                    <!-- <template v-if="filePermissionCon.downloadbit"> -->
+                    <!--   <shareMutiple -->
+                    <!--     v-if="tableSelection.length >= 1 && $shareMultipleVisible(tableSelection)" -->
+                    <!--     :project-id="projectId" -->
+                    <!--     :size="'mini'" -->
+                    <!--     :rows="tableSelection" -->
+                    <!--     @loadWorkflow="loadWorkflow" -->
+                    <!--     @loadData="loadData(...$event)" -->
+                    <!--   /> -->
+                    <!-- </template> -->
                     <!-- 删除 -->
-                    <template v-if="filePermissionCon.deletebit">
-                      <el-button
-                        size="small"
-                        style="margin-left: 0; height: 32px"
-                        type="danger"
-                        :disabled="!deleteAble"
-                        icon="el-icon-delete"
-                        @click="handleDelete"
-                      >
-                        {{ $t("base.button.delete") }}
-                      </el-button>
-                    </template>
+                    <!-- <template v-if="filePermissionCon.deletebit"> -->
+                    <!--   <el-button -->
+                    <!--     size="small" -->
+                    <!--     style="margin-left: 0; height: 32px" -->
+                    <!--     type="danger" -->
+                    <!--     :disabled="!deleteAble" -->
+                    <!--     icon="el-icon-delete" -->
+                    <!--     @click="handleDelete" -->
+                    <!--   > -->
+                    <!--     {{ $t("base.button.delete") }} -->
+                    <!--   </el-button> -->
+                    <!-- </template> -->
 
                     <!-- 20220930修改：只要勾选了多个就不展示这5个按钮 -->
                     <!-- <el-button size="mini" style="margin-left: 0" @click="decompression(tableSelection[0])" v-if="tableSelection.length == 1 &&
@@ -333,117 +333,117 @@
                     ">
                       <i class="el-icon-folder-opened"></i>解压
                     </el-button> -->
-                    <template v-if="projectInfo.projectTypeName === '桥梁大师项目'">
-                      <!-- 路线数据 -->
-                      <el-button
-                        v-if="folderLists[0] && folderLists[0].name === '路线资料'"
-                        size="mini"
-                        style="margin-left: 0; padding: 0"
-                      >
-                        <label
-                          style="display: inline-block; padding: 9px 15px"
-                          for="uploadlxsj"
-                        >
-                          <i class="el-icon el-icon-upload2" />
-                          导入
-                        </label>
-                        <input
-                          id="uploadlxsj"
-                          style="display: none"
-                          class="fileFolderUploadBtn"
-                          type="file"
-                          accept=".dl,.pmx,.zdm,.hdm,.dmg,.dmx"
-                          name="file"
-                          multiple
-                          alt="导入路线数据"
-                          @change="submitFile($event)"
-                        >
-                      </el-button>
-                      <!-- 上部标准图 -->
-                      <el-button
-                        v-if="folderLists[0] && folderLists[0].name === '上部标准图'"
-                        size="mini"
-                        style="margin-left: 0; padding: 0"
-                      >
-                        <label
-                          style="display: inline-block; padding: 9px 15px"
-                          for="uploadsbbzt"
-                        >
-                          <i class="el-icon el-icon-upload2" />
-                          导入
-                        </label>
-                        <input
-                          id="uploadsbbzt"
-                          accept=".dwg"
-                          style="display: none"
-                          class="fileFolderUploadBtn"
-                          type="file"
-                          name="file"
-                          multiple
-                          alt="导入路线数据"
-                          @change="submitFile($event)"
-                        >
-                      </el-button>
-                      <!-- 下部标准图 -->
-                      <el-button
-                        v-if="folderLists[0] && folderLists[0].name === '下部标准图'"
-                        size="mini"
-                        style="margin-left: 0; padding: 0"
-                      >
-                        <label
-                          style="display: inline-block; padding: 9px 15px"
-                          for="uploadxbbzt"
-                        >
-                          <i class="el-icon el-icon-upload2" />
-                          导入
-                        </label>
-                        <input
-                          id="uploadxbbzt"
-                          accept=".dwg"
-                          style="display: none"
-                          class="fileFolderUploadBtn"
-                          type="file"
-                          name="file"
-                          multiple
-                          alt="导入路线数据"
-                          @change="submitFile($event)"
-                        >
-                      </el-button>
-                    </template>
+                    <!-- <template v-if="projectInfo.projectTypeName === '桥梁大师项目'"> -->
+                    <!--   &lt;!&ndash; 路线数据 &ndash;&gt; -->
+                    <!--   <el-button -->
+                    <!--     v-if="folderLists[0] && folderLists[0].name === '路线资料'" -->
+                    <!--     size="mini" -->
+                    <!--     style="margin-left: 0; padding: 0" -->
+                    <!--   > -->
+                    <!--     <label -->
+                    <!--       style="display: inline-block; padding: 9px 15px" -->
+                    <!--       for="uploadlxsj" -->
+                    <!--     > -->
+                    <!--       <i class="el-icon el-icon-upload2" /> -->
+                    <!--       导入 -->
+                    <!--     </label> -->
+                    <!--     <input -->
+                    <!--       id="uploadlxsj" -->
+                    <!--       style="display: none" -->
+                    <!--       class="fileFolderUploadBtn" -->
+                    <!--       type="file" -->
+                    <!--       accept=".dl,.pmx,.zdm,.hdm,.dmg,.dmx" -->
+                    <!--       name="file" -->
+                    <!--       multiple -->
+                    <!--       alt="导入路线数据" -->
+                    <!--       @change="submitFile($event)" -->
+                    <!--     > -->
+                    <!--   </el-button> -->
+                    <!--   &lt;!&ndash; 上部标准图 &ndash;&gt; -->
+                    <!--   <el-button -->
+                    <!--     v-if="folderLists[0] && folderLists[0].name === '上部标准图'" -->
+                    <!--     size="mini" -->
+                    <!--     style="margin-left: 0; padding: 0" -->
+                    <!--   > -->
+                    <!--     <label -->
+                    <!--       style="display: inline-block; padding: 9px 15px" -->
+                    <!--       for="uploadsbbzt" -->
+                    <!--     > -->
+                    <!--       <i class="el-icon el-icon-upload2" /> -->
+                    <!--       导入 -->
+                    <!--     </label> -->
+                    <!--     <input -->
+                    <!--       id="uploadsbbzt" -->
+                    <!--       accept=".dwg" -->
+                    <!--       style="display: none" -->
+                    <!--       class="fileFolderUploadBtn" -->
+                    <!--       type="file" -->
+                    <!--       name="file" -->
+                    <!--       multiple -->
+                    <!--       alt="导入路线数据" -->
+                    <!--       @change="submitFile($event)" -->
+                    <!--     > -->
+                    <!--   </el-button> -->
+                    <!--   &lt;!&ndash; 下部标准图 &ndash;&gt; -->
+                    <!--   <el-button -->
+                    <!--     v-if="folderLists[0] && folderLists[0].name === '下部标准图'" -->
+                    <!--     size="mini" -->
+                    <!--     style="margin-left: 0; padding: 0" -->
+                    <!--   > -->
+                    <!--     <label -->
+                    <!--       style="display: inline-block; padding: 9px 15px" -->
+                    <!--       for="uploadxbbzt" -->
+                    <!--     > -->
+                    <!--       <i class="el-icon el-icon-upload2" /> -->
+                    <!--       导入 -->
+                    <!--     </label> -->
+                    <!--     <input -->
+                    <!--       id="uploadxbbzt" -->
+                    <!--       accept=".dwg" -->
+                    <!--       style="display: none" -->
+                    <!--       class="fileFolderUploadBtn" -->
+                    <!--       type="file" -->
+                    <!--       name="file" -->
+                    <!--       multiple -->
+                    <!--       alt="导入路线数据" -->
+                    <!--       @change="submitFile($event)" -->
+                    <!--     > -->
+                    <!--   </el-button> -->
+                    <!-- </template> -->
                   </div>
                 </div>
 
                 <!-- <multiplePreViewBtn v-if="multiplePreViewVisible" :rows="tableSelection" /> -->
-                <div style="display: flex; margin-right: 10px; position: relative">
-                  <!-- <div class="search-box flex ai-center" :class="{ 'show': showSearch }">
-                    <el-button type="text" icon="el-icon-search" size="small" style="padding:0 11px" @click="loadData('clearSelect', false)"></el-button>
-                  </div> -->
-                  <!-- <el-button circle :type="searchRules.fileName != '' ? '  primary' : ''" icon="el-icon-search" id="search_btn" size="small" style="margin-left: 0" @click="$store.commit('SET_SHOW_SEARCH', true)"></el-button> -->
-                  <!-- 刷新 -->
-                  <!-- <el-button circle icon="el-icon-refresh-right" size="small" style="margin-left: 5px" @click="searchRules.fileName = ''; loadData('clearSelect', false)"></el-button> -->
-                  <!-- 图览 -->
-                  <el-button
-                    v-if="!pictureMode"
-                    key="picture"
-                    icon="el-icon-menu"
-                    size="small"
-                    style="margin-left: 5px"
-                    @click="modeChange(true)"
-                  >
-                    {{ $t('base.label.picture') }}
-                  </el-button>
-                  <!-- 列表 -->
-                  <el-button
-                    v-else
-                    key="list"
-                    icon="el-icon-s-fold"
-                    size="small"
-                    style="margin-left: 5px"
-                    @click="modeChange(false)"
-                  >
-                    {{ $t('base.label.list') }}
-                  </el-button>
-                </div>
+                <!-- <div style="display: flex; margin-right: 10px; position: relative"> -->
+                <!--   &lt;!&ndash; <div class="search-box flex ai-center" :class="{ 'show': showSearch }"> -->
+                <!--     <el-button type="text" icon="el-icon-search" size="small" style="padding:0 11px" @click="loadData('clearSelect', false)"></el-button> -->
+                <!--   </div> &ndash;&gt; -->
+                <!--   &lt;!&ndash; <el-button circle :type="searchRules.fileName != '' ? '  primary' : ''" icon="el-icon-search" id="search_btn" size="small" style="margin-left: 0" @click="$store.commit('SET_SHOW_SEARCH', true)"></el-button> &ndash;&gt; -->
+                <!--   &lt;!&ndash; 刷新 &ndash;&gt; -->
+                <!--   &lt;!&ndash; <el-button circle icon="el-icon-refresh-right" size="small" style="margin-left: 5px" @click="searchRules.fileName = ''; loadData('clearSelect', false)"></el-button> &ndash;&gt; -->
+                <!--   &lt;!&ndash; 图览 &ndash;&gt; -->
+                <!--   <el-button -->
+                <!--     v-if="!pictureMode" -->
+                <!--     key="picture" -->
+                <!--     icon="el-icon-menu" -->
+                <!--     size="small" -->
+                <!--     style="margin-left: 5px" -->
+                <!--     @click="modeChange(true)" -->
+                <!--   > -->
+                <!--     {{ $t('base.label.picture') }} -->
+                <!--   </el-button> -->
+                <!--   &lt;!&ndash; 列表 &ndash;&gt; -->
+                <!--   <el-button -->
+                <!--     v-else -->
+                <!--     key="list" -->
+                <!--     icon="el-icon-s-fold" -->
+                <!--     size="small" -->
+                <!--     style="margin-left: 5px" -->
+                <!--     @click="modeChange(false)" -->
+                <!--   > -->
+                <!--     {{ $t('base.label.list') }} -->
+                <!--   </el-button> -->
+                <!-- </div> -->
               </div>
             </div>
             <div
@@ -534,108 +534,108 @@
                          </el-tooltip>
                         </template> -->
                         <!-- 浏览和编辑 -->
-                        <el-tooltip
-                          v-if="filePermissionCon.bimlookbit"
-                          class="tableOpeColMargin"
-                          effect="light"
-                          popper-class="tip-class"
-                          content="模型查看"
-                          placement="top"
-                          style="padding-left: 5px"
-                        >
-                          <i
-                            class="el-icon-view shrink"
-                            :style="{ color: isIModelFile(scope.row) ? '#8f9ab4' : '#CCC', }"
-                            style=" cursor: pointer; font-size: 20px; margin-top: 3px; display: block; "
-                            @click=" isIModelFile(scope.row) && showTransferView($appList.find((item) => item.type == 'bimwindows'), scope.row)"
-                          />
-                        </el-tooltip>
-                        <i
-                          v-else
-                          class="el-icon-view shrink tableOpeColMargin"
-                          style=" color: #ccc; cursor: not-allowed; font-size: 20px; margin-top: 3px; display: block; "
-                        />
+                        <!-- <el-tooltip -->
+                        <!--   v-if="filePermissionCon.bimlookbit" -->
+                        <!--   class="tableOpeColMargin" -->
+                        <!--   effect="light" -->
+                        <!--   popper-class="tip-class" -->
+                        <!--   content="模型查看" -->
+                        <!--   placement="top" -->
+                        <!--   style="padding-left: 5px" -->
+                        <!-- > -->
+                        <!--   <i -->
+                        <!--     class="el-icon-view shrink" -->
+                        <!--     :style="{ color: isIModelFile(scope.row) ? '#8f9ab4' : '#CCC', }" -->
+                        <!--     style=" cursor: pointer; font-size: 20px; margin-top: 3px; display: block; " -->
+                        <!--     @click=" isIModelFile(scope.row) && showTransferView($appList.find((item) => item.type == 'bimwindows'), scope.row)" -->
+                        <!--   /> -->
+                        <!-- </el-tooltip> -->
+                        <!-- <i -->
+                        <!--   v-else -->
+                        <!--   class="el-icon-view shrink tableOpeColMargin" -->
+                        <!--   style=" color: #ccc; cursor: not-allowed; font-size: 20px; margin-top: 3px; display: block; " -->
+                        <!-- /> -->
 
                         <!-- 云编辑 -->
-                        <template v-if="filePermissionCon.bimeditbit">
-                          <el-tooltip
-                            v-if="hasEditableButton(scope.row)
-                            "
-                            popper-class="tip-class"
-                            class="tableOpeColMargin"
-                            effect="light"
-                            content="模型编辑"
-                            placement="top"
-                          >
-                            <el-dropdown
-                              trigger="click"
-                              placement="bottom-start"
-                            >
-                              <i
-                                class="el-icon-model-edit shrink"
-                                style="cursor: pointer"
-                              />
-                              <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item
-                                  v-for="i in $appList.filter(
-                                    (item) => item.isEdit == true
-                                  )"
-                                  v-if="$hasPermi(`projects:editing:${i.type}`)"
-                                  :key="i.appName"
-                                  @click.native="
-                                    isIModelFile(scope.row) &&
-                                      showTransferView(i, scope.row)
-                                  "
-                                >
-                                  <div class="flex ai-center jc-between">
-                                    <div class="flex ai-center">
-                                      <img
-                                        style="width: 22px"
-                                        :src="i.logo"
-                                        alt=""
-                                      >
-                                      <span style="margin: 0 15px 0 5px">{{
-                                        i.appName
-                                      }}</span>
-                                    </div>
-                                  </div>
-                                </el-dropdown-item>
-                              </el-dropdown-menu>
-                            </el-dropdown>
-                          </el-tooltip>
-                          <el-tooltip
-                            v-else
-                            disabled
-                            class="tableOpeColMargin"
-                          >
-                            <i
-                              class="el-icon-model-edit shrink"
-                              style="opacity: 0.4; cursor: not-allowed"
-                            />
-                          </el-tooltip>
-                        </template>
+                        <!-- <template v-if="filePermissionCon.bimeditbit"> -->
+                        <!--   <el-tooltip -->
+                        <!--     v-if="hasEditableButton(scope.row) -->
+                        <!--     " -->
+                        <!--     popper-class="tip-class" -->
+                        <!--     class="tableOpeColMargin" -->
+                        <!--     effect="light" -->
+                        <!--     content="模型编辑" -->
+                        <!--     placement="top" -->
+                        <!--   > -->
+                        <!--     <el-dropdown -->
+                        <!--       trigger="click" -->
+                        <!--       placement="bottom-start" -->
+                        <!--     > -->
+                        <!--       <i -->
+                        <!--         class="el-icon-model-edit shrink" -->
+                        <!--         style="cursor: pointer" -->
+                        <!--       /> -->
+                        <!--       <el-dropdown-menu slot="dropdown"> -->
+                        <!--         <el-dropdown-item -->
+                        <!--           v-for="i in $appList.filter( -->
+                        <!--             (item) => item.isEdit == true -->
+                        <!--           )" -->
+                        <!--           v-if="$hasPermi(`projects:editing:${i.type}`)" -->
+                        <!--           :key="i.appName" -->
+                        <!--           @click.native=" -->
+                        <!--             isIModelFile(scope.row) && -->
+                        <!--               showTransferView(i, scope.row) -->
+                        <!--           " -->
+                        <!--         > -->
+                        <!--           <div class="flex ai-center jc-between"> -->
+                        <!--             <div class="flex ai-center"> -->
+                        <!--               <img -->
+                        <!--                 style="width: 22px" -->
+                        <!--                 :src="i.logo" -->
+                        <!--                 alt="" -->
+                        <!--               > -->
+                        <!--               <span style="margin: 0 15px 0 5px">{{ -->
+                        <!--                 i.appName -->
+                        <!--               }}</span> -->
+                        <!--             </div> -->
+                        <!--           </div> -->
+                        <!--         </el-dropdown-item> -->
+                        <!--       </el-dropdown-menu> -->
+                        <!--     </el-dropdown> -->
+                        <!--   </el-tooltip> -->
+                        <!--   <el-tooltip -->
+                        <!--     v-else -->
+                        <!--     disabled -->
+                        <!--     class="tableOpeColMargin" -->
+                        <!--   > -->
+                        <!--     <i -->
+                        <!--       class="el-icon-model-edit shrink" -->
+                        <!--       style="opacity: 0.4; cursor: not-allowed" -->
+                        <!--     /> -->
+                        <!--   </el-tooltip> -->
+                        <!-- </template> -->
 
-                        <el-tooltip
-                          v-if="$shareMultipleVisible([scope.row])"
-                          content="分享"
-                          class="tableOpeColMargin"
-                          popper-class="tip-class"
-                          effect="light"
-                          placement="top"
-                        >
-                          <shareMutiple
-                            :project-id="projectId"
-                            type="list"
-                            :rows="[scope.row]"
-                            @loadWorkflow="loadWorkflow"
-                            @loadData="loadData(...$event)"
-                          />
-                        </el-tooltip>
-                        <i
-                          v-else
-                          class="iconfont icon-share shrink tableOpeColMargin"
-                          style="opacity: 0.4; font-size: 18px; cursor: not-allowed"
-                        />
+                        <!-- <el-tooltip -->
+                        <!--   v-if="$shareMultipleVisible([scope.row])" -->
+                        <!--   content="分享" -->
+                        <!--   class="tableOpeColMargin" -->
+                        <!--   popper-class="tip-class" -->
+                        <!--   effect="light" -->
+                        <!--   placement="top" -->
+                        <!-- > -->
+                        <!--   <shareMutiple -->
+                        <!--     :project-id="projectId" -->
+                        <!--     type="list" -->
+                        <!--     :rows="[scope.row]" -->
+                        <!--     @loadWorkflow="loadWorkflow" -->
+                        <!--     @loadData="loadData(...$event)" -->
+                        <!--   /> -->
+                        <!-- </el-tooltip> -->
+                        <!-- <i -->
+                        <!--   v-else -->
+                        <!--   class="iconfont icon-share shrink tableOpeColMargin" -->
+                        <!--   style="opacity: 0.4; font-size: 18px; cursor: not-allowed" -->
+                        <!-- /> -->
                         <!-- 导出 -->
 
                         <template v-if="!$isRead">
@@ -705,100 +705,100 @@
                           <!-- 收藏 -->
                           <!-- <operateColCom :filePermissionCon="filePermissionCon" :row="scope.row" class="tableOpeColMargin" /> -->
                           <!-- 签入签出 -->
-                          <template v-if="!isMyDocument">
-                            <template
-                              v-if="$hasPermi('projects:filefunction:checknot') &&
-                                isIModelFile(scope.row)
-                              "
-                            >
-                              <el-tooltip
-                                v-if="scope.row.checkStatus === '1' &&
-                                  scope.row.checkUser === user.userID
-                                "
-                                popper-class="tip-class"
-                                class="tableOpeColMargin"
-                                effect="light"
-                                content="签入"
-                                placement="top"
-                              >
-                                <i
-                                  class="el-icon-unlock shrink"
-                                  style="color: #8f9ab4; cursor: pointer; font-size: 20px"
-                                  @click="showLockView(scope.row, '0')"
-                                />
-                              </el-tooltip>
-                              <el-tooltip
-                                v-else-if="scope.row.checkStatus === '1' &&
-                                  scope.row.checkUser !== user.userID
-                                "
-                                disabled
-                                class="tableOpeColMargin"
-                                effect="light"
-                                placement="top"
-                              >
-                                <i
-                                  class="el-icon-unlock shrink"
-                                  style="font-size: 20px; opacity: 0.4; cursor: not-allowed"
-                                />
-                              </el-tooltip>
-                              <el-tooltip
-                                v-if="scope.row.checkStatus === '0' ||
-                                  scope.row.checkStatus === null
-                                "
-                                popper-class="tip-class"
-                                class="tableOpeColMargin"
-                                effect="light"
-                                content="签出"
-                                placement="top"
-                              >
-                                <i
-                                  class="el-icon-lock shrink"
-                                  style="color: #8f9ab4; cursor: pointer; font-size: 20px"
-                                  @click="showLockView(scope.row, '1')"
-                                />
-                              </el-tooltip>
-                            </template>
-                            <el-tooltip
-                              v-else
-                              disabled
-                              class="tableOpeColMargin"
-                              effect="light"
-                            >
-                              <i
-                                class="el-icon-lock shrink"
-                                style="font-size: 20px; opacity: 0.4; cursor: not-allowed"
-                              />
-                            </el-tooltip>
-                          </template>
+                          <!-- <template v-if="!isMyDocument"> -->
+                          <!--   <template -->
+                          <!--     v-if="$hasPermi('projects:filefunction:checknot') && -->
+                          <!--       isIModelFile(scope.row) -->
+                          <!--     " -->
+                          <!--   > -->
+                          <!--     <el-tooltip -->
+                          <!--       v-if="scope.row.checkStatus === '1' && -->
+                          <!--         scope.row.checkUser === user.userID -->
+                          <!--       " -->
+                          <!--       popper-class="tip-class" -->
+                          <!--       class="tableOpeColMargin" -->
+                          <!--       effect="light" -->
+                          <!--       content="签入" -->
+                          <!--       placement="top" -->
+                          <!--     > -->
+                          <!--       <i -->
+                          <!--         class="el-icon-unlock shrink" -->
+                          <!--         style="color: #8f9ab4; cursor: pointer; font-size: 20px" -->
+                          <!--         @click="showLockView(scope.row, '0')" -->
+                          <!--       /> -->
+                          <!--     </el-tooltip> -->
+                          <!--     <el-tooltip -->
+                          <!--       v-else-if="scope.row.checkStatus === '1' && -->
+                          <!--         scope.row.checkUser !== user.userID -->
+                          <!--       " -->
+                          <!--       disabled -->
+                          <!--       class="tableOpeColMargin" -->
+                          <!--       effect="light" -->
+                          <!--       placement="top" -->
+                          <!--     > -->
+                          <!--       <i -->
+                          <!--         class="el-icon-unlock shrink" -->
+                          <!--         style="font-size: 20px; opacity: 0.4; cursor: not-allowed" -->
+                          <!--       /> -->
+                          <!--     </el-tooltip> -->
+                          <!--     <el-tooltip -->
+                          <!--       v-if="scope.row.checkStatus === '0' || -->
+                          <!--         scope.row.checkStatus === null -->
+                          <!--       " -->
+                          <!--       popper-class="tip-class" -->
+                          <!--       class="tableOpeColMargin" -->
+                          <!--       effect="light" -->
+                          <!--       content="签出" -->
+                          <!--       placement="top" -->
+                          <!--     > -->
+                          <!--       <i -->
+                          <!--         class="el-icon-lock shrink" -->
+                          <!--         style="color: #8f9ab4; cursor: pointer; font-size: 20px" -->
+                          <!--         @click="showLockView(scope.row, '1')" -->
+                          <!--       /> -->
+                          <!--     </el-tooltip> -->
+                          <!--   </template> -->
+                          <!--   <el-tooltip -->
+                          <!--     v-else -->
+                          <!--     disabled -->
+                          <!--     class="tableOpeColMargin" -->
+                          <!--     effect="light" -->
+                          <!--   > -->
+                          <!--     <i -->
+                          <!--       class="el-icon-lock shrink" -->
+                          <!--       style="font-size: 20px; opacity: 0.4; cursor: not-allowed" -->
+                          <!--     /> -->
+                          <!--   </el-tooltip> -->
+                          <!-- </template> -->
 
                           <!-- 版本管理 -->
-                          <el-tooltip
-                            v-if="filePermissionCon.setupbit == true &&
-                              scope.row.fileSuffix.toLowerCase() != '' &&
-                              scope.row.filePath != ''
-                            "
-                            popper-class="tip-class"
-                            class="tableOpeColMargin"
-                            effect="light"
-                            content="版本管理"
-                            placement="top"
-                          >
-                            <i
-                              class="el-icon-version shrink"
-                              style="cursor: pointer"
-                              @click="versionClick(scope.row)"
-                            />
-                          </el-tooltip>
-                          <el-tooltip
-                            v-else
-                            disabled
-                            class="tableOpeColMargin"
-                          >
-                            <i
-                              class="el-icon-version shrink"
-                              style="opacity: 0.4; cursor: not-allowed"
-                            />
-                          </el-tooltip>
+                          <!-- <el-tooltip -->
+                          <!--   v-if="filePermissionCon.setupbit == true && -->
+                          <!--     scope.row.fileSuffix.toLowerCase() != '' && -->
+                          <!--     scope.row.filePath != '' -->
+                          <!--   " -->
+                          <!--   popper-class="tip-class" -->
+                          <!--   class="tableOpeColMargin" -->
+                          <!--   effect="light" -->
+                          <!--   content="版本管理" -->
+                          <!--   placement="top" -->
+                          <!-- > -->
+                          <!--   <i -->
+                          <!--     class="el-icon-version shrink" -->
+                          <!--     style="cursor: pointer" -->
+                          <!--     @click="versionClick(scope.row)" -->
+                          <!--   /> -->
+                          <!-- </el-tooltip> -->
+                          <!-- <el-tooltip -->
+                          <!--   v-else -->
+                          <!--   disabled -->
+                          <!--   class="tableOpeColMargin" -->
+                          <!-- > -->
+                          <!--   <i -->
+                          <!--     class="el-icon-version shrink" -->
+                          <!--     style="opacity: 0.4; cursor: not-allowed" -->
+                          <!--   /> -->
+                          <!-- </el-tooltip> -->
 
                           <!-- 下载 -->
 
@@ -868,152 +868,152 @@
                             class="el-icon-download downLoadBtn1"
                           />
 
-                          <el-dropdown
-                            trigger="click"
-                            placement="bottom-start"
-                          >
-                            <i
-                              class="el-icon-more"
-                              style="
-                              color: #8f9ab4;
-                              font-size: 18px;
-                              vertical-align: middle;
-                              cursor: pointer;
-                            "
-                            />
-                            <el-dropdown-menu slot="dropdown">
-                              <!-- 压缩文件解压 -->
+                          <!-- <el-dropdown -->
+                          <!--   trigger="click" -->
+                          <!--   placement="bottom-start" -->
+                          <!-- > -->
+                          <!--   <i -->
+                          <!--     class="el-icon-more" -->
+                          <!--     style=" -->
+                          <!--     color: #8f9ab4; -->
+                          <!--     font-size: 18px; -->
+                          <!--     vertical-align: middle; -->
+                          <!--     cursor: pointer; -->
+                          <!--   " -->
+                          <!--   /> -->
+                          <!--   <el-dropdown-menu slot="dropdown"> -->
+                          <!--     &lt;!&ndash; 压缩文件解压 &ndash;&gt; -->
 
-                              <el-dropdown-item
-                                v-if="filePermissionCon.editbit == true && ['.rar', '.zip'].includes(scope.row.fileSuffix.toLowerCase())"
-                                @click.native="decompression(scope.row)"
-                              >
-                                解压
-                              </el-dropdown-item>
+                          <!--     <el-dropdown-item -->
+                          <!--       v-if="filePermissionCon.editbit == true && ['.rar', '.zip'].includes(scope.row.fileSuffix.toLowerCase())" -->
+                          <!--       @click.native="decompression(scope.row)" -->
+                          <!--     > -->
+                          <!--       解压 -->
+                          <!--     </el-dropdown-item> -->
 
-                              <el-dropdown-item
-                                v-if="filePermissionCon.editbit == true"
-                                @click.native="copyTo('move', scope.row)"
-                              >
-                                {{ $t("projects.operation.move")
-                                }}
-                              </el-dropdown-item>
-                              <el-dropdown-item
-                                v-if="filePermissionCon.editbit == true"
-                                @click.native="copyToCurrentFolder(scope.row)"
-                              >
-                                {{
-                                  $t("projects.operation.copy")
-                                }}
-                              </el-dropdown-item>
-                              <el-dropdown-item
-                                v-if="filePermissionCon.editbit == true"
-                                @click.native="copyTo('copy', scope.row)"
-                              >
-                                {{
-                                  $t("projects.operation.copyTo")
-                                }}
-                              </el-dropdown-item>
-                              <el-dropdown-item
-                                v-if="filePermissionCon.editbit == true"
-                                @click.native="showfolderDialog('reset', scope.row)"
-                              >
-                                {{ $t("projects.operation.rename")
-                                }}
-                              </el-dropdown-item>
-                              <!-- <el-dropdown-item @click.native="permissionSet('', scope.row)" v-if="scope.row.fileSuffix == '' && scope.row.authorizebit == true">权限设置</el-dropdown-item> -->
-                              <template v-if="isIModelFile(scope.row)">
-                                <el-dropdown-item
-                                  v-if="$hasPermi('projects:filefunction:display')"
-                                  @click.native="viewBigScreen(scope.row)"
-                                >
-                                  {{
-                                    $t("projects.operation.bigScreen")
-                                  }}
-                                </el-dropdown-item>
-                                <el-dropdown-item @click.native="viewBigScreenAndTable(scope.row)">
-                                  大屏展示(图表)
-                                </el-dropdown-item>
-                                <el-dropdown-item
-                                  v-if="$hasPermi('projects:filefunction:quality')"
-                                  divided
-                                  @click.native="showQuality(scope.row)"
-                                >
-                                  {{ $t("projects.operation.quality")
-                                  }}
-                                </el-dropdown-item>
-                              </template>
-                              <el-dropdown-item
-                                v-if="$hasPermi('projects:filefunction:copypath') &&
-                                  $modelFileSuffix3.concat(['.json']).indexOf(
-                                    scope.row.fileSuffix.toLowerCase()
-                                  ) != -1
-                                "
-                                divided
-                                @click.native="copyAddress(scope.row)"
-                              >
-                                复制实景地址
-                              </el-dropdown-item>
-                              <template v-if="isIModelFile(scope.row)">
-                                <el-dropdown-item
-                                  v-if="$hasPermi('projects:filefunction:copypath') &&
-                                    isIModelFile(scope.row) &&
-                                    user.isadministrator
-                                  "
-                                  @click.native="copyPath(scope.row)"
-                                >
-                                  {{ $t("projects.operation.copyPath")
-                                  }}
-                                </el-dropdown-item>
-                                <el-dropdown-item
-                                  v-if="$hasPermi('projects:filefunction:associated')"
-                                  @click.native="linkModel(scope.row)"
-                                >
-                                  {{
-                                    $t("projects.operation.linkDrawing")
-                                  }}
-                                </el-dropdown-item>
-                                <el-dropdown-item
-                                  v-if="$hasPermi('projects:filefunction:viewdrawings')"
-                                  @click.native="viewLinkModel(scope.row)"
-                                >
-                                  {{
-                                    $t("projects.operation.viewDrawing")
-                                  }}
-                                </el-dropdown-item>
-                              </template>
-                              <!-- <el-dropdown-item v-if="filePermissionCon.deletebit == true && (scope.row.checkStatus === '0' || scope.row.checkStatus === null)" @click.native="handleDeleteFile(scope.row)">{{ $t('base.button.delete') }}</el-dropdown-item> -->
-                              <!-- ------------------------ -->
-                              <template v-if="filePermissionCon.editbit">
-                                <template
-                                  v-if="$modelFileSuffix3
-                                    .concat($modelFileSuffix)
-                                    .indexOf(scope.row.fileSuffix.toLowerCase()) != -1
-                                  "
-                                >
-                                  <el-dropdown-item
-                                    divided
-                                    @click.native="
-                                      reTranscoding(scope.row.iuid, undefined, scope.row)
-                                    "
-                                  >
-                                    {{
-                                      $t("projects.transcoding.transcoding")
-                                    }}
-                                  </el-dropdown-item>
-                                </template>
-                              </template>
+                          <!--     <el-dropdown-item -->
+                          <!--       v-if="filePermissionCon.editbit == true" -->
+                          <!--       @click.native="copyTo('move', scope.row)" -->
+                          <!--     > -->
+                          <!--       {{ $t("projects.operation.move") -->
+                          <!--       }} -->
+                          <!--     </el-dropdown-item> -->
+                          <!--     <el-dropdown-item -->
+                          <!--       v-if="filePermissionCon.editbit == true" -->
+                          <!--       @click.native="copyToCurrentFolder(scope.row)" -->
+                          <!--     > -->
+                          <!--       {{ -->
+                          <!--         $t("projects.operation.copy") -->
+                          <!--       }} -->
+                          <!--     </el-dropdown-item> -->
+                          <!--     <el-dropdown-item -->
+                          <!--       v-if="filePermissionCon.editbit == true" -->
+                          <!--       @click.native="copyTo('copy', scope.row)" -->
+                          <!--     > -->
+                          <!--       {{ -->
+                          <!--         $t("projects.operation.copyTo") -->
+                          <!--       }} -->
+                          <!--     </el-dropdown-item> -->
+                          <!--     <el-dropdown-item -->
+                          <!--       v-if="filePermissionCon.editbit == true" -->
+                          <!--       @click.native="showfolderDialog('reset', scope.row)" -->
+                          <!--     > -->
+                          <!--       {{ $t("projects.operation.rename") -->
+                          <!--       }} -->
+                          <!--     </el-dropdown-item> -->
+                          <!--     &lt;!&ndash; <el-dropdown-item @click.native="permissionSet('', scope.row)" v-if="scope.row.fileSuffix == '' && scope.row.authorizebit == true">权限设置</el-dropdown-item> &ndash;&gt; -->
+                          <!--     <template v-if="isIModelFile(scope.row)"> -->
+                          <!--       <el-dropdown-item -->
+                          <!--         v-if="$hasPermi('projects:filefunction:display')" -->
+                          <!--         @click.native="viewBigScreen(scope.row)" -->
+                          <!--       > -->
+                          <!--         {{ -->
+                          <!--           $t("projects.operation.bigScreen") -->
+                          <!--         }} -->
+                          <!--       </el-dropdown-item> -->
+                          <!--       <el-dropdown-item @click.native="viewBigScreenAndTable(scope.row)"> -->
+                          <!--         大屏展示(图表) -->
+                          <!--       </el-dropdown-item> -->
+                          <!--       <el-dropdown-item -->
+                          <!--         v-if="$hasPermi('projects:filefunction:quality')" -->
+                          <!--         divided -->
+                          <!--         @click.native="showQuality(scope.row)" -->
+                          <!--       > -->
+                          <!--         {{ $t("projects.operation.quality") -->
+                          <!--         }} -->
+                          <!--       </el-dropdown-item> -->
+                          <!--     </template> -->
+                          <!--     <el-dropdown-item -->
+                          <!--       v-if="$hasPermi('projects:filefunction:copypath') && -->
+                          <!--         $modelFileSuffix3.concat(['.json']).indexOf( -->
+                          <!--           scope.row.fileSuffix.toLowerCase() -->
+                          <!--         ) != -1 -->
+                          <!--       " -->
+                          <!--       divided -->
+                          <!--       @click.native="copyAddress(scope.row)" -->
+                          <!--     > -->
+                          <!--       复制实景地址 -->
+                          <!--     </el-dropdown-item> -->
+                          <!--     <template v-if="isIModelFile(scope.row)"> -->
+                          <!--       <el-dropdown-item -->
+                          <!--         v-if="$hasPermi('projects:filefunction:copypath') && -->
+                          <!--           isIModelFile(scope.row) && -->
+                          <!--           user.isadministrator -->
+                          <!--         " -->
+                          <!--         @click.native="copyPath(scope.row)" -->
+                          <!--       > -->
+                          <!--         {{ $t("projects.operation.copyPath") -->
+                          <!--         }} -->
+                          <!--       </el-dropdown-item> -->
+                          <!--       <el-dropdown-item -->
+                          <!--         v-if="$hasPermi('projects:filefunction:associated')" -->
+                          <!--         @click.native="linkModel(scope.row)" -->
+                          <!--       > -->
+                          <!--         {{ -->
+                          <!--           $t("projects.operation.linkDrawing") -->
+                          <!--         }} -->
+                          <!--       </el-dropdown-item> -->
+                          <!--       <el-dropdown-item -->
+                          <!--         v-if="$hasPermi('projects:filefunction:viewdrawings')" -->
+                          <!--         @click.native="viewLinkModel(scope.row)" -->
+                          <!--       > -->
+                          <!--         {{ -->
+                          <!--           $t("projects.operation.viewDrawing") -->
+                          <!--         }} -->
+                          <!--       </el-dropdown-item> -->
+                          <!--     </template> -->
+                          <!--     &lt;!&ndash; <el-dropdown-item v-if="filePermissionCon.deletebit == true && (scope.row.checkStatus === '0' || scope.row.checkStatus === null)" @click.native="handleDeleteFile(scope.row)">{{ $t('base.button.delete') }}</el-dropdown-item> &ndash;&gt; -->
+                          <!--     &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; &ndash;&gt; -->
+                          <!--     <template v-if="filePermissionCon.editbit"> -->
+                          <!--       <template -->
+                          <!--         v-if="$modelFileSuffix3 -->
+                          <!--           .concat($modelFileSuffix) -->
+                          <!--           .indexOf(scope.row.fileSuffix.toLowerCase()) != -1 -->
+                          <!--         " -->
+                          <!--       > -->
+                          <!--         <el-dropdown-item -->
+                          <!--           divided -->
+                          <!--           @click.native=" -->
+                          <!--             reTranscoding(scope.row.iuid, undefined, scope.row) -->
+                          <!--           " -->
+                          <!--         > -->
+                          <!--           {{ -->
+                          <!--             $t("projects.transcoding.transcoding") -->
+                          <!--           }} -->
+                          <!--         </el-dropdown-item> -->
+                          <!--       </template> -->
+                          <!--     </template> -->
 
-                              <el-dropdown-item
-                                divided
-                                @click.native="
-                                  uploadJsonFile(scope.row)
-                                "
-                              >
-                                上传视图文件
-                              </el-dropdown-item>
-                            </el-dropdown-menu>
-                          </el-dropdown>
+                          <!--     <el-dropdown-item -->
+                          <!--       divided -->
+                          <!--       @click.native=" -->
+                          <!--         uploadJsonFile(scope.row) -->
+                          <!--       " -->
+                          <!--     > -->
+                          <!--       上传视图文件 -->
+                          <!--     </el-dropdown-item> -->
+                          <!--   </el-dropdown-menu> -->
+                          <!-- </el-dropdown> -->
                         </template>
                       </div>
                     </template>

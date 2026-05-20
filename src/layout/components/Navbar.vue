@@ -57,58 +57,58 @@
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-tooltip
-            v-if="!$isSpace"
-            style="margin-right: 20px;"
-            effect="dark"
-            content="学习园地"
-            placement="bottom"
-          >
-            <img
-              src="../../assets/newNavBtn/read.svg"
-              style="cursor: pointer;width: 18px;height: 18px;"
-              @click="navToStudy"
-            >
-          </el-tooltip>
-          <el-tooltip
-            v-if="$deployName=='wp'"
-            style="margin-right: 20px;"
-            effect="dark"
-            content="意见反馈"
-            placement="bottom"
-          >
-            <img
-              src="../../assets/iconImg/customerService.svg"
-              style="cursor: pointer;width: 20px;height: 20px;"
-              @click="showCustomerService"
-            >
-          </el-tooltip>
-          <el-tooltip
-            v-if="user.isadministrator && $deployName == 'ksj'"
-            style="margin-right: 20px;"
-            effect="dark"
-            content="系统管理"
-            placement="bottom"
-          >
-            <img
-              src="../../assets/newNavBtn/setting.svg"
-              style="cursor: pointer;width: 20px;height: 20px;"
-              @click="navToSetting"
-            >
-          </el-tooltip>
-          <el-tooltip
-            v-if="!$isSpace"
-            style="margin-right: 20px;"
-            effect="dark"
-            content="开发者中心"
-            placement="bottom"
-          >
-            <img
-              src="../../assets/newNavBtn/code.svg"
-              style="cursor: pointer;width: 20px;height: 20px;"
-              @click="openApiDoc"
-            >
-          </el-tooltip>
+          <!-- <el-tooltip -->
+          <!--   v-if="!$isSpace" -->
+          <!--   style="margin-right: 20px;" -->
+          <!--   effect="dark" -->
+          <!--   content="学习园地" -->
+          <!--   placement="bottom" -->
+          <!-- > -->
+          <!--   <img -->
+          <!--     src="../../assets/newNavBtn/read.svg" -->
+          <!--     style="cursor: pointer;width: 18px;height: 18px;" -->
+          <!--     @click="navToStudy" -->
+          <!--   > -->
+          <!-- </el-tooltip> -->
+          <!-- <el-tooltip -->
+          <!--   v-if="$deployName=='wp'" -->
+          <!--   style="margin-right: 20px;" -->
+          <!--   effect="dark" -->
+          <!--   content="意见反馈" -->
+          <!--   placement="bottom" -->
+          <!-- > -->
+          <!--   <img -->
+          <!--     src="../../assets/iconImg/customerService.svg" -->
+          <!--     style="cursor: pointer;width: 20px;height: 20px;" -->
+          <!--     @click="showCustomerService" -->
+          <!--   > -->
+          <!-- </el-tooltip> -->
+          <!-- <el-tooltip -->
+          <!--   v-if="user.isadministrator && $deployName == 'ksj'" -->
+          <!--   style="margin-right: 20px;" -->
+          <!--   effect="dark" -->
+          <!--   content="系统管理" -->
+          <!--   placement="bottom" -->
+          <!-- > -->
+          <!--   <img -->
+          <!--     src="../../assets/newNavBtn/setting.svg" -->
+          <!--     style="cursor: pointer;width: 20px;height: 20px;" -->
+          <!--     @click="navToSetting" -->
+          <!--   > -->
+          <!-- </el-tooltip> -->
+          <!-- <el-tooltip -->
+          <!--   v-if="!$isSpace" -->
+          <!--   style="margin-right: 20px;" -->
+          <!--   effect="dark" -->
+          <!--   content="开发者中心" -->
+          <!--   placement="bottom" -->
+          <!-- > -->
+          <!--   <img -->
+          <!--     src="../../assets/newNavBtn/code.svg" -->
+          <!--     style="cursor: pointer;width: 20px;height: 20px;" -->
+          <!--     @click="openApiDoc" -->
+          <!--   > -->
+          <!-- </el-tooltip> -->
           <el-tooltip
             v-if="hasCorp"
             style="margin-right: 20px;"
@@ -125,95 +125,95 @@
           <!-- <el-tooltip v-if="hasCorp && $sideBarModules.indexOf('团队协作') > -1" style="margin-right: 20px;" effect="dark" content="我的消息" placement="bottom">
             <img src="../../assets/newNavBtn/message.svg" style="cursor: pointer;width: 20px;height: 20px;" @click="showMessageDialog">
           </el-tooltip> -->
-          <el-popover
-            v-if="hasCorp"
-            v-model="showNoticeList"
-            placement="bottom"
-            :disabled="messageListCount == 0"
-            width="300"
-            trigger="hover"
-          >
-            <div
-              v-for="item in messageList.usermes.data"
-              :key="item.iuid"
-              class="msgList flex ai-center jc-between"
-            >
-              <div>
-                <div style="font-size: 14px;color: #555;">
-                  <span style="color:#000">{{ item.userName }}</span> 申请加入企业
-                </div>
-                <div style="font-size: 12px;color: #999;margin-top: 5px;">
-                  {{ item.createTime }}
-                </div>
-              </div>
-              <el-button
-                type="text"
-                size="small"
-                @click="showApplyDialog"
-              >
-                查看人员
-              </el-button>
-            </div>
-            <div
-              v-for="item in messageList.checkmes.data"
-              :key="item.iuid"
-              class="msgList flex ai-center jc-between"
-            >
-              <div>
-                <div style="font-size: 14px;color: #555;">
-                  <span style="color:#000">{{ item.creatorName }}</span> 提交的审批
-                </div>
-                <div style="font-size: 12px;color: #999;margin-top: 5px;">
-                  {{ item.createTime }}
-                </div>
-              </div>
-              <el-button
-                type="text"
-                size="small"
-                @click="showApprove(item)"
-              >
-                点击查看
-              </el-button>
-            </div>
-            <div
-              v-for="item in messageList.workflowcheckmes.data"
-              :key="item.iuid"
-              class="msgList flex ai-center jc-between"
-            >
-              <div>
-                <div style="font-size: 14px;color: #555;">
-                  <span style="color:#000">{{ item.creatorName }}</span> 提交的审批
-                </div>
-                <div style="font-size: 12px;color: #999;margin-top: 5px;">
-                  {{ item.createTime }}
-                </div>
-              </div>
-              <el-button
-                type="text"
-                size="small"
-                @click="showApprove(item)"
-              >
-                点击查看
-              </el-button>
-            </div>
-            <template slot="reference">
-              <el-badge
-                style="margin-right: 20px;cursor: pointer;margin-top: 7px;"
-                :value="messageListCount"
-                :max="99"
-                :is-dot="false"
-                size="mini"
-                :hidden="messageListCount == 0"
-                type="danger"
-              >
-                <!-- <i class="el-icon-bell hover" style="cursor: pointer;font-size:20px"></i> -->
-                <img
-                  src="../../assets/newNavBtn/remind.svg"
-                  style="cursor: pointer;width: 18px;height: 18px;"
-                >
-              </el-badge>
-            </template>
-          </el-popover>
+          <!-- <el-popover -->
+          <!--   v-if="hasCorp" -->
+          <!--   v-model="showNoticeList" -->
+          <!--   placement="bottom" -->
+          <!--   :disabled="messageListCount == 0" -->
+          <!--   width="300" -->
+          <!--   trigger="hover" -->
+          <!-- > -->
+          <!--   <div -->
+          <!--     v-for="item in messageList.usermes.data" -->
+          <!--     :key="item.iuid" -->
+          <!--     class="msgList flex ai-center jc-between" -->
+          <!--   > -->
+          <!--     <div> -->
+          <!--       <div style="font-size: 14px;color: #555;"> -->
+          <!--         <span style="color:#000">{{ item.userName }}</span> 申请加入企业 -->
+          <!--       </div> -->
+          <!--       <div style="font-size: 12px;color: #999;margin-top: 5px;"> -->
+          <!--         {{ item.createTime }} -->
+          <!--       </div> -->
+          <!--     </div> -->
+          <!--     <el-button -->
+          <!--       type="text" -->
+          <!--       size="small" -->
+          <!--       @click="showApplyDialog" -->
+          <!--     > -->
+          <!--       查看人员 -->
+          <!--     </el-button> -->
+          <!--   </div> -->
+          <!--   <div -->
+          <!--     v-for="item in messageList.checkmes.data" -->
+          <!--     :key="item.iuid" -->
+          <!--     class="msgList flex ai-center jc-between" -->
+          <!--   > -->
+          <!--     <div> -->
+          <!--       <div style="font-size: 14px;color: #555;"> -->
+          <!--         <span style="color:#000">{{ item.creatorName }}</span> 提交的审批 -->
+          <!--       </div> -->
+          <!--       <div style="font-size: 12px;color: #999;margin-top: 5px;"> -->
+          <!--         {{ item.createTime }} -->
+          <!--       </div> -->
+          <!--     </div> -->
+          <!--     <el-button -->
+          <!--       type="text" -->
+          <!--       size="small" -->
+          <!--       @click="showApprove(item)" -->
+          <!--     > -->
+          <!--       点击查看 -->
+          <!--     </el-button> -->
+          <!--   </div> -->
+          <!--   <div -->
+          <!--     v-for="item in messageList.workflowcheckmes.data" -->
+          <!--     :key="item.iuid" -->
+          <!--     class="msgList flex ai-center jc-between" -->
+          <!--   > -->
+          <!--     <div> -->
+          <!--       <div style="font-size: 14px;color: #555;"> -->
+          <!--         <span style="color:#000">{{ item.creatorName }}</span> 提交的审批 -->
+          <!--       </div> -->
+          <!--       <div style="font-size: 12px;color: #999;margin-top: 5px;"> -->
+          <!--         {{ item.createTime }} -->
+          <!--       </div> -->
+          <!--     </div> -->
+          <!--     <el-button -->
+          <!--       type="text" -->
+          <!--       size="small" -->
+          <!--       @click="showApprove(item)" -->
+          <!--     > -->
+          <!--       点击查看 -->
+          <!--     </el-button> -->
+          <!--   </div> -->
+          <!--   <template slot="reference"> -->
+          <!--     <el-badge -->
+          <!--       style="margin-right: 20px;cursor: pointer;margin-top: 7px;" -->
+          <!--       :value="messageListCount" -->
+          <!--       :max="99" -->
+          <!--       :is-dot="false" -->
+          <!--       size="mini" -->
+          <!--       :hidden="messageListCount == 0" -->
+          <!--       type="danger" -->
+          <!--     > -->
+          <!--       &lt;!&ndash; <i class="el-icon-bell hover" style="cursor: pointer;font-size:20px"></i> &ndash;&gt; -->
+          <!--       <img -->
+          <!--         src="../../assets/newNavBtn/remind.svg" -->
+          <!--         style="cursor: pointer;width: 18px;height: 18px;" -->
+          <!--       > -->
+          <!--     </el-badge> -->
+          <!--   </template> -->
+          <!-- </el-popover> -->
         </div>
         <div class="avatar-wrapper flex ai-center">
           <img

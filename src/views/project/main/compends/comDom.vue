@@ -6,16 +6,16 @@
   >
     <template v-if="hasCorp">
       <div class="flex ai-center oper-bar">
-        <el-button
-          v-if="$hasPermi('projects:projectchunkson:projectadd')"
-          icon="el-icon-plus"
-          type="primary"
-          plain
-          size="small"
-          @click="handleAdd()"
-        >
-          {{ $t("projects.button.add") }}
-        </el-button>
+        <!-- <el-button -->
+        <!--   v-if="$hasPermi('projects:projectchunkson:projectadd')" -->
+        <!--   icon="el-icon-plus" -->
+        <!--   type="primary" -->
+        <!--   plain -->
+        <!--   size="small" -->
+        <!--   @click="handleAdd()" -->
+        <!-- > -->
+        <!--   {{ $t("projects.button.add") }} -->
+        <!-- </el-button> -->
         <el-button
           v-if="tableSelection.length > 0 && pathName != 'myCollectionProject' && pathName != 'lately'"
           icon="el-icon-delete"
@@ -208,109 +208,109 @@
               sortable="custom"
               :label="$t('base.label.createTime')"
             />
-            <el-table-column
-              width="180px"
-              prop="active"
-              :label="$t('base.formLabel.operation')"
-            >
-              <template slot-scope="scope">
-                <template v-if="!$isRead">
-                  <el-tooltip
-                    v-if="scope.row.isCollection == 0"
-                    effect="dark"
-                    :content="$t('projects.cardtips.collect')"
-                    placement="top"
-                    style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; "
-                  >
-                    <el-link
-                      :underline="false"
-                      icon="iconfont icon-quxiaoshoucang"
-                      @click="collectionPoject(scope.row)"
-                    />
-                  </el-tooltip>
-                  <el-tooltip
-                    v-if="scope.row.isCollection == 1"
-                    effect="dark"
-                    :content="$t('projects.cardtips.cancelCollect')"
-                    placement="top"
-                    style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; "
-                  >
-                    <el-link
-                      :underline="false"
-                      icon="iconfont icon-shoucang"
-                      style="color: #ffe039"
-                      @click="cancelCollectionPoject(scope.row)"
-                    />
-                  </el-tooltip>
-                  <el-tooltip
-                    class="tableOpeColMargin"
-                    effect="dark"
-                    :content="$t('projects.cardtips.detail')"
-                    placement="top"
-                  >
-                    <el-link
-                      :underline="false"
-                      icon="el-icon-tickets"
-                      @click="handleOpeProject('DETAIL', scope.row)"
-                    />
-                  </el-tooltip>
-                  <el-dropdown
-                    v-if="scope.row.isCreator === 1"
-                    class="tableOpeColMargin"
-                    trigger="click"
-                    size="small"
-                  >
-                    <el-link
-                      :underline="false"
-                      icon="el-icon-setting"
-                    />
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="handleEdit('base', scope.row)">
-                        {{ $t("projects.nav.base") }}
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="handleEdit('member', scope.row)">
-                        {{ $t("projects.nav.member") }}
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="handleEdit('permission', scope.row)">
-                        {{ $t("projects.nav.permission") }}
-                      </el-dropdown-item>
-                      <el-dropdown-item @click.native="handleEdit('workflow', scope.row)">
-                        {{ $t("projects.nav.workflow") }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  <el-tooltip
-                    v-if="scope.row.isCreator === 1"
-                    class="tableOpeColMargin"
-                    effect="dark"
-                    :content="$t('projects.cardtips.delete')"
-                    placement="top"
-                  >
-                    <el-link
-                      :underline="false"
-                      icon="iconfont icon-delete"
-                      @click="handleDelete(false, scope.row)"
-                    />
-                  </el-tooltip>
-                </template>
+            <!-- <el-table-column -->
+            <!--   width="180px" -->
+            <!--   prop="active" -->
+            <!--   :label="$t('base.formLabel.operation')" -->
+            <!-- > -->
+            <!--   <template slot-scope="scope"> -->
+            <!--     <template v-if="!$isRead"> -->
+            <!--       <el-tooltip -->
+            <!--         v-if="scope.row.isCollection == 0" -->
+            <!--         effect="dark" -->
+            <!--         :content="$t('projects.cardtips.collect')" -->
+            <!--         placement="top" -->
+            <!--         style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; " -->
+            <!--       > -->
+            <!--         <el-link -->
+            <!--           :underline="false" -->
+            <!--           icon="iconfont icon-quxiaoshoucang" -->
+            <!--           @click="collectionPoject(scope.row)" -->
+            <!--         /> -->
+            <!--       </el-tooltip> -->
+            <!--       <el-tooltip -->
+            <!--         v-if="scope.row.isCollection == 1" -->
+            <!--         effect="dark" -->
+            <!--         :content="$t('projects.cardtips.cancelCollect')" -->
+            <!--         placement="top" -->
+            <!--         style=" width: 25px; height: 25px; margin-right: 10px; line-height: 25px; text-align: center; " -->
+            <!--       > -->
+            <!--         <el-link -->
+            <!--           :underline="false" -->
+            <!--           icon="iconfont icon-shoucang" -->
+            <!--           style="color: #ffe039" -->
+            <!--           @click="cancelCollectionPoject(scope.row)" -->
+            <!--         /> -->
+            <!--       </el-tooltip> -->
+            <!--       <el-tooltip -->
+            <!--         class="tableOpeColMargin" -->
+            <!--         effect="dark" -->
+            <!--         :content="$t('projects.cardtips.detail')" -->
+            <!--         placement="top" -->
+            <!--       > -->
+            <!--         <el-link -->
+            <!--           :underline="false" -->
+            <!--           icon="el-icon-tickets" -->
+            <!--           @click="handleOpeProject('DETAIL', scope.row)" -->
+            <!--         /> -->
+            <!--       </el-tooltip> -->
+            <!--       <el-dropdown -->
+            <!--         v-if="scope.row.isCreator === 1" -->
+            <!--         class="tableOpeColMargin" -->
+            <!--         trigger="click" -->
+            <!--         size="small" -->
+            <!--       > -->
+            <!--         <el-link -->
+            <!--           :underline="false" -->
+            <!--           icon="el-icon-setting" -->
+            <!--         /> -->
+            <!--         <el-dropdown-menu slot="dropdown"> -->
+            <!--           <el-dropdown-item @click.native="handleEdit('base', scope.row)"> -->
+            <!--             {{ $t("projects.nav.base") }} -->
+            <!--           </el-dropdown-item> -->
+            <!--           <el-dropdown-item @click.native="handleEdit('member', scope.row)"> -->
+            <!--             {{ $t("projects.nav.member") }} -->
+            <!--           </el-dropdown-item> -->
+            <!--           <el-dropdown-item @click.native="handleEdit('permission', scope.row)"> -->
+            <!--             {{ $t("projects.nav.permission") }} -->
+            <!--           </el-dropdown-item> -->
+            <!--           <el-dropdown-item @click.native="handleEdit('workflow', scope.row)"> -->
+            <!--             {{ $t("projects.nav.workflow") }} -->
+            <!--           </el-dropdown-item> -->
+            <!--         </el-dropdown-menu> -->
+            <!--       </el-dropdown> -->
+            <!--       <el-tooltip -->
+            <!--         v-if="scope.row.isCreator === 1" -->
+            <!--         class="tableOpeColMargin" -->
+            <!--         effect="dark" -->
+            <!--         :content="$t('projects.cardtips.delete')" -->
+            <!--         placement="top" -->
+            <!--       > -->
+            <!--         <el-link -->
+            <!--           :underline="false" -->
+            <!--           icon="iconfont icon-delete" -->
+            <!--           @click="handleDelete(false, scope.row)" -->
+            <!--         /> -->
+            <!--       </el-tooltip> -->
+            <!--     </template> -->
 
-                <template v-else>
-                  <el-tooltip
-                    v-if="scope.row.isCollection == 0 && !scope.row.bitmyxm"
-                    effect="dark"
-                    :content="$t('projects.cardtips.syncProject')"
-                    placement="top"
-                    style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
-                  >
-                    <el-link
-                      :underline="false"
-                      icon="el-icon el-icon-refresh"
-                      @click="syncProject(scope.row)"
-                    />
-                  </el-tooltip>
-                </template>
-              </template>
-            </el-table-column>
+            <!--     <template v-else> -->
+            <!--       <el-tooltip -->
+            <!--         v-if="scope.row.isCollection == 0 && !scope.row.bitmyxm" -->
+            <!--         effect="dark" -->
+            <!--         :content="$t('projects.cardtips.syncProject')" -->
+            <!--         placement="top" -->
+            <!--         style=" width: 20px; height: 25px; line-height: 25px; text-align: center; " -->
+            <!--       > -->
+            <!--         <el-link -->
+            <!--           :underline="false" -->
+            <!--           icon="el-icon el-icon-refresh" -->
+            <!--           @click="syncProject(scope.row)" -->
+            <!--         /> -->
+            <!--       </el-tooltip> -->
+            <!--     </template> -->
+            <!--   </template> -->
+            <!-- </el-table-column> -->
             <div
               slot="empty"
               class="empty"
@@ -387,93 +387,93 @@
                     >
                       {{ item.projectTypeName }}
                     </p>
-                    <div style=" margin-top: 5px; margin-left: 35px; width: fit-content; flex-shrink: 0; ">
-                      <template v-if="!$isRead">
-                        <el-tooltip
-                          v-if="item.isCollection == 0 && !item.bitmyxm"
-                          effect="dark"
-                          :content="$t('projects.cardtips.collect')"
-                          placement="top"
-                          style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
-                        >
-                          <el-link
-                            :underline="false"
-                            icon="iconfont icon-quxiaoshoucang"
-                            @click="collectionPoject(item)"
-                          />
-                        </el-tooltip>
-                        <el-tooltip
-                          v-if="item.isCollection == 1 && !item.bitmyxm"
-                          effect="dark"
-                          :content="$t('projects.cardtips.cancelCollect')"
-                          placement="top"
-                          style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
-                        >
-                          <el-link
-                            :underline="false"
-                            icon="iconfont icon-shoucang"
-                            style="color: #ffe039"
-                            @click="cancelCollectionPoject(item)"
-                          />
-                        </el-tooltip>
-                        <template v-if="user.iscorpadmin || item.isCreator">
-                          <el-dropdown
-                            trigger="click"
-                            size="small"
-                            :placement="'bottom'"
-                          >
-                            <el-link
-                              :underline="false"
-                              style="font-size: 14px; margin-top: -2px"
-                              icon="el-icon-setting"
-                            />
-                            <el-dropdown-menu slot="dropdown">
-                              <el-dropdown-item @click.native="handleEdit('base', item)">
-                                {{ $t("projects.nav.base") }}
-                              </el-dropdown-item>
-                              <el-dropdown-item @click.native="handleEdit('member', item)">
-                                {{ $t("projects.nav.member") }}
-                              </el-dropdown-item>
-                              <el-dropdown-item @click.native="handleEdit('permission', item)">
-                                {{ $t("projects.nav.permission") }}
-                              </el-dropdown-item>
-                              <el-dropdown-item @click.native="handleEdit('workflow', item)">
-                                {{ $t("projects.nav.workflow") }}
-                              </el-dropdown-item>
-                            </el-dropdown-menu>
-                          </el-dropdown>
-                          <el-tooltip
-                            v-if="!item.bitmyxm"
-                            effect="dark"
-                            :content="$t('projects.cardtips.delete')"
-                            placement="top"
-                            style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
-                          >
-                            <el-link
-                              :underline="false"
-                              class="el-icon-delete"
-                              @click="handleDelete(false, item)"
-                            />
-                          </el-tooltip>
-                        </template>
-                      </template>
+                    <!-- <div style=" margin-top: 5px; margin-left: 35px; width: fit-content; flex-shrink: 0; "> -->
+                    <!--   <template v-if="!$isRead"> -->
+                    <!--     <el-tooltip -->
+                    <!--       v-if="item.isCollection == 0 && !item.bitmyxm" -->
+                    <!--       effect="dark" -->
+                    <!--       :content="$t('projects.cardtips.collect')" -->
+                    <!--       placement="top" -->
+                    <!--       style=" width: 20px; height: 25px; line-height: 25px; text-align: center; " -->
+                    <!--     > -->
+                    <!--       <el-link -->
+                    <!--         :underline="false" -->
+                    <!--         icon="iconfont icon-quxiaoshoucang" -->
+                    <!--         @click="collectionPoject(item)" -->
+                    <!--       /> -->
+                    <!--     </el-tooltip> -->
+                    <!--     <el-tooltip -->
+                    <!--       v-if="item.isCollection == 1 && !item.bitmyxm" -->
+                    <!--       effect="dark" -->
+                    <!--       :content="$t('projects.cardtips.cancelCollect')" -->
+                    <!--       placement="top" -->
+                    <!--       style=" width: 20px; height: 25px; line-height: 25px; text-align: center; " -->
+                    <!--     > -->
+                    <!--       <el-link -->
+                    <!--         :underline="false" -->
+                    <!--         icon="iconfont icon-shoucang" -->
+                    <!--         style="color: #ffe039" -->
+                    <!--         @click="cancelCollectionPoject(item)" -->
+                    <!--       /> -->
+                    <!--     </el-tooltip> -->
+                    <!--     <template v-if="user.iscorpadmin || item.isCreator"> -->
+                    <!--       <el-dropdown -->
+                    <!--         trigger="click" -->
+                    <!--         size="small" -->
+                    <!--         :placement="'bottom'" -->
+                    <!--       > -->
+                    <!--         <el-link -->
+                    <!--           :underline="false" -->
+                    <!--           style="font-size: 14px; margin-top: -2px" -->
+                    <!--           icon="el-icon-setting" -->
+                    <!--         /> -->
+                    <!--         <el-dropdown-menu slot="dropdown"> -->
+                    <!--           <el-dropdown-item @click.native="handleEdit('base', item)"> -->
+                    <!--             {{ $t("projects.nav.base") }} -->
+                    <!--           </el-dropdown-item> -->
+                    <!--           <el-dropdown-item @click.native="handleEdit('member', item)"> -->
+                    <!--             {{ $t("projects.nav.member") }} -->
+                    <!--           </el-dropdown-item> -->
+                    <!--           <el-dropdown-item @click.native="handleEdit('permission', item)"> -->
+                    <!--             {{ $t("projects.nav.permission") }} -->
+                    <!--           </el-dropdown-item> -->
+                    <!--           <el-dropdown-item @click.native="handleEdit('workflow', item)"> -->
+                    <!--             {{ $t("projects.nav.workflow") }} -->
+                    <!--           </el-dropdown-item> -->
+                    <!--         </el-dropdown-menu> -->
+                    <!--       </el-dropdown> -->
+                    <!--       <el-tooltip -->
+                    <!--         v-if="!item.bitmyxm" -->
+                    <!--         effect="dark" -->
+                    <!--         :content="$t('projects.cardtips.delete')" -->
+                    <!--         placement="top" -->
+                    <!--         style=" width: 20px; height: 25px; line-height: 25px; text-align: center; " -->
+                    <!--       > -->
+                    <!--         <el-link -->
+                    <!--           :underline="false" -->
+                    <!--           class="el-icon-delete" -->
+                    <!--           @click="handleDelete(false, item)" -->
+                    <!--         /> -->
+                    <!--       </el-tooltip> -->
+                    <!--     </template> -->
+                    <!--   </template> -->
 
-                      <template v-else>
-                        <el-tooltip
-                          v-if="item.isCollection == 0 && !item.bitmyxm"
-                          effect="dark"
-                          :content="$t('projects.cardtips.syncProject')"
-                          placement="top"
-                          style=" width: 20px; height: 25px; line-height: 25px; text-align: center; "
-                        >
-                          <el-link
-                            :underline="false"
-                            icon="el-icon el-icon-refresh"
-                            @click="syncProject(item)"
-                          />
-                        </el-tooltip>
-                      </template>
-                    </div>
+                    <!--   <template v-else> -->
+                    <!--     <el-tooltip -->
+                    <!--       v-if="item.isCollection == 0 && !item.bitmyxm" -->
+                    <!--       effect="dark" -->
+                    <!--       :content="$t('projects.cardtips.syncProject')" -->
+                    <!--       placement="top" -->
+                    <!--       style=" width: 20px; height: 25px; line-height: 25px; text-align: center; " -->
+                    <!--     > -->
+                    <!--       <el-link -->
+                    <!--         :underline="false" -->
+                    <!--         icon="el-icon el-icon-refresh" -->
+                    <!--         @click="syncProject(item)" -->
+                    <!--       /> -->
+                    <!--     </el-tooltip> -->
+                    <!--   </template> -->
+                    <!-- </div> -->
                   </div>
                 </div>
                 <el-row class="buttonStyle">

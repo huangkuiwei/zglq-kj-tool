@@ -24,8 +24,8 @@ export const constantRouterMap = [
   // 首页
   {
     path: "/",
-    // redirect: "/all",
-    redirect: "/clouddesktop",
+    redirect: "/all",
+    // redirect: "/clouddesktop",
     hidden: true,
   },
   // 工作台

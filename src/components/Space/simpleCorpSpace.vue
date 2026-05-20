@@ -7,69 +7,69 @@
       @mouseenter="mouseenter"
     >
       <div class="corpInfoContainer">
-        <div class="flex ai-center corpMargin">
-          <img
-            :src="corpSpaceModel.ddUserAvatar && corpSpaceModel.ddUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.ddUserAvatar)) : defaultCorpLogo"
-            class="corpAvatar"
-          >
-          <div>
-            <div class="userName">
-              {{ corpSpaceModel.username }}
-            </div>
-            <div class="corpName">
-              {{ corpSpaceModel.corpName }}
-            </div>
-          </div>
-        </div>
-        <div style="width: 100%;height: 1px;background-color: #d5d5d5;margin: 15px 0 5px;" />
-        <div
-          class="flex ai-center corpSpaceContainerUl jc-between"
-          @click="editPersonalInfo"
-        >
-          <div class="flex ai-center">
-            <img
-              style="width: 20px;"
-              src="../../assets/newNavBtn/account.svg"
-              alt=""
-            >
-            <span>{{ $t('userCenter.account') }}</span>
-            <!-- <div style="position:absolute;width:8px;height:8px;border-radius:50%;background-color:#FF3300;top:8px;right:-10px" v-if="hasNotDealApply"></div> -->
-          </div>
-        </div>
-        <div
-          v-if="corpSpaceModel.isadministrator"
-          class="flex ai-center corpSpaceContainerUl jc-between"
-          @click="handleDetail"
-        >
-          <div class="flex ai-center">
-            <img
-              style="width: 20px;"
-              src="../../assets/newNavBtn/storage.svg"
-              alt=""
-            >
-            <span>{{ $t('userCenter.storage') }}</span>
-          </div>
-          <div class="count">
-            {{ corpSpaceModel.usedSpace }}
-          </div>
-        </div>
-        <div
-          v-if="corpSpaceModel.isadministrator"
-          class="flex ai-center corpSpaceContainerUl jc-between"
-          @click="registedUserDetail"
-        >
-          <div class="flex ai-center">
-            <img
-              style="width: 20px;"
-              src="../../assets/newNavBtn/member.svg"
-              alt=""
-            >
-            <span>{{ $t('userCenter.corpMember') }}</span>
-          </div>
-          <div class="count">
-            {{ corpSpaceModel.registedUserCount + $t('userCenter.countName') }}
-          </div>
-        </div>
+        <!-- <div class="flex ai-center corpMargin"> -->
+        <!--   <img -->
+        <!--     :src="corpSpaceModel.ddUserAvatar && corpSpaceModel.ddUserAvatar.length > 0 ? avatorUrl + encodeURIComponent(encrypt(corpSpaceModel.ddUserAvatar)) : defaultCorpLogo" -->
+        <!--     class="corpAvatar" -->
+        <!--   > -->
+        <!--   <div> -->
+        <!--     <div class="userName"> -->
+        <!--       {{ corpSpaceModel.username }} -->
+        <!--     </div> -->
+        <!--     <div class="corpName"> -->
+        <!--       {{ corpSpaceModel.corpName }} -->
+        <!--     </div> -->
+        <!--   </div> -->
+        <!-- </div> -->
+        <!-- <div style="width: 100%;height: 1px;background-color: #d5d5d5;margin: 15px 0 5px;" /> -->
+        <!-- <div -->
+        <!--   class="flex ai-center corpSpaceContainerUl jc-between" -->
+        <!--   @click="editPersonalInfo" -->
+        <!-- > -->
+        <!--   <div class="flex ai-center"> -->
+        <!--     <img -->
+        <!--       style="width: 20px;" -->
+        <!--       src="../../assets/newNavBtn/account.svg" -->
+        <!--       alt="" -->
+        <!--     > -->
+        <!--     <span>{{ $t('userCenter.account') }}</span> -->
+        <!--     &lt;!&ndash; <div style="position:absolute;width:8px;height:8px;border-radius:50%;background-color:#FF3300;top:8px;right:-10px" v-if="hasNotDealApply"></div> &ndash;&gt; -->
+        <!--   </div> -->
+        <!-- </div> -->
+        <!-- <div -->
+        <!--   v-if="corpSpaceModel.isadministrator" -->
+        <!--   class="flex ai-center corpSpaceContainerUl jc-between" -->
+        <!--   @click="handleDetail" -->
+        <!-- > -->
+        <!--   <div class="flex ai-center"> -->
+        <!--     <img -->
+        <!--       style="width: 20px;" -->
+        <!--       src="../../assets/newNavBtn/storage.svg" -->
+        <!--       alt="" -->
+        <!--     > -->
+        <!--     <span>{{ $t('userCenter.storage') }}</span> -->
+        <!--   </div> -->
+        <!--   <div class="count"> -->
+        <!--     {{ corpSpaceModel.usedSpace }} -->
+        <!--   </div> -->
+        <!-- </div> -->
+        <!-- <div -->
+        <!--   v-if="corpSpaceModel.isadministrator" -->
+        <!--   class="flex ai-center corpSpaceContainerUl jc-between" -->
+        <!--   @click="registedUserDetail" -->
+        <!-- > -->
+        <!--   <div class="flex ai-center"> -->
+        <!--     <img -->
+        <!--       style="width: 20px;" -->
+        <!--       src="../../assets/newNavBtn/member.svg" -->
+        <!--       alt="" -->
+        <!--     > -->
+        <!--     <span>{{ $t('userCenter.corpMember') }}</span> -->
+        <!--   </div> -->
+        <!--   <div class="count"> -->
+        <!--     {{ corpSpaceModel.registedUserCount + $t('userCenter.countName') }} -->
+        <!--   </div> -->
+        <!-- </div> -->
         <div
           class="flex ai-center corpSpaceContainerUl jc-between"
           @click="exitLogin"
@@ -317,7 +317,7 @@ export default {
   box-shadow: 0 0 10px #ccc;
   z-index: 1000;
   /* padding: 20px 15px 10px 20px; */
-  padding: 20px 0 10px 0;
+  //padding: 20px 0 10px 0;
   line-height: normal;
   border-radius: 7px;
 }
