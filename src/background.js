@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu, session } from 'electron'
+import { app, protocol, BrowserWindow, Menu, session, globalShortcut } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -39,12 +39,14 @@ async function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
-      contextIsolation: false
-    }
+      contextIsolation: false,
+      webSecurity: false,
+      sandbox: false,
+      webviewTag: true,
+      partition: 'persist:webview'
+    },
   })
 
   win.maximize()
@@ -123,6 +125,15 @@ app.on('ready', async () => {
     }
 
     callback({ responseHeaders: headers })
+  })
+
+  // 注册快捷键 Ctrl+Shift+I 来切换控制台
+  globalShortcut.register('CommandOrControl+Shift+I', () => {
+    const focusedWin = BrowserWindow.getFocusedWindow()
+    if (focusedWin) {
+      // 如果控制台已打开则关闭，否则打开
+      focusedWin.webContents.toggleDevTools()
+    }
   })
 })
 
