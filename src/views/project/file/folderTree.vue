@@ -16,52 +16,52 @@
             {{ data.fileName }}
           </div>
 
-          <div class="operBtn ai-center">
-            <template v-if='filePermissionCon.editbit'>
-              <el-tooltip content="重命名" placement="top" :open-delay="500" effect="dark">
-                <img style="width:18px;margin-left: 8px;" src="@/assets/projectIcon/edit.svg" @click.stop="$emit('handleLinkEdit', data)" alt="">
-              </el-tooltip>
-            </template>
-            <template v-if='filePermissionCon.deletebit'>
-              <el-tooltip content="删除" placement="top" :open-delay="500" effect="dark">
-                <img style="width:18px;margin-left: 8px;" src="@/assets/projectIcon/delete.svg" @click.stop="$emit('handleOpeDelete', data)" alt="">
-              </el-tooltip>
-            </template>
-            <template v-if='filePermissionCon.editbit'>
-              <el-tooltip content="上移" :disabled="data.sort == 0" placement="top" :open-delay="500" effect="dark">
-                <img style="width:18px;margin-left: 8px;transform:rotate(-90deg)" src="@/assets/projectIcon/move.svg" @click.stop="handleMoveUpDown(data, 'Above')" alt="">
-              </el-tooltip>
-              <el-tooltip content="下移" :disabled="data.sort == treeData.length - 1" placement="top" :open-delay="500" effect="dark">
-                <img style="width:18px;margin-left: 8px;transform:rotate(90deg)" src="@/assets/projectIcon/move.svg" @click.stop="handleMoveUpDown(data, 'Below')" alt="">
-              </el-tooltip>
-            </template>
-          </div>
+          <!--<div class="operBtn ai-center">-->
+          <!--  <template v-if='filePermissionCon.editbit'>-->
+          <!--    <el-tooltip content="重命名" placement="top" :open-delay="500" effect="dark">-->
+          <!--      <img style="width:18px;margin-left: 8px;" src="@/assets/projectIcon/edit.svg" @click.stop="$emit('handleLinkEdit', data)" alt="">-->
+          <!--    </el-tooltip>-->
+          <!--  </template>-->
+          <!--  <template v-if='filePermissionCon.deletebit'>-->
+          <!--    <el-tooltip content="删除" placement="top" :open-delay="500" effect="dark">-->
+          <!--      <img style="width:18px;margin-left: 8px;" src="@/assets/projectIcon/delete.svg" @click.stop="$emit('handleOpeDelete', data)" alt="">-->
+          <!--    </el-tooltip>-->
+          <!--  </template>-->
+          <!--  <template v-if='filePermissionCon.editbit'>-->
+          <!--    <el-tooltip content="上移" :disabled="data.sort == 0" placement="top" :open-delay="500" effect="dark">-->
+          <!--      <img style="width:18px;margin-left: 8px;transform:rotate(-90deg)" src="@/assets/projectIcon/move.svg" @click.stop="handleMoveUpDown(data, 'Above')" alt="">-->
+          <!--    </el-tooltip>-->
+          <!--    <el-tooltip content="下移" :disabled="data.sort == treeData.length - 1" placement="top" :open-delay="500" effect="dark">-->
+          <!--      <img style="width:18px;margin-left: 8px;transform:rotate(90deg)" src="@/assets/projectIcon/move.svg" @click.stop="handleMoveUpDown(data, 'Below')" alt="">-->
+          <!--    </el-tooltip>-->
+          <!--  </template>-->
+          <!--</div>-->
 
 
         </div>
         <template v-else>
-          <el-popover v-if="!linkModelDialog" popper-class="treePopover" :disabled="!filePermissionCon.deletebit && ($modelFileSuffix.concat($ibimFileSuffix).indexOf(data.fileSuffix.toLowerCase()) == -1 || !data.lookbit)" placement="right" width="150px" effect="dark" :close-delay="0" transition="none" trigger="hover">
-            <div class="flex ai-center jc-around">
-              <div class="one-button" v-show="$modelFileSuffix.concat($ibimFileSuffix).includes(data.fileSuffix.toLowerCase()) && isCheckUser(data)">
-                <el-tooltip effect="light" content="模型浏览" placement="top" popper-class="tip-class">
-                  <i class="el-icon-view" style="cursor: pointer;font-size:20px;margin-top: 3px;color: #98a2b4;" @click=" $modelFileSuffix.concat($ibimFileSuffix).includes(data.fileSuffix.toLowerCase()) && showTransferView($appList.find(item => item.type == 'bimwindows'), data.iuid, data)"></i>
-                </el-tooltip>
-              </div>
-              <div class="one-button" v-show="filePermissionCon.deletebit == true && (data.checkStatus == '0' || data.checkStatus == undefined)">
-                <el-tooltip effect="light" content="删除" placement="top" popper-class="tip-class">
-                  <i class="el-icon-delete-file" style="cursor: pointer" @click="$emit('handleDeleteFile', data)"></i>
-                </el-tooltip>
-              </div>
-            </div>
-            <div slot="reference" class="flex ai-center">
-              <el-tooltip class="item" effect="light" :content="`该文件被${data.checkUserName}签出`" placement="top-start">
-                <img src="@/assets/button/suo.svg" style="width: 12px; height: 12px; margin-right: 3px" v-if="data.checkStatus == '1'" />
-              </el-tooltip>
-              <fileIconComponends :fullPath="getFolderFullPath" :isBimWorks="false" :row="node.data" @linkToFilePage="$emit('linkToFilePage')" />
-            </div>
-          </el-popover>
+          <!--<el-popover v-if="!linkModelDialog" popper-class="treePopover" :disabled="!filePermissionCon.deletebit && ($modelFileSuffix.concat($ibimFileSuffix).indexOf(data.fileSuffix.toLowerCase()) == -1 || !data.lookbit)" placement="right" width="150px" effect="dark" :close-delay="0" transition="none" trigger="hover">-->
+          <!--  <div class="flex ai-center jc-around">-->
+          <!--    <div class="one-button" v-show="$modelFileSuffix.concat($ibimFileSuffix).includes(data.fileSuffix.toLowerCase()) && isCheckUser(data)">-->
+          <!--      <el-tooltip effect="light" content="模型浏览" placement="top" popper-class="tip-class">-->
+          <!--        <i class="el-icon-view" style="cursor: pointer;font-size:20px;margin-top: 3px;color: #98a2b4;" @click=" $modelFileSuffix.concat($ibimFileSuffix).includes(data.fileSuffix.toLowerCase()) && showTransferView($appList.find(item => item.type == 'bimwindows'), data.iuid, data)"></i>-->
+          <!--      </el-tooltip>-->
+          <!--    </div>-->
+          <!--    <div class="one-button" v-show="filePermissionCon.deletebit == true && (data.checkStatus == '0' || data.checkStatus == undefined)">-->
+          <!--      <el-tooltip effect="light" content="删除" placement="top" popper-class="tip-class">-->
+          <!--        <i class="el-icon-delete-file" style="cursor: pointer" @click="$emit('handleDeleteFile', data)"></i>-->
+          <!--      </el-tooltip>-->
+          <!--    </div>-->
+          <!--  </div>-->
+          <!--  <div slot="reference" class="flex ai-center">-->
+          <!--    <el-tooltip class="item" effect="light" :content="`该文件被${data.checkUserName}签出`" placement="top-start">-->
+          <!--      <img src="@/assets/button/suo.svg" style="width: 12px; height: 12px; margin-right: 3px" v-if="data.checkStatus == '1'" />-->
+          <!--    </el-tooltip>-->
+          <!--    <fileIconComponends :fullPath="getFolderFullPath" :isBimWorks="false" :row="node.data" @linkToFilePage="$emit('linkToFilePage')" />-->
+          <!--  </div>-->
+          <!--</el-popover>-->
 
-          <fileIconComponends v-else :linkModelDialog="true" :fullPath="getFolderFullPath" :isBimWorks="false" :row="node.data" @linkToFilePage="$emit('linkToFilePage')" />
+          <fileIconComponends :linkModelDialog="true" :fullPath="getFolderFullPath" :isBimWorks="false" :row="node.data" @linkToFilePage="$emit('linkToFilePage')" />
         </template>
       </div>
     </el-tree>

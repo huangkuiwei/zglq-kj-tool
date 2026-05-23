@@ -292,16 +292,16 @@
                     <!-- 标段 -->
                     <!-- <el-button size="mini" v-if="!isMyDocument && tableSelection.length >= 0" @click="handleSetMainfile" icon="el-icon-setting">标段</el-button> -->
                     <!-- 审批 -->
-                    <el-button
-                      size="small"
-                      :disabled="!canApprove"
-                      style="margin-left: 0; height: 32px"
-                      icon="el-icon-startworkflow"
-                      @click="handleApplyWorkflow"
-                    >
-                      {{ $t("base.button.approve")
-                      }}
-                    </el-button>
+                    <!--<el-button-->
+                    <!--  size="small"-->
+                    <!--  :disabled="!canApprove"-->
+                    <!--  style="margin-left: 0; height: 32px"-->
+                    <!--  icon="el-icon-startworkflow"-->
+                    <!--  @click="handleApplyWorkflow"-->
+                    <!--&gt;-->
+                    <!--  {{ $t("base.button.approve")-->
+                    <!--  }}-->
+                    <!--</el-button>-->
                     <!-- 分享 -->
                     <!-- <template v-if="filePermissionCon.downloadbit"> -->
                     <!--   <shareMutiple -->
@@ -639,69 +639,69 @@
                         <!-- 导出 -->
 
                         <template v-if="!$isRead">
-                          <template v-if="$hasPermi('projects:filefunction:derive')">
-                            <el-dropdown
-                              v-if="isIModelFile(scope.row) && scope.row.actionType === '2'"
-                              trigger="click"
-                              placement="bottom"
-                              size="small"
-                              style="padding-top: 2px"
-                              class="tableOpeColMargin flex"
-                              @command="handleExport(...arguments, scope.row)"
-                            >
-                              <el-tooltip
-                                popper-class="tip-class"
-                                effect="light"
-                                content="导出"
-                                placement="top"
-                              >
-                                <img
-                                  src="../../../assets/fileExport.svg"
-                                  class="el-icon-tickets shrink"
-                                  style="width: 18px; cursor: pointer"
-                                >
-                              </el-tooltip>
-                              <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="dgn">
-                                  dgn
-                                </el-dropdown-item>
-                                <template v-if="!$isSpace">
-                                  <el-dropdown-item command="obj">
-                                    obj
-                                  </el-dropdown-item>
-                                  <el-dropdown-item command="gltf">
-                                    gltf
-                                  </el-dropdown-item>
-                                  <el-dropdown-item command="ifc">
-                                    ifc
-                                  </el-dropdown-item>
-                                  <el-dropdown-item command="datasmith">
-                                    datasmith
-                                  </el-dropdown-item>
-                                </template>
+                          <!--<template v-if="$hasPermi('projects:filefunction:derive')">-->
+                          <!--  <el-dropdown-->
+                          <!--    v-if="isIModelFile(scope.row) && scope.row.actionType === '2'"-->
+                          <!--    trigger="click"-->
+                          <!--    placement="bottom"-->
+                          <!--    size="small"-->
+                          <!--    style="padding-top: 2px"-->
+                          <!--    class="tableOpeColMargin flex"-->
+                          <!--    @command="handleExport(...arguments, scope.row)"-->
+                          <!--  >-->
+                          <!--    <el-tooltip-->
+                          <!--      popper-class="tip-class"-->
+                          <!--      effect="light"-->
+                          <!--      content="导出"-->
+                          <!--      placement="top"-->
+                          <!--    >-->
+                          <!--      <img-->
+                          <!--        src="../../../assets/fileExport.svg"-->
+                          <!--        class="el-icon-tickets shrink"-->
+                          <!--        style="width: 18px; cursor: pointer"-->
+                          <!--      >-->
+                          <!--    </el-tooltip>-->
+                          <!--    <el-dropdown-menu slot="dropdown">-->
+                          <!--      <el-dropdown-item command="dgn">-->
+                          <!--        dgn-->
+                          <!--      </el-dropdown-item>-->
+                          <!--      <template v-if="!$isSpace">-->
+                          <!--        <el-dropdown-item command="obj">-->
+                          <!--          obj-->
+                          <!--        </el-dropdown-item>-->
+                          <!--        <el-dropdown-item command="gltf">-->
+                          <!--          gltf-->
+                          <!--        </el-dropdown-item>-->
+                          <!--        <el-dropdown-item command="ifc">-->
+                          <!--          ifc-->
+                          <!--        </el-dropdown-item>-->
+                          <!--        <el-dropdown-item command="datasmith">-->
+                          <!--          datasmith-->
+                          <!--        </el-dropdown-item>-->
+                          <!--      </template>-->
 
-                                <template v-if="$webTitle === '数据资源协同平台'">
-                                  <el-dropdown-item command="obj">
-                                    obj
-                                  </el-dropdown-item>
-                                  <el-dropdown-item command="ifc">
-                                    ifc
-                                  </el-dropdown-item>
-                                </template>
-                              </el-dropdown-menu>
-                            </el-dropdown>
-                            <el-tooltip
-                              v-else
-                              disabled
-                              class="tableOpeColMargin"
-                            >
-                              <img
-                                src="../../../assets/fileExport.svg"
-                                class="el-icon-tickets shrink"
-                                style="width: 18px; cursor: pointer; opacity: 0.4"
-                              >
-                            </el-tooltip>
-                          </template>
+                          <!--      <template v-if="$webTitle === '数据资源协同平台'">-->
+                          <!--        <el-dropdown-item command="obj">-->
+                          <!--          obj-->
+                          <!--        </el-dropdown-item>-->
+                          <!--        <el-dropdown-item command="ifc">-->
+                          <!--          ifc-->
+                          <!--        </el-dropdown-item>-->
+                          <!--      </template>-->
+                          <!--    </el-dropdown-menu>-->
+                          <!--  </el-dropdown>-->
+                          <!--  <el-tooltip-->
+                          <!--    v-else-->
+                          <!--    disabled-->
+                          <!--    class="tableOpeColMargin"-->
+                          <!--  >-->
+                          <!--    <img-->
+                          <!--      src="../../../assets/fileExport.svg"-->
+                          <!--      class="el-icon-tickets shrink"-->
+                          <!--      style="width: 18px; cursor: pointer; opacity: 0.4"-->
+                          <!--    >-->
+                          <!--  </el-tooltip>-->
+                          <!--</template>-->
                           <!-- 收藏 -->
                           <!-- <operateColCom :filePermissionCon="filePermissionCon" :row="scope.row" class="tableOpeColMargin" /> -->
                           <!-- 签入签出 -->

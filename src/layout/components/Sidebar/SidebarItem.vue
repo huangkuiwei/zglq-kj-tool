@@ -126,7 +126,8 @@ export default {
       if (isExternal(routePath)) {
         return routePath
       }
-      return path.resolve(this.basePath, routePath)
+
+      return routePath
     },
     isExternalLink(path) {
       return isExternal(path)
