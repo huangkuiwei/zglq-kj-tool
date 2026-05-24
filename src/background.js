@@ -1,8 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu, session, globalShortcut } from 'electron'
+import { app, protocol, BrowserWindow, Menu, session, globalShortcut, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
+import { pauseDownload, resumeDownload, startDownload } from '@/downloader'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 let win = null
@@ -169,3 +170,15 @@ if (isDevelopment) {
     })
   }
 }
+
+ipcMain.handle('start-download', async (event, url, filename, id, token, isshenpi, shenpiData) => {
+  return await startDownload(url, filename, id, token, isshenpi, shenpiData);
+});
+
+ipcMain.handle('pause-download', async (event, id) => {
+  pauseDownload(id);
+});
+
+ipcMain.handle('resume-download', async (event, id) => {
+  await resumeDownload(id);
+});

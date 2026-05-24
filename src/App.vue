@@ -18,6 +18,8 @@ import postApi from "@/api/document/indexApi.js";
 import { whiteList } from '@/utils/whiteList'
 import projectFileApi from '@/api/document/indexApi'
 import { decrypt } from '@/utils'
+import { ipcRenderer } from 'electron'
+import request from '@/utils/request'
 
 export default {
   name: "App",
@@ -217,6 +219,33 @@ export default {
       this.$root.outputDataReceived += res + "\n";
       localStorage.setItem("outputDataReceived", this.$root.outputDataReceived);
     });
+
+    ipcRenderer.on('download-progress', (event, args) => {
+      let taskId = args.id;
+      let downloads = this.$store.state.downloadData.downloads
+      let index = downloads.findIndex(x => x.id === taskId)
+
+      if (index !== -1) {
+        this.$set(downloads, index, {
+          ...downloads[index],
+          ...args,
+          progress: args.progress.toFixed(2) + '%',
+          speed: args.speed / 1024 + 'm/s',
+          totalSize: (args.totalSize / (1024 * 1024)).toFixed(2) + 'M',
+        })
+
+        if (args.progress === 100 && args.isshenpi) {
+          let formData = new FormData();
+          formData.append('workflowIUID', args.shenpiData.workflowiuid)
+          formData.append('downloadType', args.shenpiData.key)
+
+          // 完成
+          request.post('api/Home/FiledowndownloadState', formData).then(() => {
+            this.$root.emit('queryMyDownloadData')
+          })
+        }
+      }
+    })
   },
   async mounted() {
     if (

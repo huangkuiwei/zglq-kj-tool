@@ -13,6 +13,8 @@ import { closemodel, closemodelCallback } from "@/utils/CloseModel";
 // import { resolve } from "path-browserify";
 
 import axios from "axios";
+import { ipcRenderer } from 'electron'
+import { TaskStatus } from '@/utils/taskStorage'
 
 
 addIframeExtenssions();
@@ -443,7 +445,7 @@ export default function addVueExtenssions() {
   // compressionFileInfo = {compressionFileId,compressionFileSize}
   fn.$downloadFile = async (row, _self, isCompressionFile = false, compressionFileInfo = null, downloadByUrl = false, isBim = false, isshenpi = false) => {
     if(isBim) {
-      request.get(`api/Home/GetFilebimState?iuid=${row.iuid}` + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : '')).then(res => {
+      request.get(`api/Home/GetFilebimState?iuid=${row.iuid}` + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : '')).then(async (res) => {
         if (res.code === 1) {
           let fileName
           let path
@@ -475,37 +477,25 @@ export default function addVueExtenssions() {
           console.log(row);
           store.commit("UPDATEDOWNLOADFILEDATA_CLONE", downLoadData);
 
-          request.get(`${process.env.VUE_APP_BASE_API}/${path}`, {
-            responseType: "blob",
-            withCredentials: false,
-            onDownloadProgress: (e) => {
-              downLoadData.fileSize = Math.round(e.total / 1024 / 1024) + 'M'
+          console.log(111)
+          const taskId = Date.now().toString()
+          const url = `${process.env.VUE_APP_BASE_API}/${path}`
 
-              let progress = e.loaded / e.total;
-              downLoadData.progress = Math.round(progress * 100);
+          const task = {
+            id: taskId,
+            url: url,
+            filename: fileName,
+            totalSize: 0,
+            downloaded: 0,
+            progress: 0,
+            status: TaskStatus.DOWNLOADING,
+            speed: 0,
+            error: undefined,
+            userinfotoken: local.getToken(),
+          }
 
-              if (downLoadData.progress === 100 && isshenpi) {
-                let formData = new FormData();
-                formData.append('workflowIUID', row.workflowiuid)
-                formData.append('downloadType', row.key)
-                // 完成
-                request.post('api/Home/FiledowndownloadState', formData).then(() => {
-                  _self.queryData();
-                })
-              }
-            }
-          }).then(res => {
-            let blob = new Blob([res], { type: '' });
-            let elink = document.createElement("a");
-            elink.download = fileName;
-            elink.style.display = "none";
-            let href = window.URL.createObjectURL(blob);
-            elink.href = href;
-            document.body.appendChild(elink);
-            elink.click();
-            document.body.removeChild(elink);
-            window.URL.revokeObjectURL(href);
-          })
+          await ipcRenderer.invoke('start-download', url, fileName, taskId, task.userinfotoken)
+          store.commit('ADD_DOWNLOAD', task)
         }
       })
 
@@ -517,7 +507,26 @@ export default function addVueExtenssions() {
 
       if (res.code === 1) {
         if (res.data) {
-          window.open(res.data)
+          console.log(222)
+          const taskId = Date.now().toString()
+          const url = res.data
+
+          const task = {
+            id: taskId,
+            url: url,
+            filePath: undefined,
+            filename: row.filename,
+            totalSize: 0,
+            downloaded: 0,
+            progress: 0,
+            status: TaskStatus.DOWNLOADING,
+            speed: 0,
+            error: undefined,
+            userinfotoken: local.getToken(),
+          }
+
+          await ipcRenderer.invoke('start-download', url, row.filename, taskId, task.userinfotoken)
+          store.commit('ADD_DOWNLOAD', task)
         } else {
           Message.info(res.msg)
         }
@@ -542,7 +551,7 @@ export default function addVueExtenssions() {
       return url
     };
 
-    function handleDownload(fileName) {
+    async function handleDownload(fileName) {
       // 文件传输面板
       store.dispatch("ChangeUploderVisible", "show");
       store.commit("CHANGE_UPLOADERTAB_INDEX", 2);
@@ -557,43 +566,28 @@ export default function addVueExtenssions() {
       console.log(row);
       store.commit("UPDATEDOWNLOADFILEDATA_CLONE", downLoadData);
 
-      request.get(process.env.VUE_APP_BASE_API + downloadUrl(), {
-        responseType: "blob",
-        onDownloadProgress: (e) => {
-          downLoadData.fileSize = Math.round(e.total / 1024 / 1024) + 'M'
+      console.log(333)
+      const taskId = Date.now().toString()
+      const url = process.env.VUE_APP_BASE_API + downloadUrl()
 
-          let progress = e.loaded / e.total;
-          downLoadData.progress = Math.round(progress * 100);
+      const task = {
+        id: taskId,
+        url: url,
+        filename: fileName + '.zip',
+        totalSize: 0,
+        downloaded: 0,
+        progress: 0,
+        status: TaskStatus.DOWNLOADING,
+        speed: 0,
+        error: undefined,
+        userinfotoken: local.getToken(),
+      }
 
-          if (downLoadData.progress === 100 && isshenpi) {
-            let formData = new FormData();
-            formData.append('workflowIUID', row.workflowiuid)
-            formData.append('downloadType', row.key)
-            // 完成
-            request.post('api/Home/FiledowndownloadState', formData).then(() => {
-              _self.queryData();
-            })
-          }
-        }
-      }).then(res => {
-        let blob
-
-        if (isCompressionFile) {
-          blob = new Blob([res], { type: 'application/x-zip-compressed' });
-        } else {
-          blob = new Blob([res], { type: '' });
-        }
-
-        let elink = document.createElement("a");
-        elink.download = fileName + '.zip';
-        elink.style.display = "none";
-        let href = window.URL.createObjectURL(blob);
-        elink.href = href;
-        document.body.appendChild(elink);
-        elink.click();
-        document.body.removeChild(elink);
-        window.URL.revokeObjectURL(href);
+      await ipcRenderer.invoke('start-download', url, fileName + '.zip', taskId, task.userinfotoken, isshenpi, {
+        workflowIUID: row.workflowiuid,
+        downloadType: row.key,
       })
+      store.commit('ADD_DOWNLOAD', task)
     }
     if (isCompressionFile) {
       // 打包下载不需要判断文件状态

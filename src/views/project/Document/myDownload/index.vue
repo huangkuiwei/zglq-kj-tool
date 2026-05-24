@@ -93,6 +93,12 @@ export default {
   created() {
     this.breadcrumb = [];
     this.queryData();
+
+    this.$root.$on('queryMyDownloadData', this.queryData)
+  },
+
+  beforeDestroy() {
+    this.$root.$off('queryMyDownloadData', this.queryData);
   },
 
   methods: {

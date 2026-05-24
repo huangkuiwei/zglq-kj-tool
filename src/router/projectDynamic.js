@@ -95,43 +95,43 @@ const dynamicRouterMap = [
     }]
   },
 
-  {
-    path: '/myShare',
-    meta: {
-      title: '我的分享',
-      icon: 'part',
-      name: 'base.button.myShare'
-    },
-    component: projectLayout,
-    children: [{
-      path: '/myShare',
-      name: 'myShare',
-      meta: {
-        nav: 'projects',
-        keepAlive: true
-      },
-      component: () => import('@/views/project/Document/myShare/index')
-    }]
-  },
-
-  {
-    path: '/myCollection',
-    meta: {
-      title: '我的收藏',
-      icon: 'collect',
-      name: 'base.button.myCollection'
-    },
-    component: projectLayout,
-    children: [{
-      path: '/myCollection',
-      name: 'myCollection',
-      meta: {
-        nav: 'projects',
-        keepAlive: true
-      },
-      component: () => import('@/views/project/Document/myCollection/index')
-    }]
-  },
+  // {
+  //   path: '/myShare',
+  //   meta: {
+  //     title: '我的分享',
+  //     icon: 'part',
+  //     name: 'base.button.myShare'
+  //   },
+  //   component: projectLayout,
+  //   children: [{
+  //     path: '/myShare',
+  //     name: 'myShare',
+  //     meta: {
+  //       nav: 'projects',
+  //       keepAlive: true
+  //     },
+  //     component: () => import('@/views/project/Document/myShare/index')
+  //   }]
+  // },
+  //
+  // {
+  //   path: '/myCollection',
+  //   meta: {
+  //     title: '我的收藏',
+  //     icon: 'collect',
+  //     name: 'base.button.myCollection'
+  //   },
+  //   component: projectLayout,
+  //   children: [{
+  //     path: '/myCollection',
+  //     name: 'myCollection',
+  //     meta: {
+  //       nav: 'projects',
+  //       keepAlive: true
+  //     },
+  //     component: () => import('@/views/project/Document/myCollection/index')
+  //   }]
+  // },
 
   {
     path: '/myDownload',
