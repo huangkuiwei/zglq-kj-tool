@@ -74,6 +74,8 @@ async function performDownload(taskId) {
     bwforweb: true
   }
 
+  console.log('task.downloaded', task.downloaded)
+
   if (task.downloaded > 0) {
     headers['Range'] = `bytes=${task.downloaded}-`
   }
@@ -92,7 +94,7 @@ async function performDownload(taskId) {
       timeout: 30000,
     })
 
-    task.totalSize = Number(response.headers['content-length'] || 0)
+    task.totalSize = task.totalSize || Number(response.headers['content-length'] || 0)
 
     response.data.on('data', (chunk) => {
       task.downloaded += chunk.length

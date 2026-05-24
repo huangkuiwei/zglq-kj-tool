@@ -43,7 +43,7 @@ async function createWindow() {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       contextIsolation: false,
-      // webSecurity: false,
+      partition: 'persist:webview'
     },
   })
 
