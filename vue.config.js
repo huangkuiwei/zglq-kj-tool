@@ -135,7 +135,7 @@ module.exports = {
     electronBuilder: {
       nodeIntegration: true,
       builderOptions: {
-        productName: '中国路桥工具',
+        productName: '中国路桥下载工具',
         win: {
           target: 'nsis',
           icon: 'public/icon.ico'
@@ -146,7 +146,7 @@ module.exports = {
           oneClick: false,
           perMachine: true,
           createDesktopShortcut: true,
-          shortcutName: '中国路桥工具'
+          shortcutName: '中国路桥下载工具'
         },
       }
     }

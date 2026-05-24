@@ -43,10 +43,7 @@ async function createWindow() {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       contextIsolation: false,
-      webSecurity: false,
-      sandbox: false,
-      webviewTag: true,
-      partition: 'persist:webview'
+      // webSecurity: false,
     },
   })
 
@@ -62,7 +59,9 @@ async function createWindow() {
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    await win.loadURL('app://./index.html')
+    await win.loadURL('app://./index.html').catch((error) => {
+      console.log(error)
+    })
   }
 
   if (process.platform === 'win32') {
@@ -97,9 +96,9 @@ app.on('ready', async () => {
   createWindow()
 
   if (app.isPackaged) {
-    app.setAsDefaultProtocolClient('ncc')
+    app.setAsDefaultProtocolClient('app')
   } else {
-    app.setAsDefaultProtocolClient('ncc-test', process.execPath, [
+    app.setAsDefaultProtocolClient('app-test', process.execPath, [
       path.resolve(process.argv[1])
     ])
   }
