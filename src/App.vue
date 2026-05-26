@@ -220,6 +220,14 @@ export default {
       localStorage.setItem("outputDataReceived", this.$root.outputDataReceived);
     });
 
+    let downloads = localStorage.getItem('downloads')
+
+    if (downloads) {
+      downloads = JSON.parse(downloads);
+      this.$store.commit("SET_DOWNLOADS", downloads);
+      ipcRenderer.invoke('sync-downloads-data', downloads);
+    }
+
     ipcRenderer.on('download-progress', (event, args) => {
       let taskId = args.id;
       let downloads = this.$store.state.downloadData.downloads
@@ -231,17 +239,17 @@ export default {
           ...args,
           progress: args.progress.toFixed(2) + '%',
           speed: args.speed / 1024 + 'm/s',
-          totalSize: (args.totalSize / (1024 * 1024)).toFixed(2) + 'M',
+          totalSizeText: (args.totalSize / (1024 * 1024)).toFixed(2) + 'M',
         })
 
         if (args.progress === 100 && args.isshenpi) {
           let formData = new FormData();
-          formData.append('workflowIUID', args.shenpiData.workflowiuid)
-          formData.append('downloadType', args.shenpiData.key)
+          formData.append('workflowIUID', args.shenpiData.workflowIUID)
+          formData.append('downloadType', args.shenpiData.downloadType)
 
           // 完成
           request.post('api/Home/FiledowndownloadState', formData).then(() => {
-            this.$root.emit('queryMyDownloadData')
+            this.$root.$emit('queryMyDownloadData')
           })
         }
       }

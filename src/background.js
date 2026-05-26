@@ -3,7 +3,7 @@
 import { app, protocol, BrowserWindow, Menu, session, globalShortcut, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import path from 'path'
-import { pauseDownload, resumeDownload, startDownload } from '@/downloader'
+import { pauseDownload, performDownload, resumeDownload, startDownload, syncDownloadsData } from '@/downloader'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 let win = null
@@ -180,4 +180,12 @@ ipcMain.handle('pause-download', async (event, id) => {
 
 ipcMain.handle('resume-download', async (event, id) => {
   await resumeDownload(id);
+});
+
+ipcMain.handle('sync-downloads-data', async (event, data) => {
+  syncDownloadsData(data);
+});
+
+ipcMain.handle('perform-download', async (event, id, updateTask) => {
+  performDownload(id, updateTask);
 });

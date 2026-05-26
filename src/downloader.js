@@ -6,6 +6,13 @@ const { app, BrowserWindow, session } = require('electron')
 // 活动下载任务
 const activeDownloads = new Map()
 
+function syncDownloadsData(data) {
+  data.forEach(item => {
+    let id = item.id
+    activeDownloads.set(id, item)
+  })
+}
+
 // 获取下载文件夹
 function getDownloadPath() {
   return app.getPath('downloads')
@@ -36,6 +43,7 @@ async function startDownload(url, filename, taskId, userinfotoken, isshenpi, she
     filePath,
     filename,
     totalSize,
+    totalSizeText: '-',
     downloaded,
     progress: 0,
     status: 'downloading',
@@ -56,7 +64,11 @@ async function startDownload(url, filename, taskId, userinfotoken, isshenpi, she
 }
 
 // 执行下载
-async function performDownload(taskId) {
+async function performDownload(taskId, updateTask) {
+  if (updateTask) {
+    activeDownloads.set(taskId, updateTask)
+  }
+
   const task = activeDownloads.get(taskId)
   if (!task || task.status !== 'downloading') return
 
@@ -126,7 +138,6 @@ async function performDownload(taskId) {
     // return new Promise((resolve, reject) => {
       stream.on('close', () => {
         task.status = 'completed'
-        activeDownloads.delete(taskId)
         sendProgress({ ...task, cancelToken: null })
         // resolve()
       })
@@ -188,4 +199,6 @@ module.exports = {
   startDownload,
   pauseDownload,
   resumeDownload,
+  syncDownloadsData,
+  performDownload
 }

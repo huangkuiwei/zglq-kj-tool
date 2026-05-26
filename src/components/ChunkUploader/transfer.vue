@@ -20,7 +20,7 @@
           <div style="flex-shrink: 0; flex-grow: 1; overflow: auto; height: 100px">
             <el-table v-show="type === '1'" :data="downloads">
               <el-table-column label="文件名" prop="filename" show-overflow-tooltip></el-table-column>
-              <el-table-column label="大小" prop="totalSize"></el-table-column>
+              <el-table-column label="大小" prop="totalSizeText"></el-table-column>
               <el-table-column label="进度" prop="progress"></el-table-column>
               <el-table-column label="状态" prop="status">
                 <template slot-scope="scope">
@@ -36,16 +36,16 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="140px">
+              <el-table-column label="操作" width="160px">
                 <template slot-scope="scope">
                   <div style="display: flex; align-items: center">
-                    <!--<el-button size="mini" v-if="scope.row.status === 'downloading'" @click="paused(scope.row)">暂停</el-button>-->
-                    <!--<el-button size="mini" v-if="scope.row.status === 'paused'" @click="download(scope.row)">下载</el-button>-->
+                    <el-button size="mini" v-if="scope.row.status === 'downloading'" @click="paused(scope.row)">暂停</el-button>
+                    <el-button size="mini" v-if="scope.row.status === 'paused'" @click="download(scope.row)">下载</el-button>
                     <el-button size="mini" v-if="scope.row.status === 'completed'" @click="openFile(scope.row)">打开</el-button>
                     <el-button size="mini" type="danger" @click="deleteFile(scope.row)">删除</el-button>
-                    <!--<el-button size="mini" v-if="scope.row.status === 'error'" @click="reDownload(scope.row)">-->
-                    <!--  重新下载-->
-                    <!--</el-button>-->
+                    <el-button size="mini" v-if="scope.row.status === 'error'" @click="reDownload(scope.row)">
+                      重新下载
+                    </el-button>
                   </div>
                 </template>
               </el-table-column>
@@ -60,6 +60,7 @@
 import { mapGetters } from 'vuex'
 import transitionComponents from "@/utils/transition";
 import { ipcRenderer, shell } from 'electron'
+import { TaskStatus } from '@/utils/taskStorage'
 
 const fs = require("fs");
 
@@ -108,7 +109,8 @@ export default {
     downloads: {
       handler(value) {
         localStorage.setItem("downloads", JSON.stringify(value));
-      }
+      },
+      deep: true
     }
   },
 
@@ -148,17 +150,23 @@ export default {
       }
     },
 
-    // 重新下载
-    // reDownload(row) {
-    //   const task = {
-    //     ...row,
-    //     downloaded: 0,
-    //     progress: 0,
-    //     status: TaskStatus.DOWNLOADING,
-    //     speed: 0,
-    //     error: undefined,
-    //   }
-    // }
+    reDownload(row) {
+      const task = {
+        ...row,
+        downloaded: 0,
+        progress: 0,
+        status: TaskStatus.DOWNLOADING,
+        speed: 0,
+        error: undefined,
+      }
+
+      let index = this.$store.state.downloadData.downloads.findIndex(x => x.id === row.id);
+
+      if (index > -1) {
+        ipcRenderer.invoke('perform-download', task)
+        this.$store.state.downloadData.downloads.splice(index, 1, task);
+      }
+    }
   },
 };
 </script>

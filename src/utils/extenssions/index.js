@@ -443,187 +443,54 @@ export default function addVueExtenssions() {
     document.body.removeChild(aLink);
   };
   // compressionFileInfo = {compressionFileId,compressionFileSize}
-  fn.$downloadFile = async (row, _self, isCompressionFile = false, compressionFileInfo = null, downloadByUrl = false, isBim = false, isshenpi = false) => {
-    if(isBim) {
-      request.get(`api/Home/GetFilebimState?iuid=${row.iuid}` + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : '')).then(async (res) => {
-        if (res.code === 1) {
-          let fileName
-          let path
-
-          if (row.turnPath) {
-            let index = row.turnPath.indexOf('Files')
-            path = row.turnPath.slice(index)
-            fileName = path.split('/')[path.split('/').length - 1];
-          } else {
-            path = row.filePath
-            fileName = row.fileName.replace(/\\\\/g, '/');
-          }
-
-          if (!fileName.endsWith('.bim') && !fileName.endsWith('.BIM')) {
-            fileName += fileName + '.bim'
-          }
-
-          // 文件传输面板
-          store.dispatch("ChangeUploderVisible", "show");
-          store.commit("CHANGE_UPLOADERTAB_INDEX", 2);
-          let downLoadData = {
-            fileName: row.fileName,
-            fileSize: row.fileSize,
-            fullPath: row.fullPath,
-            downloadTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-            progress: 0,
-            fileSuffix: '.' + row.fileName.split('.')[row.fileName.split('.').length - 1],
-          };
-          console.log(row);
-          store.commit("UPDATEDOWNLOADFILEDATA_CLONE", downLoadData);
-
-          console.log(111)
-          const taskId = Date.now().toString()
-          const url = `${process.env.VUE_APP_BASE_API}/${path}`
-
-          const task = {
-            id: taskId,
-            url: url,
-            filename: fileName,
-            totalSize: 0,
-            downloaded: 0,
-            progress: 0,
-            status: TaskStatus.DOWNLOADING,
-            speed: 0,
-            error: undefined,
-            userinfotoken: local.getToken(),
-          }
-
-          await ipcRenderer.invoke('start-download', url, fileName, taskId, task.userinfotoken)
-          store.commit('ADD_DOWNLOAD', task)
-        }
-      })
-
-      return
-    }
-
-    if (!isCompressionFile) {
-      let res = await request.get(`api/Home/GetossFile?IUID=${row.iuid}`)
-
-      if (res.code === 1) {
-        if (res.data) {
-          console.log(222)
-          const taskId = Date.now().toString()
-          const url = res.data
-
-          const task = {
-            id: taskId,
-            url: url,
-            filePath: undefined,
-            filename: row.filename,
-            totalSize: 0,
-            downloaded: 0,
-            progress: 0,
-            status: TaskStatus.DOWNLOADING,
-            speed: 0,
-            error: undefined,
-            userinfotoken: local.getToken(),
-          }
-
-          await ipcRenderer.invoke('start-download', url, row.filename, taskId, task.userinfotoken)
-          store.commit('ADD_DOWNLOAD', task)
-        } else {
-          Message.info(res.msg)
-        }
-
-        return
+  fn.$downloadFile = async (row, isBim = false, isshenpi) => {
+    request.get('api/home/GetCosUrl', {
+      params: {
+        iuid: row.iuid,
+        isbim: isBim,
+        workflowIUID: row.workflowiuid
       }
-    }
+    }).then(res => {
+      let urls = res.data
+      let keys = Object.keys(urls)
 
-    let downloadUrl = (type) => {
-      let url = '';
-      // 文件路径编码
-      const VUE_APP_BASE_API = "/api/home/GetUploadPictureFile";
-      const STATE_API = "/api/home/GetFileState";
-      let api = type == 'state' ? STATE_API : VUE_APP_BASE_API
-      if (isCompressionFile) {
-        url = api + "?IUID=" + compressionFileInfo.iuid + (type != 'state' ? "&fileType=zip" + "&getFileFolderName=" + compressionFileInfo.getFileFolderName : '') + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : '');
-      } else if (downloadByUrl) {
-        url = api + "?fileUrl=" + encodeURIComponent(encrypt(row.turnPath || row.filePath));
-      } else {
-        url = api + "?IUID=" + row.iuid + (type != 'state' ? "&fileType=" + row.fileType + "&getFileFolderName=" + row.getFileFolderName : '') + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : '');
-      }
-      return url
-    };
-
-    async function handleDownload(fileName) {
-      // 文件传输面板
-      store.dispatch("ChangeUploderVisible", "show");
-      store.commit("CHANGE_UPLOADERTAB_INDEX", 2);
-      let downLoadData = {
-        fileName: row.fileName,
-        fileSize: row.fileSize,
-        fullPath: row.fullPath,
-        downloadTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
-        progress: 0,
-        fileSuffix: '.zip',
-      };
-      console.log(row);
-      store.commit("UPDATEDOWNLOADFILEDATA_CLONE", downLoadData);
-
-      console.log(333)
-      const taskId = Date.now().toString()
-      const url = process.env.VUE_APP_BASE_API + downloadUrl()
-
-      const task = {
-        id: taskId,
-        url: url,
-        filename: fileName + '.zip',
-        totalSize: 0,
-        downloaded: 0,
-        progress: 0,
-        status: TaskStatus.DOWNLOADING,
-        speed: 0,
-        error: undefined,
-        userinfotoken: local.getToken(),
+      if (keys.length) {
+        // 文件传输面板
+        store.dispatch("ChangeUploderVisible", "show");
       }
 
-      await ipcRenderer.invoke('start-download', url, fileName + '.zip', taskId, task.userinfotoken, isshenpi, {
-        workflowIUID: row.workflowiuid,
-        downloadType: row.key,
-      })
-      store.commit('ADD_DOWNLOAD', task)
-    }
-    if (isCompressionFile) {
-      // 打包下载不需要判断文件状态
-      handleDownload(row.fileName)
-    } else {
-      axios.get(process.env.VUE_APP_BASE_API + downloadUrl('state')).then((r) => {
-        let res = r.data
-        if (res.code == -100) {
-          fn.$error('资源文件丢失，下载失败！')
-        } else if (res.code == -120) {
-          MessageBox.confirm(
-            "文件处于占用状态,请在关闭占用的模型文件后,重新进行上述操作",
-            "提示",
-            {
-              confirmButtonText: "关闭",
-              cancelButtonText: "取消",
-              type: "warning",
-            }
-          ).then(() => {
-            if (res.data) {
-              let filePath = res.data
-              closemodel(
-                process.env.VUE_APP_GisIframeOrigin + "/?" + filePath,
-                closemodelCallback
-              );
-            }
-          });
-        } else {
-          handleDownload(row.fileName)
+      keys.forEach((key) => {
+        let url = urls[key];
+        const taskId = (Math.ceil(Date.now() + Math.ceil(Math.random() * 1000))).toString()
+
+        let search = new URLSearchParams(url);
+        let dis = search.get('response-content-disposition')
+        let disStr = decodeURIComponent(dis);
+        const match = disStr.match(/filename="([^"]+)"/);
+        const name = match ? match[1] : key;
+
+        const task = {
+          id: taskId,
+          url: url,
+          filename: name,
+          totalSize: 0,
+          totalSizeText: '-',
+          downloaded: 0,
+          progress: 0,
+          status: TaskStatus.DOWNLOADING,
+          speed: 0,
+          error: undefined,
+          userinfotoken: local.getToken(),
         }
-      }).then(e => {
-        console.log(e);
+
+        ipcRenderer.invoke('start-download', url, name, taskId, task.userinfotoken, isshenpi, {
+          workflowIUID: row.workflowiuid,
+          downloadType: row.key,
+        })
+
+        store.commit('ADD_DOWNLOAD', task)
       })
-    }
-
-
+    })
   };
   fn.$folderFullPath = (basePath, breadcrumb) => {
     let folderFullPath = basePath;
