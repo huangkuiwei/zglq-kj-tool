@@ -108,39 +108,36 @@ export default {
     },
 
     async download(row) {
-      row.iuid = row.fileIUID;
-      this.$downloadFile(row, row.downloadType === '.bim', true);
+      const loading = this.$loading({
+        text: '正在压缩文件，请稍等...',
+        body: true,
+        lock: true,
+        background: '#00000010',
+      })
 
-      // const loading = this.$loading({
-      //   text: '正在压缩文件，请稍等...',
-      //   body: true,
-      //   lock: true,
-      //   background: '#00000010',
-      // })
-      //
-      // let res = {}
-      //
-      // if (row.downloadType === '.bim') {
-      //   res = await request.get(`api/Home/GetFilebimState?iuid=${row.fileIUID}` + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : ''), {
-      //     timeout: 0
-      //   }).catch(() => {})
-      // } else {
-      //   res = await commonApi.compressFileFolder(row.fileIUID, row.workflowiuid).catch(() => {})
-      // }
-      //
-      // loading.close()
-      //
-      // if (res && res.code == 1) {
-      //   var compressionFileInfo = {
-      //     path: res.data.zipfileRelativePath,
-      //     compressionFileSize: res.data.fileSize,
-      //     iuid: res.data.newIUID,
-      //     workflowiuid: row.workflowiuid
-      //   }
-      //   this.$downloadFile(row, this, true, compressionFileInfo, false, false, true)
-      // } else {
-      //   this.$message.error("压缩失败，请重试");
-      // }
+      let res = {}
+
+      if (row.downloadType === '.bim') {
+        res = await request.get(`api/Home/GetFilebimState?iuid=${row.fileIUID}` + (row.workflowiuid ? `&workflowiuid=${row.workflowiuid}` : ''), {
+          timeout: 0
+        }).catch(() => {})
+      } else {
+        res = await commonApi.compressFileFolder(row.fileIUID, row.workflowiuid).catch(() => {})
+      }
+
+      loading.close()
+
+      if (res && res.code == 1) {
+        var compressionFileInfo = {
+          path: res.data.zipfileRelativePath,
+          compressionFileSize: res.data.fileSize,
+          iuid: res.data.newIUID,
+          workflowiuid: row.workflowiuid
+        }
+        this.$downloadFile(row, this, true, compressionFileInfo, false, false, true)
+      } else {
+        this.$message.error("压缩失败，请重试");
+      }
 
       // if (row.downloadType === '.zip') {
       //   const loading = this.$loading({

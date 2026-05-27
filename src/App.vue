@@ -242,6 +242,10 @@ export default {
           totalSizeText: (args.totalSize / (1024 * 1024)).toFixed(2) + 'M',
         })
 
+        if (args.progress === 100) {
+          request.get(`api/Home/GetZipdelete?iuid=${downloads[index].zipIUID}`)
+        }
+
         if (args.progress === 100 && args.isshenpi) {
           let formData = new FormData();
           formData.append('workflowIUID', args.shenpiData.workflowIUID)

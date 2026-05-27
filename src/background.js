@@ -42,8 +42,7 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
-      contextIsolation: false,
-      partition: 'persist:webview'
+      contextIsolation: false
     },
   })
 
@@ -107,25 +106,49 @@ app.on('ready', async () => {
     urls: ['*://*/*'] // 拦截所有 HTTP/HTTPS 请求
   }
 
-  session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
-    const headers = details.responseHeaders
+  if (app.isPackaged) {
+    session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+      const headers = details.responseHeaders
 
-    // 检查是否存在多个值的 Access-Control-Allow-Origin
-    if (headers['access-control-allow-origin']) {
-      const originHeader = headers['access-control-allow-origin'][0] // 假设是数组
-      const origins = originHeader.split(',').map(s => s.trim())
+      // 检查是否存在多个值的 Access-Control-Allow-Origin
+      if (headers['access-control-allow-origin']) {
+        const originHeader = headers['access-control-allow-origin'][0] // 假设是数组
+        const origins = originHeader.split(',').map(s => s.trim())
 
-      // 如果包含 app://.，只保留它；否则保留 *
-      let singleOrigin = '*'
-      if (origins.includes('app://.')) {
-        singleOrigin = 'app://.'
+        // 如果包含 app://.，只保留它；否则保留 *
+        let singleOrigin = '*'
+        if (origins.includes('app://.')) {
+          singleOrigin = 'app://.'
+        }
+
+        headers['access-control-allow-origin'] = [singleOrigin]
       }
 
-      headers['access-control-allow-origin'] = [singleOrigin]
-    }
+      callback({ responseHeaders: headers })
+    })
+  } else {
+    session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+      const headers = details.responseHeaders
 
-    callback({ responseHeaders: headers })
-  })
+      // 检查是否存在多个值的 Access-Control-Allow-Origin
+      if (headers['Access-Control-Allow-Origin']) {
+        const originHeader = headers['Access-Control-Allow-Origin'][0] // 假设是数组
+        const origins = originHeader.split(',').map(s => s.trim())
+
+        // 如果包含 app://.，只保留它；否则保留 *
+        let singleOrigin = 'http://localhost:8081'
+        if (origins.includes('app://.')) {
+          singleOrigin = 'app://.'
+        }
+
+        headers['Access-Control-Allow-Origin'] = [singleOrigin]
+      } else {
+        headers['Access-Control-Allow-Origin'] = ['http://localhost:8081']
+      }
+
+      callback({ responseHeaders: headers })
+    })
+  }
 
   // 注册快捷键 Ctrl+Shift+I 来切换控制台
   globalShortcut.register('CommandOrControl+Shift+I', () => {

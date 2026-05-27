@@ -73,7 +73,8 @@ async function performDownload(taskId, updateTask) {
   if (!task || task.status !== 'downloading') return
 
   // 创建写入流（追加模式）
-  const stream = fs.createWriteStream(task.filePath, { flags: 'a' })
+  const stream = fs.createWriteStream(task.filePath, { start: task.downloaded, flags: task.downloaded ? 'r+' : 'w', autoClose: true })
+  task.stream = stream
 
   // 创建取消令牌
   const cancelTokenSource = axios.CancelToken.source()
@@ -85,8 +86,6 @@ async function performDownload(taskId, updateTask) {
     userinfotoken: token,
     bwforweb: true
   }
-
-  console.log('task.downloaded', task.downloaded)
 
   if (task.downloaded > 0) {
     headers['Range'] = `bytes=${task.downloaded}-`
@@ -107,6 +106,8 @@ async function performDownload(taskId, updateTask) {
     })
 
     task.totalSize = task.totalSize || Number(response.headers['content-length'] || 0)
+
+    let progressList = []
 
     response.data.on('data', (chunk) => {
       task.downloaded += chunk.length
@@ -130,21 +131,26 @@ async function performDownload(taskId, updateTask) {
         task.progress = progress
       }
 
-      sendProgress({ ...task, cancelToken: null })
+      if (!progressList.includes(Math.ceil(progress))) {
+        progressList.push(Math.ceil(progress))
+        sendProgress({ ...task, cancelToken: null, stream: null })
+      }
     })
 
     response.data.pipe(stream)
 
     // return new Promise((resolve, reject) => {
       stream.on('close', () => {
-        task.status = 'completed'
-        sendProgress({ ...task, cancelToken: null })
+        if (task.progress === 100) {
+          task.status = 'completed'
+          sendProgress({ ...task, cancelToken: null, stream: null })
+        }
         // resolve()
       })
 
       stream.on('error', (err) => {
         task.status = 'error'
-        sendProgress({ ...task, cancelToken: null })
+        sendProgress({ ...task, cancelToken: null, stream: null })
         // reject(err)
       })
 
@@ -152,7 +158,7 @@ async function performDownload(taskId, updateTask) {
         if (axios.isCancel(err)) {
           stream.end()
           task.status = 'paused'
-          sendProgress({ ...task, cancelToken: null })
+          sendProgress({ ...task, cancelToken: null, stream: null })
           // resolve()
         } else {
           // reject(err)
@@ -162,7 +168,7 @@ async function performDownload(taskId, updateTask) {
   } catch (error) {
     if (!axios.isCancel(error)) {
       task.status = 'error'
-      sendProgress({ ...task, cancelToken: null })
+      sendProgress({ ...task, cancelToken: null, stream: null })
     }
   }
 }
@@ -179,9 +185,10 @@ function sendProgress(task) {
 function pauseDownload(taskId) {
   const task = activeDownloads.get(taskId)
   if (task && task.cancelToken) {
+    task.stream && task.stream.close()
     task.cancelToken.cancel('用户暂停下载')
     task.status = 'paused'
-    sendProgress({ ...task, cancelToken: null })
+    sendProgress({ ...task, cancelToken: null, stream: null })
   }
 }
 
@@ -190,7 +197,7 @@ async function resumeDownload(taskId) {
   const task = activeDownloads.get(taskId)
   if (task && task.status === 'paused') {
     task.status = 'downloading'
-    sendProgress({ ...task, cancelToken: null })
+    sendProgress({ ...task, cancelToken: null, stream: null })
     performDownload(taskId)
   }
 }

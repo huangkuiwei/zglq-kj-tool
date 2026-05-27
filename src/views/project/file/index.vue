@@ -811,7 +811,7 @@
                               popper-class="tip-class"
                               class="tableOpeColMargin"
                               effect="light"
-                              content="下载"
+                              content="打包下载"
                               placement="top"
                             >
                               <i
@@ -3004,17 +3004,15 @@ export default {
       let formData = new FormData();
       formData.append("IUID", row.iuid);
       formData.append("downloadType", this.isdownload);
-      row.downLoading = true
 
       request.post('api/ProjectFile/GetDownloadtype', formData).then((res) => {
         if (res.code === 1) {
           this.applyWorkflowDialogVisible1 = true
-          row.downLoading = false
         } else if (res.code === 2) {
+          row.downLoading = true
           this.rowData = [row];
           this.$nextTick(() => {
             this.$refs["download"].download();
-            row.downLoading = false
           });
         } else {
           this.$message.error(res.msg);

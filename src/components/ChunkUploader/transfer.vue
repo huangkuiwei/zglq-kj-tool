@@ -43,9 +43,9 @@
                     <el-button size="mini" v-if="scope.row.status === 'paused'" @click="download(scope.row)">下载</el-button>
                     <el-button size="mini" v-if="scope.row.status === 'completed'" @click="openFile(scope.row)">打开</el-button>
                     <el-button size="mini" type="danger" @click="deleteFile(scope.row)">删除</el-button>
-                    <el-button size="mini" v-if="scope.row.status === 'error'" @click="reDownload(scope.row)">
-                      重新下载
-                    </el-button>
+                    <!-- <el-button size="mini" v-if="scope.row.status === 'error'" @click="reDownload(scope.row)"> -->
+                    <!--   重新下载 -->
+                    <!-- </el-button> -->
                   </div>
                 </template>
               </el-table-column>
