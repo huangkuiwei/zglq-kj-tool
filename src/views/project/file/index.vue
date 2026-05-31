@@ -191,53 +191,53 @@
                     <!--   </el-button> -->
                     <!-- </el-popover> -->
                     <!-- 上传 -->
-                    <!--<el-popover-->
-                    <!--  v-if="filePermissionCon.setupbit == true"-->
-                    <!--  v-model="uploadFilePopVisible"-->
-                    <!--  placement="bottom"-->
-                    <!--  transition="el-zoom-in-top"-->
-                    <!--  width="120"-->
-                    <!--  trigger="click"-->
-                    <!--&gt;-->
-                    <!--  <div-->
-                    <!--    class="fileFolderUploadHref"-->
-                    <!--    @click="uploadFilePopVisible = false"-->
-                    <!--  >-->
-                    <!--    上传文件-->
-                    <!--    <input-->
-                    <!--      ref="fileUploader"-->
-                    <!--      class="fileFolderUploadBtn"-->
-                    <!--      type="file"-->
-                    <!--      name="file"-->
-                    <!--      multiple-->
-                    <!--      alt="请选择文件"-->
-                    <!--      @change="submitFile($event)"-->
-                    <!--    >-->
-                    <!--  </div>-->
-                    <!--  <div-->
-                    <!--    class="fileFolderUploadHref"-->
-                    <!--    @click="uploadFilePopVisible = false"-->
-                    <!--  >-->
-                    <!--    上传文件夹-->
-                    <!--    <input-->
-                    <!--      class="fileFolderUploadBtn"-->
-                    <!--      type="file"-->
-                    <!--      name="file"-->
-                    <!--      webkitdirectory-->
-                    <!--      alt="请选择文件夹"-->
-                    <!--      @change="fileFolderUpload($event)"-->
-                    <!--    >-->
-                    <!--  </div>-->
-                    <!--  <el-button-->
-                    <!--    slot="reference"-->
-                    <!--    size="small"-->
-                    <!--    icon="el-icon-upload2"-->
-                    <!--  >-->
-                    <!--    {{-->
-                    <!--      $t("base.button.upload")-->
-                    <!--    }}-->
-                    <!--  </el-button>-->
-                    <!--</el-popover>-->
+                    <el-popover
+                     v-if="filePermissionCon.setupbit == true"
+                     v-model="uploadFilePopVisible"
+                     placement="bottom"
+                     transition="el-zoom-in-top"
+                     width="120"
+                     trigger="click"
+                    >
+                     <div
+                       class="fileFolderUploadHref"
+                       @click="uploadFilePopVisible = false"
+                     >
+                       上传文件
+                       <input
+                         ref="fileUploader"
+                         class="fileFolderUploadBtn"
+                         type="file"
+                         name="file"
+                         multiple
+                         alt="请选择文件"
+                         @change="submitFile($event)"
+                       >
+                     </div>
+                     <div
+                       class="fileFolderUploadHref"
+                       @click="uploadFilePopVisible = false"
+                     >
+                       上传文件夹
+                       <input
+                         class="fileFolderUploadBtn"
+                         type="file"
+                         name="file"
+                         webkitdirectory
+                         alt="请选择文件夹"
+                         @change="fileFolderUpload($event)"
+                       >
+                     </div>
+                     <el-button
+                       slot="reference"
+                       size="small"
+                       icon="el-icon-upload2"
+                     >
+                       {{
+                         $t("base.button.upload")
+                       }}
+                     </el-button>
+                    </el-popover>
                     <!-- 桥梁大师项目设置 -->
                     <!-- <template -->
                     <!--   v-if="projectInfo && -->
@@ -5220,6 +5220,7 @@ export default {
           fullPath: _self.getFolderFullPath(),
           relativePath: item.webkitRelativePath,
           file: item,
+          fileLocalPath: item.path,
           fileSize: _self.$getFileSize(item.size),
           lastModifiedData: _self.$dayjs(item.lastModifiedDate, "YYYY-MM-DD HH:mm:ss"),
           uploadTime: _self.$dayjs(new Date(), "YYYY-MM-DD HH:mm:ss"),
@@ -5247,6 +5248,7 @@ export default {
           Operationmode: 0,
           sign: null, //作为标识传给后台，后台有用
           file: files[i],
+          fileLocalPath: files[i].path,
           fileSize: _self.$getFileSize(files[i].size),
           lastModifiedData: _self.$dayjs(
             files[i].lastModifiedDate,

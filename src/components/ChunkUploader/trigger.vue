@@ -52,19 +52,24 @@ export default {
       taskIsFail: false
     };
   },
+  // mounted() {
+  //   let fileData = localStorage.getItem("fileData");
+  //
+  //   if (fileData) {
+  //     fileData = JSON.parse(fileData);
+  //     this.fileData = fileData;
+  //   }
+  // },
+  //
   // watch:{
-  //   'fileDataClone.length': {
-  //       handler(newValue, oldValue) {
-  //         debugger
-  //         var postingDataIndex = this.fileDataClone.findIndex((item)=>{
-  //           return item.httpStatus == 'OnPosting'
-  //         })
-  //         if(postingDataIndex > -1){
-  //           return
-  //         }
-  //         this.handleChuankUpload()
-  //       }
-  //   },
+  //   fileData: {
+  //     handler(newVal) {
+  //       this.$store.dispatch("UpdateFileDataClone", newVal);
+  //       console.log('newVal', newVal)
+  //       localStorage.setItem('fileData', JSON.stringify(newVal));
+  //     },
+  //     deep: true,
+  //   }
   // },
   methods: {
     showUploadDialog() {
@@ -148,6 +153,7 @@ export default {
             relativePath: item.fullPath.substr(1),
             fullPath: fullPath,
             file: file,
+            fileLocalPath: file.path,
             fileSize: _self.$getFileSize(file.size),
             lastModifiedData: _self.$dayjs(file.lastModifiedDate, "YYYY-MM-DD HH:mm:ss"),
             progress: 0,
@@ -349,7 +355,8 @@ export default {
 
           if (res.code == 0) {
             var _index = _this.fileDataClone.findIndex(element => element.iuid == res.debrisIUID)
-            _this.fileDataClone[_index].progress = res.progress
+            // _this.fileDataClone[_index].progress = res.progress
+            _this.$set(_this.fileDataClone[_index], 'progress', res.progress)
             _this.$set(_this.fileDataClone, _index, _this.fileDataClone[_index])
           } else {
             //请求失败
@@ -365,14 +372,14 @@ export default {
               data.append("IUID", res.debrisIUID)
               await projectFileApi.post('/api/TaskManagement/otherchange', data)
             }
-            _this.$emit('reloadData')
-            let s_index = _this.fileDataClone.findIndex(element => element.iuid == res.debrisIUID)
-            console.log(_this.fileDataClone);
-
-            if (s_index + 1 == _this.fileDataClone.length) {
-              _this.$store.commit('CHANGE_UPLOADERTAB_INDEX', 0)
-              _this.$store.commit('REMOVE_FILEDATA_CLONE',)
-            }
+            // _this.$emit('reloadData')
+            // let s_index = _this.fileDataClone.findIndex(element => element.iuid == res.debrisIUID)
+            // console.log(_this.fileDataClone);
+            //
+            // if (s_index + 1 == _this.fileDataClone.length) {
+            //   _this.$store.commit('CHANGE_UPLOADERTAB_INDEX', 0)
+            //   _this.$store.commit('REMOVE_FILEDATA_CLONE',)
+            // }
             // this.$getCorpSpace()         取消容量数据获取 【2021/4/22 creator: MengLiu】
           } else if (res.code == 0 && !res.mergeOk) {
             // i = res.number++

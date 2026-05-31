@@ -717,6 +717,7 @@ export default {
           relativePath: files[i].name,
           fullPath: _self.getFolderFullPath(),
           file: files[i],
+          fileLocalPath: files[i].path,
           fileSize: _self.$getFileSize(files[i].size),
           lastModifiedData: _self.$dayjs(
             files[i].lastModifiedDate,

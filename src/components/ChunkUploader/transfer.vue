@@ -8,14 +8,13 @@
           <!--<el-link icon="el-icon-minus" class="uploaderProgressTitleBtn" @click="changeUploaderVisible('hidden')"></el-link>-->
         </div>
 
-        <!-- TODO -->
         <div class="" style="padding: 0 20px; flex-grow: 1; overflow: hidden; display: flex; flex-direction: column">
-          <!--<div style="flex-shrink: 0">-->
-          <!--  <el-tabs v-model="type">-->
-          <!--    <el-tab-pane label="下载" name="1"></el-tab-pane>-->
-          <!--    <el-tab-pane label="上传" name="2"></el-tab-pane>-->
-          <!--  </el-tabs>-->
-          <!--</div>-->
+          <div style="flex-shrink: 0">
+           <el-tabs v-model="type">
+             <el-tab-pane label="下载" name="1"></el-tab-pane>
+             <el-tab-pane label="上传" name="2"></el-tab-pane>
+           </el-tabs>
+          </div>
 
           <div style="flex-shrink: 0; flex-grow: 1; overflow: auto; height: 100px">
             <el-table v-show="type === '1'" :data="downloads">
@@ -46,6 +45,29 @@
                     <!-- <el-button size="mini" v-if="scope.row.status === 'error'" @click="reDownload(scope.row)"> -->
                     <!--   重新下载 -->
                     <!-- </el-button> -->
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <el-table v-show="type === '2'" :data="fileDataClone">
+              <el-table-column label="文件名" prop="fileName" show-overflow-tooltip></el-table-column>
+              <el-table-column label="大小" prop="fileSize"></el-table-column>
+              <el-table-column label="进度" prop="progress">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.progress }}%</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="状态">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.progress != 100">上传中</span>
+                  <div style="display: flex; align-items: center; gap: 10px" v-if="scope.row.progress == 100">
+                    <span>上传完成</span>
+                    <i class="el-icon el-icon-success" style="color: #00B83F"></i>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px" v-if="scope.row.errorMsg">
+                    <span>{{ scope.row.errorMsg || '上传失败' }}</span>
+                    <i class="el-icon el-icon-error" style="color: #ff4545"></i>
                   </div>
                 </template>
               </el-table-column>
@@ -102,6 +124,9 @@ export default {
     ...mapGetters(["uploaderVisible"]),
     downloads() {
       return this.$store.state.downloadData.downloads;
+    },
+    fileDataClone() {
+      return this.$store.state.app.fileDataClone
     }
   },
 
@@ -111,10 +136,24 @@ export default {
         localStorage.setItem("downloads", JSON.stringify(value));
       },
       deep: true
+    },
+
+    fileDataClone: {
+      handler(value) {
+        console.log('fileDataClone', value)
+        localStorage.setItem("fileDataClone", JSON.stringify(value));
+      },
+      deep: true
     }
   },
 
   mounted() {
+    let fileDataClone = localStorage.getItem("fileDataClone");
+
+    if (fileDataClone) {
+      fileDataClone = JSON.parse(fileDataClone);
+      // this.fileData = fileData;
+    }
   },
 
   methods: {
